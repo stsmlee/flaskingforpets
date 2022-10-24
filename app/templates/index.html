@@ -4,7 +4,7 @@
 <h2>PetFinder has so many types of pets that need good loving homes!</h2>
 <p>
 {% for type in pet_types_dict %} 
-<ul>{{type}}</ul>
+<ul><a href = "{{url_for('animals', type=type)}}">{{type}}</a></ul>
 {% endfor %}
 </p>
 {%endblock%}

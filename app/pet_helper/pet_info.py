@@ -55,11 +55,9 @@ def update_all_types_breeds():
     for key in types_dict.keys():
         get_breeds(key)        
 
+types_dict = update_types()
+update_all_types_breeds()
+json_obj = json.dumps(types_dict, indent = 4)
+with open('types.json', 'w') as outfile:
+    outfile.write(json_obj)
 types_dict = get_types_dict()
-
-# types_dict = update_types()
-# update_all_types_breeds()
-# json_obj = json.dumps(types_dict, indent = 4)
-# with open('types.json', 'w') as outfile:
-#     outfile.write(json_obj)
-
