@@ -1,0 +1,10 @@
+{%extends 'base.html'%}
+{%block content%}
+<h1>SUP DOG</h1>
+<h2>PetFinder has so many types of pets that need good loving homes!</h2>
+<p>
+{% for type in pet_types_dict %} 
+<ul>{{type}}</ul>
+{% endfor %}
+</p>
+{%endblock%}
