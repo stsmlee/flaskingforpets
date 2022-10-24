@@ -1,0 +1,10 @@
+{%extends 'base.html'%}
+{%block content%}
+<h1>So you want a {{type}}!</h1>
+<p><form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.choice.label }} {{ form.choice()}}</p>
+    <p>{{ form.submit() }}</p>
+  </form>
+</p>
+{%endblock%}
