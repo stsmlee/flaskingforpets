@@ -2,7 +2,6 @@ from app.pet_helper.sneaky import secret_dict
 from asyncore import write
 import requests
 import json
-# import copy
 
 def get_types_dict():
     with open('types.json', 'r') as openfile:
