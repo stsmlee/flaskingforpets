@@ -1,9 +1,37 @@
 {%extends 'base.html'%}
 {%block content%}
+
+{% if form.is_submitted() and form.errors|count > 0 %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ form.errors|count }} error(s):
+    <ul>
+    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+        {% for error in field_errors %}
+            <li>{{ form[field_name].label }}: {{ error }}</li>
+        {% endfor %}
+    {% endfor %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
 <h1>So you want {{type | lower}}s!</h1>
+<h3>Pick out some filters if you like!</h3>
 <p><form method="POST">
     {{ form.hidden_tag() }}
-    <p>{{ form.breed.label }} {{ form.breed()}}</p>
+    <p>{{ form.breed1.label }} {{ form.breed1()}}</p>
+    <p>{{ form.breed2.label }} {{ form.breed2()}}</p>
+    <p>{{ form.color.label }} {{ form.color()}}</p>
+    <p>{{ form.coat.label }} {{ form.coat()}}</p>
+    <p>{{ form.gender.label }} {{ form.gender()}}</p>
+    <h4>Care to filter by size? You may select multiple.</h4>
+    <p>{{form.size()}}</p>
+    <h4>Care to filter by age? You may select multiple.</h4>
+    <p>{{form.age()}}</p>
+    <h4>Care to filter by your home needs?</h4>
+    <p>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }}</p>
+    <h4>Where are you?</h4>
+    <p>{{ form.zipcode.label }} {{ form.zipcode() }} {{ form.distance.label }} {{ form.distance() }}</p>
+    <p></p>
     <p>{{ form.submit() }}</p>
   </form>
 </p>
