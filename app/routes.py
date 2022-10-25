@@ -9,8 +9,6 @@ pet_types_list = [pet_type for pet_type in pet_types_dict.keys()]
 
 # pet_types_list = [(count, val) for count, val in enumerate(pet_types_dict.keys())]
 
-
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -18,8 +16,8 @@ def index():
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
-    my_form = forms.BreedForm()
-    my_form.choice.choices = pet_types_dict[type]['Breeds']
-    return render_template('animal.html', form = my_form, type=type, list=pet_types_list, breeds = pet_types_dict[type]['Breeds'])
+    my_form = forms.FilterForm()
+    my_form.breed.choices = ['N/A'] + pet_types_dict[type]['Breeds']
+    return render_template('animal.html', form = my_form, type=type)
     # if my_form.validate_on_submit():
     #     return redirect(url_for("animals", my_form.data))

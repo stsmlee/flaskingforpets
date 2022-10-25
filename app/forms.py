@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, RadioField, BooleanField, SelectField
 from wtforms.validators import DataRequired
 
-class BreedForm(FlaskForm):
-    # choice = StringField('Choice', validators=[DataRequired()])
-    choice = SelectField('Breed')
+class FilterForm(FlaskForm):
+    breed = SelectField('Breed')
+    # color = SelectField('Color')
     submit = SubmitField('Submit')
