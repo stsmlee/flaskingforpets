@@ -31,8 +31,6 @@ header = {"Authorization": auth}
 def update_types():
     type_url = 'https://api.petfinder.com/v2/types'
     res = requests.get(type_url, headers=header)
-    # print(res)
-    # return res.json()
     types_json= res.json()
     types_dict = {}
     for i in range(len(types_json['types'])):
@@ -59,16 +57,16 @@ update_all_types_breeds()
 json_obj = json.dumps(types_dict, indent = 4)
 with open('types.json', 'w') as outfile:
     outfile.write(json_obj)
-# types_dict = get_types_dict()
 
 base_url = 'https://api.petfinder.com'
 animals_url = 'https://api.petfinder.com/v2/animals'
 
-def get_request(animals_url):
-    res = requests.get(url, headers = header, params = payload)
+
+def get_request(payload):
+    res = requests.get(animals_url, headers = header, params = payload)
     res_json = res.json()
-    pagination = res_json['pagination']   
-    total_hits = pagination['total_count']
-    if total_hits <= 0:
-        print('No Results')
-        return
+    # pagination = res_json['pagination']   
+    # total_hits = pagination['total_count']
+    # if total_hits <= 0:
+    #     return('No results!')
+    return res_json

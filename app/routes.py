@@ -5,8 +5,8 @@ from app.pet_helper import pet_info
 from app import forms
 
 pet_types_dict = pet_info.get_types_dict()
-# pet_types_list = [pet_type for pet_type in pet_types_dict.keys()]
 payload = {}
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -21,7 +21,7 @@ def animals(type):
     my_form.color.choices = ['N/A'] + pet_types_dict[type]['Colors']
     my_form.coat.choices = ['N/A'] + pet_types_dict[type]['Coats']
     if my_form.validate_on_submit():
-        payload = {'type':type, 'zipcode' : my_form.zipcode.data, 'distance' : my_form.distance.data}
+        payload = {'type':type, 'location' : my_form.zipcode.data, 'distance' : my_form.distance.data}
         if my_form.breed1.data != 'N/A':
             payload['breed'] = my_form.breed1.data
         if my_form.breed2.data != 'N/A':
@@ -42,12 +42,12 @@ def animals(type):
             payload['good_with_dogs'] = 1
         if my_form.cats.data:
             payload['good_with_cats'] = 1
-        # return payload
         return redirect(url_for('search', type=type))
     return render_template('animal.html', form = my_form, type=type)
 
 @app.route('/animals/<type>/search')
 def search(type):
     global payload
+    return pet_info.get_request(payload)
     # return payload
-    return render_template('index.html')
+    # return render_template('index.html')
