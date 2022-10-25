@@ -1,6 +1,18 @@
 h1 {
     color:blueviolet
 }
-a {
-    color:purple
+a:link {
+    color:navy
+}
+
+a:visited {
+    color:navy
+}
+
+a:hover {
+    color:slateblue
+}
+
+a:active {
+    color:skyblue
 }
