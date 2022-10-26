@@ -4,16 +4,14 @@
     {% if res %}
         {% for pet in res %}
             {% for key, value in pet.items() %}
-                {% if key not in exclude %}
-                    {% if key == 'url' %}
+                    {% if key == 'Profile Link' %}
                         <p><b>{{key}} :</b> <a href="{{value}}">profile link</a></p>
                     {% else %}
                         <p><b>{{key}} :</b> {{value}}</p>
-                    {% endif %}
-                {% endif %}
+                    {% endif %}          
             {% endfor %}
-            <div>------</div>
-         {% endfor %}
+            <div>------</div>         
+        {% endfor %}
     {% endif %}
 </p>
 

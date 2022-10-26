@@ -103,7 +103,7 @@ def parse_res_animals(res_animals):
         additional_attr = []
         for attr, val in pet['attributes'].items():
             if val:
-                additional_attr.append(' '.join(attr.split('_').title()))
+                additional_attr.append(' '.join(attr.split('_')).title())
         current['Attributes'] = ', '.join(additional_attr)
         enviro = []
         for attr, val in pet['environment'].items():
@@ -126,7 +126,7 @@ def parse_res_animals(res_animals):
         contact_info = {}
         for key, val in pet['contact'].items():
             if key != 'address' and val:
-                contact_info[key.upper()] = val
+                contact_info[key.title()] = val
             elif val:
                 contact_info['Address'] = {}
                 for k,v in val.items():
@@ -135,7 +135,7 @@ def parse_res_animals(res_animals):
                     elif k == 'address2' and v:
                         contact_info['Address']['Address2'] = v
                     elif v:
-                        contact_info['Address'][k.upper()] = v
+                        contact_info['Address'][k.title()] = v
         current['Contact Info'] = contact_info
         parsed_list.append(current)
     return parsed_list
