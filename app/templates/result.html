@@ -5,12 +5,16 @@
         {% for pet in res %}
             {% for key, value in pet.items() %}
                     {% if key == 'Profile Link' %}
-                        <p><b>{{key}} :</b> <a href="{{value}}">profile link</a></p>
+                        <p><b>{{key}} :</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a></p>
+                    {% elif key == 'Photos' %}
+                        {% for pic in value %}
+                        <img src="{{pic}}" alt="photo of {{pet['Name']}}">
+                        {% endfor %}
                     {% else %}
-                        <p><b>{{key}} :</b> {{value}}</p>
+                        <p><b>{{key}}:</b> {{value}}</p>
                     {% endif %}          
             {% endfor %}
-            <div>------</div>         
+            <hr style="height:2px;border-width:0;color:gray;background-color:gray">        
         {% endfor %}
     {% endif %}
 </p>

@@ -1,5 +1,5 @@
 from app.pet_helper.sneaky import secret_dict
-from asyncore import write
+# from asyncore import write
 import requests
 import json
 
@@ -120,7 +120,7 @@ def parse_res_animals(res_animals):
                 if key == 'medium':
                     photo_links.append(val)
         current['Photos'] = photo_links
-        current['Status'] = pet['status']
+        current['Status'] = pet['status'].title()
         current['Published at'] = pet['published_at'][:10]
         current['Distance'] = pet['distance']
         contact_info = {}
@@ -128,15 +128,28 @@ def parse_res_animals(res_animals):
             if key != 'address' and val:
                 contact_info[key.title()] = val
             elif val:
-                contact_info['Address'] = {}
+                # contact_info['Address'] = {}
+                contact_info = ""
                 for k,v in val.items():
-                    if k == 'address1' and v:
-                        contact_info['Address']['Address1'] = v
-                    elif k == 'address2' and v:
-                        contact_info['Address']['Address2'] = v
-                    elif v:
-                        contact_info['Address'][k.title()] = v
+                    if v:
+                        if k == 'address1' or k == 'address2' or k == 'city':
+                            contact_info += v + ', '
+                        if k == 'state':
+                            contact_info += v 
+                        if k == 'postcode':
+                            contact_info += ' ' + v                            
+                        if k == 'country':
+                            contact_info += ', ' + v                            
         current['Contact Info'] = contact_info
         parsed_list.append(current)
     return parsed_list
 
+
+# def string_to_dict(string):
+#     string = string[3:-3]
+#     dict = {}
+#     x = string.split(',%20')
+#     for i in x:
+#         a, b = i.split(':%20')
+#         dict[a] = b
+#     return dict
