@@ -48,6 +48,7 @@ def animals(type):
 @app.route('/animals/<type>/search')
 def search(type):
     global payload
-    return pet_info.get_request(payload)
-    # return payload
-    # return render_template('index.html')
+    res_json = pet_info.get_request(payload)
+    if not res_json:
+        return render_template('no_results.html', type=type)
+    return render_template('result.html', res=res_json['animals'], pagination = res_json['pagination'], type=type, exclude = {'type', 'status_changed_at'}) 

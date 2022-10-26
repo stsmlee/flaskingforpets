@@ -1,0 +1,20 @@
+{%extends 'base.html'%}
+{%block content%}
+<p>
+    {% if res %}
+        {% for pet in res %}
+            {% for key, value in pet.items() %}
+                {% if key not in exclude %}
+                    {% if key == 'url' %}
+                        <p><b>{{key}} :</b> <a href="{{value}}">profile link</a></p>
+                    {% else %}
+                        <p><b>{{key}} :</b> {{value}}</p>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <div>------</div>
+         {% endfor %}
+    {% endif %}
+</p>
+
+{%endblock%}

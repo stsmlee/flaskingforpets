@@ -65,8 +65,78 @@ animals_url = 'https://api.petfinder.com/v2/animals'
 def get_request(payload):
     res = requests.get(animals_url, headers = header, params = payload)
     res_json = res.json()
-    # pagination = res_json['pagination']   
-    # total_hits = pagination['total_count']
-    # if total_hits <= 0:
-    #     return('No results!')
+    pagination = res_json['pagination']   
+    total_hits = pagination['total_count']
+    if total_hits <= 0:
+        return None
     return res_json
+
+null = None
+false = False
+true = True
+
+def parse_res_animals(res_animals):
+    exclude = {'type', 'status_changed_at'}
+    parsed_list = []
+    for pet in res_animals:
+        current = {}
+        current['ID'] = pet['id']
+        current['Organization ID'] = pet['organization_id']
+        current['Name'] = pet['name']
+        current['Profile Link'] = pet['url']
+        current['Species'] = pet['species']        
+        breeds = []
+        for attr,br in pet['breeds'].items():
+            if attr == 'mixed' and br:
+                breeds.append('Mixed Breed')
+            elif br:
+                breeds.append(br)
+        current['Breed(s)'] = ', '.join(breeds)
+        colors = []
+        for color in pet['colors'].values():
+            if color:
+                colors.append(color)
+        current['Colors'] = ', '.join(colors)
+        current['Age'] = pet['age']
+        current['Size'] = pet['size']
+        current['Coat'] = pet['coat']
+        additional_attr = []
+        for attr, val in pet['attributes'].items():
+            if val:
+                additional_attr.append(' '.join(attr.split('_').title()))
+        current['Attributes'] = ', '.join(additional_attr)
+        enviro = []
+        for attr, val in pet['environment'].items():
+            if val:
+                enviro.append(attr.title())
+        current['Environment, Good with'] = ', '.join(enviro)
+        current['Tags'] = ', '.join(pet['tags'])
+        current['Description'] = pet['description']
+        if pet['organization_animal_id']:
+            current['Organization Animal ID'] = pet['organization_animal_id']
+        photo_links = []
+        for entry in pet['photos']:
+            for key, val in entry.items():
+                if key == 'medium':
+                    photo_links.append(val)
+        current['Photos'] = photo_links
+        current['Status'] = pet['status']
+        current['Published at'] = pet['published_at'][:10]
+        current['Distance'] = pet['distance']
+        contact_info = {}
+        for key, val in pet['contact'].items():
+            if key != 'address' and val:
+                contact_info[key.upper()] = val
+            elif val:
+                contact_info['Address'] = {}
+                for k,v in val.items():
+                    if k == 'address1' and v:
+                        contact_info['Address']['Address1'] = v
+                    elif k == 'address2' and v:
+                        contact_info['Address']['Address2'] = v
+                    elif v:
+                        contact_info['Address'][k.upper()] = v
+        current['Contact Info'] = contact_info
+        parsed_list.append(current)
+    return parsed_list
+
