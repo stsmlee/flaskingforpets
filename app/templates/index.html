@@ -1,6 +1,11 @@
-{%extends 'base.html'%}
+{%extends base_html %}
 {%block content%}
+{% if not username %}
 <h1>SUP DOG</h1>
+{% else %}
+<h1>Welcome, {{username}}!!</h1>
+{% endif %}
+
 <h2>PetFinder has so many types of pets that need good loving homes!</h2>
 
 {% if form %}
@@ -9,10 +14,6 @@
     {{ form.hidden_tag() }}
     {{form.username.label}}: {{form.username()}} {{form.submit()}}
 </p></form>
-{% endif %}
-
-{% if username %}
-<h3>Welcome, {{username}}!!</h3>
 {% endif %}
 
 <p>
