@@ -23,10 +23,10 @@
     <p>{{ form.color.label }} {{ form.color()}}</p>
     <p>{{ form.coat.label }} {{ form.coat()}}</p>
     <p>{{ form.gender.label }} {{ form.gender()}}</p>
-    <h4>Care to filter by size? You may select multiple.</h4>
-    <p>{{form.size()}}</p>
-    <h4>Care to filter by age? You may select multiple.</h4>
-    <p>{{form.age()}}</p>
+    <h4>Care to filter by size?</h4>
+    <p>{{ form.small() }} {{ form.small.label }} {{ form.medium() }} {{ form.medium.label }} {{ form.large() }} {{ form.large.label }} {{ form.xlarge() }} {{ form.xlarge.label }}</p>
+    <h4>Care to filter by age?</h4>
+    <p>{{ form.baby() }} {{form.baby.label}} {{ form.young() }} {{form.young.label}} {{ form.adult() }} {{form.adult.label}} {{ form.senior() }} {{form.senior.label}} </p>
     <h4>Care to filter by your home needs?</h4>
     <p>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }}</p>
     <h4>Where are you?</h4>

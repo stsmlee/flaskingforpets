@@ -72,10 +72,6 @@ def get_request(payload):
         return None
     return res_json
 
-# def get_more_pages(url):
-#     res = requests.get(base_url+url, headers = header)
-#     return res.json()
-
 null = None
 false = False
 true = True
@@ -178,10 +174,32 @@ def build_params(my_data, type):
         payload['coat'] = my_data['coat']
     if my_data['gender'] != 'N/A':
         payload['gender'] = my_data['gender']
-    if my_data['age']:
-        payload['age'] = ','.join(my_data['age'])
-    if my_data['size']:
-        payload['size'] = ','.join(my_data['size'])
+    # if my_data['age']:
+    #     payload['age'] = ','.join(my_data['age'])
+    age = []
+    if my_data['baby']:
+        age.append('baby')
+    if my_data['young']:
+        age.append('young')
+    if my_data['adult']:
+        age.append('adult')
+    if my_data['senior']:
+        age.append('senior')
+    if age:
+        payload['age'] = ','.join(age)
+    # if my_data['size']:
+    #     payload['size'] = ','.join(my_data['size'])
+    size = []
+    if my_data['small']:
+        size.append('small')
+    if my_data['medium']:
+        size.append('medium')
+    if my_data['large']:
+        size.append('large')
+    if my_data['xlarge']:
+        size.append('xlarge')
+    if size:
+        payload['size'] = ','.join(size)
     if my_data['children']:
         payload['good_with_children'] = 1
     if my_data['dogs']:

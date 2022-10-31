@@ -30,9 +30,9 @@
     <span style="float:right"><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a></span>        
 </p>
     {% elif pag['Previous'] %}
-    <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a>
+    <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a><br/>
     {% elif pag['Next'] %}
-    <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a>  
+    <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a><br/>
     {% endif %}
 </p>
 {%endblock%}
