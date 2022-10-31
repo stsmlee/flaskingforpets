@@ -23,4 +23,16 @@ What type are you looking for?
         <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
     {% endfor %}
 </ul></p>
+
+
+
+{% if re_form %}
+<p>You can reuse a search below.</p>
+<p><form method="POST">
+    {{ re_form.hidden_tag() }}
+    {{ re_form.savename.label }}: {{ re_form.savename() }}    {{ re_form.submit() }}
+</form></p>
+{% endif %}
+
+
 {%endblock%}

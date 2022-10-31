@@ -4,13 +4,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, RadioField, BooleanField, SelectField, IntegerField, SelectMultipleField
 from wtforms.validators import DataRequired, InputRequired, NumberRange, Length
 
-
-
-
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), Length(min=1, max=20)])
     submit = SubmitField('Submit')
+
+class ReuseForm(FlaskForm):
+    savename = SelectField('Saved Searches', validators= [InputRequired()])
+    submit = SubmitField('Let\'s Go!')
 
 class FilterForm(FlaskForm):
     breed1 = SelectField('Breed1')

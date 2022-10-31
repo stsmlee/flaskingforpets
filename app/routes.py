@@ -9,6 +9,7 @@ from app import forms
 pet_types_dict = pet_info.get_types_dict()
 param_dict = {}
 
+
 def logged_in():
     if 'username' in session.keys():
         return True
@@ -23,17 +24,27 @@ def base_html():
 @app.route('/index', methods=["GET", "POST"])
 def index():
     login_form = forms.LoginForm()
+    reuse_form = forms.ReuseForm()
     if login_form.validate_on_submit():
         session['username'] = login_form.username.data
         return redirect(url_for('index'))
     if logged_in():
-        return render_template('index.html', pet_types_dict = pet_types_dict, username=session['username'], base_html='base_logged_in.html')
+        if 'saved searches' not in session.keys():
+            session['saved searches']={}
+        saves = [k for k in session['saved searches'].keys()]
+        reuse_form.savename.choices = saves
+    if reuse_form.validate_on_submit():
+        payload = session['saved searches'][reuse_form.savename.data]
+        type = payload['type']
+        return redirect(url_for('search', payload=json.dumps(payload), type = type, page=1))        
+    if logged_in():
+        return render_template('index.html', pet_types_dict = pet_types_dict, username=session['username'], base_html='base_logged_in.html', re_form = reuse_form)
     return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form, base_html='base.html')
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
-    # session.clear()
+    # session.pop('username', None)
+    session.clear()
     return redirect(url_for('index'))
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
@@ -43,12 +54,13 @@ def animals(type):
     my_form.breed2.choices = my_form.breed1.choices
     my_form.color.choices = ['N/A'] + pet_types_dict[type]['Colors']
     my_form.coat.choices = ['N/A'] + pet_types_dict[type]['Coats']
-    if my_form.validate_on_submit():
-        payload = pet_info.build_params(my_form.data, type)
+    if logged_in():
         if 'saved searches' not in session.keys():
             session['saved searches'] = {}
+    if my_form.validate_on_submit():
+        payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:
-            session['saved searches'][my_form.savename.data] = [payload]
+            session['saved searches'][my_form.savename.data] = payload
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
     return render_template('animal.html', form = my_form, type=type, base_html = base_html(), login = logged_in())
 
