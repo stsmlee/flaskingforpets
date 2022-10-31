@@ -27,13 +27,13 @@ def index():
         session['username'] = login_form.username.data
         return redirect(url_for('index'))
     if logged_in():
-        return render_template('index.html', pet_types_dict = pet_types_dict, username=session['username'], base_html=base_html())
-    return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form, base_html=base_html())
+        return render_template('index.html', pet_types_dict = pet_types_dict, username=session['username'], base_html='base_logged_in.html')
+    return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form, base_html='base.html')
 
 @app.route('/logout')
 def logout():
-    # session.pop('username', None)
-    session.clear()
+    session.pop('username', None)
+    # session.clear()
     return redirect(url_for('index'))
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
@@ -45,8 +45,12 @@ def animals(type):
     my_form.coat.choices = ['N/A'] + pet_types_dict[type]['Coats']
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
+        if 'saved searches' not in session.keys():
+            session['saved searches'] = {}
+        if my_form.savename.data:
+            session['saved searches'][my_form.savename.data] = [payload]
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
-    return render_template('animal.html', form = my_form, type=type, base_html = base_html())
+    return render_template('animal.html', form = my_form, type=type, base_html = base_html(), login = logged_in())
 
 @app.route('/animals/<type>/page<int:page>/<payload>')
 def search(type,payload,page):

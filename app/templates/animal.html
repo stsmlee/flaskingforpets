@@ -31,6 +31,9 @@
     <p>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }}</p>
     <h4>Where are you?</h4>
     <p>{{ form.zipcode.label }} {{ form.zipcode() }} {{ form.distance.label }} {{ form.distance() }}</p>
+    {% if login %}
+    <p>If you want to save your search for future use, enter a name: {{ form.savename() }}</p>
+    {% endif %}
     <p></p>
     <p>{{ form.submit() }}</p>
   </form>
