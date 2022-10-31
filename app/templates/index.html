@@ -2,9 +2,24 @@
 {%block content%}
 <h1>SUP DOG</h1>
 <h2>PetFinder has so many types of pets that need good loving homes!</h2>
+
+{% if form %}
+<p>Do you want to log in?</p>
+<form method="POST"><p>
+    {{ form.hidden_tag() }}
+    {{form.username.label}}: {{form.username()}} {{form.submit()}}
+</p></form>
+{% endif %}
+
+{% if username %}
+<h3>Welcome, {{username}}!!</h3>
+{% endif %}
+
+<p>
+What type are you looking for?
 <ul>
     {% for type in pet_types_dict %} 
         <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
     {% endfor %}
-</ul>
+</ul></p>
 {%endblock%}

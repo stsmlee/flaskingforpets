@@ -53,11 +53,11 @@ def update_all_types_breeds():
         get_breeds(key)        
 
 types_dict = update_types()
-update_all_types_breeds()
-json_obj = json.dumps(types_dict, indent = 4)
-with open('types.json', 'w') as outfile:
-    outfile.write(json_obj)
-pet_types_dict = get_types_dict()
+# update_all_types_breeds()
+# json_obj = json.dumps(types_dict, indent = 4)
+# with open('types.json', 'w') as outfile:
+#     outfile.write(json_obj)
+# pet_types_dict = get_types_dict()
 
 base_url = 'https://api.petfinder.com'
 animals_url = 'https://api.petfinder.com/v2/animals'

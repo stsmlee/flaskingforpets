@@ -2,7 +2,11 @@ from flask import Flask
 import requests
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, RadioField, BooleanField, SelectField, IntegerField, SelectMultipleField
-from wtforms.validators import DataRequired, InputRequired, NumberRange
+from wtforms.validators import DataRequired, InputRequired, NumberRange, Length
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators= [InputRequired(), Length(min=1, max=20)])
+    submit = SubmitField('Submit')
 
 class FilterForm(FlaskForm):
     breed1 = SelectField('Breed1')
@@ -15,7 +19,6 @@ class FilterForm(FlaskForm):
     young = BooleanField('Young')
     adult = BooleanField('Adult')
     senior = BooleanField('Senior')
-    # size = SelectMultipleField('Size', choices = ['Small', 'Medium', 'Large', 'Xlarge'])
     small = BooleanField('Small')
     medium = BooleanField('Medium')
     large = BooleanField('Large')

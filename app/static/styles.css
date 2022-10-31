@@ -28,3 +28,11 @@ a.page_links, a.page_links:visited {
     display: inline-block;
     padding: 8px 16px;
 }
+
+a.logout_link {
+    background-color: rgb(120, 67, 246);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}

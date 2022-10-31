@@ -1,5 +1,6 @@
 from app import forms, app
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, redirect, url_for, session
+from flask_session import Session
 import json
 from app.pet_helper import pet_info
 from app import forms
@@ -7,10 +8,27 @@ from app import forms
 pet_types_dict = pet_info.get_types_dict()
 param_dict = {}
 
-@app.route('/')
-@app.route('/index')
+def logged_in():
+    if 'username' in session.keys():
+        return True
+    return False
+
+@app.route('/', methods=["GET", "POST"])
+@app.route('/index', methods=["GET", "POST"])
 def index():
-    return render_template('index.html', pet_types_dict = pet_types_dict)
+    login_form = forms.LoginForm()
+    if login_form.validate_on_submit():
+        session['username'] = login_form.username.data
+        return redirect(url_for('index'))
+    if logged_in():
+        return render_template('index.html', pet_types_dict = pet_types_dict, username=session['username'])
+    return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form)
+
+@app.route('/logout')
+def logout():
+    # session.pop('username', None)
+    session.clear()
+    return redirect(url_for('index'))
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
