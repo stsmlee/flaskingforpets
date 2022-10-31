@@ -1,22 +1,38 @@
 {%extends 'base.html'%}
 {%block content%}
+<h1>Results!</h1>
 <p>
-    {% if res %}
-        {% for pet in res %}
-            {% for key, value in pet.items() %}
-                    {% if key == 'Profile Link' %}
-                        <p><b>{{key}} :</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a></p>
-                    {% elif key == 'Photos' %}
-                        {% for pic in value %}
-                        <img src="{{pic}}" alt="photo of {{pet['Name']}}">
-                        {% endfor %}
-                    {% else %}
-                        <p><b>{{key}}:</b> {{value}}</p>
-                    {% endif %}          
-            {% endfor %}
-            <hr style="height:2px;border-width:0;color:gray;background-color:gray">        
+    {% for pet in res %}
+        {% for key, value in pet.items() %}
+                {% if key == 'Profile Link' %}
+                    <b>{{key}} :</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a><br/>
+                {% elif key == 'Photos' %}
+                    {% for pic in value %}
+                    <img src="{{pic}}" alt="photo of {{pet['Name']}}">
+                    {% endfor %}<br/>
+                {% else %}
+                    <b>{{key}}:</b> {{value}}<br/>
+                {% endif %}          
         {% endfor %}
+        {% if res.index(pet) != res|length-1 %}
+            <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        {% endif %}  
+    {% endfor %}
+</p>
+<hr style="height:5px;border-width:0;color:gray;background-color:rgb(81, 81, 238)">   
+<p style="text-align:center;">
+    Results per page: {{pag['Results per page']}}<br/>
+    Total number of results: {{pag['Total number of results']}}<br/>
+    Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
+    {% if pag['Previous'] and pag['Next'] %}
+<p style="width:400px; margin:auto">        
+    <span style="float:left"><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a></span>
+    <span style="float:right"><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a></span>        
+</p>
+    {% elif pag['Previous'] %}
+    <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a>
+    {% elif pag['Next'] %}
+    <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a>  
     {% endif %}
 </p>
-
 {%endblock%}

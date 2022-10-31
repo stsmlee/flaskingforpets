@@ -16,3 +16,12 @@ a:hover {
 a:active {
     color:skyblue
 }
+
+ul li {
+    padding: 5px 0px;
+}
+
+a.page_links, a.page_links:visited {
+    background-color: rgb(81, 81, 238);
+    color: black;
+}

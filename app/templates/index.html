@@ -2,9 +2,9 @@
 {%block content%}
 <h1>SUP DOG</h1>
 <h2>PetFinder has so many types of pets that need good loving homes!</h2>
-<p>
-{% for type in pet_types_dict %} 
-<ul><a href = "{{url_for('animals', type=type)}}">{{type}}</a></ul>
-{% endfor %}
-</p>
+<ul>
+    {% for type in pet_types_dict %} 
+        <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
+    {% endfor %}
+</ul>
 {%endblock%}

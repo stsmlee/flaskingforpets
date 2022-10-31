@@ -57,6 +57,7 @@ update_all_types_breeds()
 json_obj = json.dumps(types_dict, indent = 4)
 with open('types.json', 'w') as outfile:
     outfile.write(json_obj)
+pet_types_dict = get_types_dict()
 
 base_url = 'https://api.petfinder.com'
 animals_url = 'https://api.petfinder.com/v2/animals'
@@ -71,12 +72,15 @@ def get_request(payload):
         return None
     return res_json
 
+# def get_more_pages(url):
+#     res = requests.get(base_url+url, headers = header)
+#     return res.json()
+
 null = None
 false = False
 true = True
 
 def parse_res_animals(res_animals):
-    exclude = {'type', 'status_changed_at'}
     parsed_list = []
     for pet in res_animals:
         current = {}
@@ -141,15 +145,47 @@ def parse_res_animals(res_animals):
                         if k == 'country':
                             contact_info += ', ' + v                            
         current['Contact Info'] = contact_info
-        parsed_list.append(current)
+        clean_cur = {k: v for k, v in current.items() if v}
+        parsed_list.append(clean_cur)
     return parsed_list
 
+def parse_res_pag(res_pag):
+    pag = {}
+    pag['Results per page'] = res_pag['count_per_page']
+    pag['Total number of results'] = res_pag['total_count']
+    pag['Current page'] = res_pag['current_page']
+    pag['Total pages'] = res_pag['total_pages']
+    if '_links' in res_pag.keys():
+        if 'previous' in res_pag['_links'].keys():
+            pag['Previous'] = True
+        else: 
+            pag['Previous'] = False
+        if 'next' in res_pag['_links'].keys():
+            pag['Next'] = True
+        else:
+            pag['Next'] = False
+    return pag
 
-# def string_to_dict(string):
-#     string = string[3:-3]
-#     dict = {}
-#     x = string.split(',%20')
-#     for i in x:
-#         a, b = i.split(':%20')
-#         dict[a] = b
-#     return dict
+def build_params(my_data, type):
+    payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':10}
+    if my_data['breed1'] != 'N/A':
+        payload['breed'] = my_data['breed1']
+    if my_data['breed2'] != 'N/A':
+        payload['breed'] += ',' + my_data['breed2']
+    if my_data['color'] != 'N/A':
+        payload['color'] = my_data['color']
+    if my_data['coat'] != 'N/A':
+        payload['coat'] = my_data['coat']
+    if my_data['gender'] != 'N/A':
+        payload['gender'] = my_data['gender']
+    if my_data['age']:
+        payload['age'] = ','.join(my_data['age'])
+    if my_data['size']:
+        payload['size'] = ','.join(my_data['size'])
+    if my_data['children']:
+        payload['good_with_children'] = 1
+    if my_data['dogs']:
+        payload['good_with_dogs'] = 1
+    if my_data['cats']:
+        payload['good_with_cats'] = 1
+    return payload
