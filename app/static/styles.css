@@ -36,3 +36,10 @@ a.logout_link {
     display: inline-block;
     padding: 8px 16px;
 }
+
+.alert {
+    padding: 20px;
+    margin: 5px;
+    color: #970020;
+    background-color: #ffd5de;
+}

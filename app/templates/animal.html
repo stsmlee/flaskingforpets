@@ -5,14 +5,15 @@
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{ form.errors|count }} error(s):
     <ul>
-    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
         {% for error in field_errors %}
             <li>{{ form[field_name].label }}: {{ error }}</li>
         {% endfor %}
     {% endfor %}
+    </ul>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% endif %}
+{% endif %} 
 
 <h1>So you want {{type | lower}}s!</h1>
 
@@ -39,4 +40,5 @@
     <p>{{ form.submit() }}</p>
   </form>
 </p>
+
 {%endblock%}

@@ -3,14 +3,14 @@ DROP TABLE IF EXISTS saves;
 
 CREATE TABLE users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL
+    username TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE saves(
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
    savename TEXT NOT NULL,
-   user_id INTEGER NOT NULL,
    params TEXT NOT NULL,
+   user_id INTEGER NOT NULL,
+   PRIMARY KEY (savename, user_id),
    FOREIGN KEY (user_id) REFERENCES users(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
