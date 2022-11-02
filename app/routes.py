@@ -28,10 +28,11 @@ def index():
     if login_form.validate_on_submit():
         session['username'] = login_form.username.data
         return redirect(url_for('index'))
-    if logged_in():
-        if 'saved searches' not in session.keys():
-            session['saved searches']={}
-        saves = [k for k in session['saved searches'].keys()]
+    if logged_in():  
+        user_saves = session['username'] + ' saved searches'
+        if user_saves not in session.keys():
+            session[user_saves] = {}
+        saves = [k for k in session[user_saves].keys()]
         reuse_form.savename.choices = saves
     if reuse_form.validate_on_submit():
         payload = session['saved searches'][reuse_form.savename.data]
@@ -43,8 +44,8 @@ def index():
 
 @app.route('/logout')
 def logout():
-    # session.pop('username', None)
-    session.clear()
+    session.pop('username', None)
+    # session.clear()
     return redirect(url_for('index'))
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
@@ -55,12 +56,13 @@ def animals(type):
     my_form.color.choices = ['N/A'] + pet_types_dict[type]['Colors']
     my_form.coat.choices = ['N/A'] + pet_types_dict[type]['Coats']
     if logged_in():
-        if 'saved searches' not in session.keys():
-            session['saved searches'] = {}
+        user_saves = session['username'] + ' saved searches'
+        if user_saves not in session.keys():
+            session[user_saves] = {}
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:
-            session['saved searches'][my_form.savename.data] = payload
+            session[user_saves][my_form.savename.data] = payload
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
     return render_template('animal.html', form = my_form, type=type, base_html = base_html(), login = logged_in())
 

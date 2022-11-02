@@ -174,8 +174,6 @@ def build_params(my_data, type):
         payload['coat'] = my_data['coat']
     if my_data['gender'] != 'N/A':
         payload['gender'] = my_data['gender']
-    # if my_data['age']:
-    #     payload['age'] = ','.join(my_data['age'])
     age = []
     if my_data['baby']:
         age.append('baby')
@@ -187,8 +185,6 @@ def build_params(my_data, type):
         age.append('senior')
     if age:
         payload['age'] = ','.join(age)
-    # if my_data['size']:
-    #     payload['size'] = ','.join(my_data['size'])
     size = []
     if my_data['small']:
         size.append('small')
