@@ -5,7 +5,6 @@ import json
 from app.pet_helper import pet_info
 import sqlite3
 from wtforms.validators import NoneOf, Length
-from wtforms import BooleanField
 
 
 pet_types_dict = pet_info.get_types_dict()
@@ -63,8 +62,30 @@ def get_savenames_params():
     conn.close()
     names_params = {}
     for row in res:
-        names_params[row['savename']] = row['params']
+        parastring = str(row['params'])[1:-1]
+        parastring = parastring.replace('\"', '')
+        names_params[row['savename']] = parastring
     return names_params
+
+def clean_up_req_dels(formdata):
+    req_dels = []
+    for selected in formdata:
+        name = ''
+        for l in selected:
+            if l == ':':
+                break
+            else:
+                name += l
+        req_dels.append(name)
+    return req_dels
+
+def delete_save(req_list):
+    conn = get_db_connection()
+    for savename in req_list:
+        conn.execute('DELETE FROM saves WHERE user_id = ? AND savename = ?', (session['user id'], savename))
+    conn.commit()
+    conn.close()
+    flash('Selected saved searches successfully cleared.', 'notice')
         
 
 @app.route('/', methods=["GET", "POST"])
@@ -123,20 +144,24 @@ def search(type,payload,page):
         return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
-@app.route('/clearsaves')
-def clear_saves():
-    conn = get_db_connection()
-    conn.execute('DELETE FROM saves WHERE user_id = ?', (session['user id'],))
-    conn.commit()
-    conn.close()
-    flash('Saved searches successfully cleared.', 'notice')
-    return redirect(url_for('index'))
+# @app.route('/clearsaves')
+# def clear_saves():
+#     conn = get_db_connection()
+#     conn.execute('DELETE FROM saves WHERE user_id = ?', (session['user id'],))
+#     conn.commit()
+#     conn.close()
+#     flash('Saved searches successfully cleared.', 'notice')
+#     return redirect(url_for('index'))
 
 @app.route('/manageaccount', methods=["GET", "POST"])
-def delete_saves():
+def manage_account():
     del_form = forms.DeleteSavesForm()
-    saves = get_savenames_params()
-    del_form.saves.choices = [k+': '+ str(v) for k,v in saves.items()]
+    saved = get_savenames_params()
+    del_form.saves.choices = [k+': '+ str(v) for k,v in saved.items()]
+    if del_form.validate_on_submit():
+        req_list = clean_up_req_dels(del_form.saves.data)
+        delete_save(req_list)
+        return redirect(url_for('manage_account'))
     return render_template('manage.html', form=del_form)
 
 @app.route('/logout')

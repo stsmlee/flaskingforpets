@@ -12,7 +12,7 @@
 <h2>PetFinder has so many types of pets that need good loving homes!</h2>
 
 {% if form %}
-<p>Do you want to log in?</p>
+<p>Do you want to log in to your session?</p>
 <form method="POST"><p>
     {{ form.hidden_tag() }}
     {{form.username.label}}: {{form.username()}} {{form.submit()}}
@@ -34,6 +34,5 @@ What type are you looking for?
     {{ re_form.savename.label }}: {{ re_form.savename() }}    {{ re_form.submit() }}
 </form></p>
 {% endif %}
-
 
 {%endblock%}

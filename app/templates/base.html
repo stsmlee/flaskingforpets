@@ -8,11 +8,17 @@
   </head>
   <body>
     <div class = "header">
-      <h4><a href="/">Home</a></h4>
+      <div><a href="/">Home</a></div>
       {%if session['username']%}
-      <nav><a href="{{url_for('clear_saves')}}" class="logout_link">Clear Your Saved Searches</a> <a href="{{url_for('logout')}}" class="logout_link">Log Out</a></nav>
+      <nav>
+        <ul>
+        <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
+        <li><a href="{{url_for('logout')}}">Log Out</a></li>
+        </ul>
+      </nav>
       {%endif%}
     </div>
+    <hr style="height:1px;border-width:0;color:gray;background-color:rgb(81, 81, 238)">   
 
     <div>{% with notices = get_flashed_messages(category_filter=['notice']) %}
       {% if notices %}
