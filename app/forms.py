@@ -1,7 +1,7 @@
 from flask import Flask
 import requests
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, RadioField, BooleanField, SelectField, IntegerField, SelectMultipleField
+from wtforms import StringField, SubmitField, TextAreaField, RadioField, BooleanField, SelectField, IntegerField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, InputRequired, NumberRange, Length, NoneOf
 
 class LoginForm(FlaskForm):
@@ -33,3 +33,11 @@ class FilterForm(FlaskForm):
     distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()])
     savename = StringField('Save Name')
     submit = SubmitField('Submit')
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+class DeleteSavesForm(FlaskForm):
+    saves = MultiCheckboxField('Saved Searches')
+    submit = SubmitField('Delete')

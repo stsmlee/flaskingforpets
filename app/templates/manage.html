@@ -1,0 +1,11 @@
+{%extends 'base.html'%}
+
+{%block title%}Manage your saved searches here!{%endblock%}
+
+{%block content%}
+<form method="POST"><p>
+    {{ form.hidden_tag() }}
+    {{ form.saves.label }} {{ form.saves() }}
+    {{form.submit()}}
+</p></form>
+{%endblock%}

@@ -3,9 +3,10 @@ from flask import Flask, render_template, redirect, url_for, session, flash
 from flask_session import Session
 import json
 from app.pet_helper import pet_info
-from app import forms
 import sqlite3
 from wtforms.validators import NoneOf, Length
+from wtforms import BooleanField
+
 
 pet_types_dict = pet_info.get_types_dict()
 
@@ -55,6 +56,16 @@ def get_params(savename):
     res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename, session['user id'])).fetchone()
     conn.close()
     return res[0]
+
+def get_savenames_params():
+    conn = get_db_connection()
+    res = conn.execute('SELECT savename,params FROM saves WHERE user_id = ?', (session['user id'],)).fetchall()
+    conn.close()
+    names_params = {}
+    for row in res:
+        names_params[row['savename']] = row['params']
+    return names_params
+        
 
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
@@ -109,7 +120,7 @@ def search(type,payload,page):
     res_json = pet_info.get_request(payload)
     print(res_json)
     if not res_json:
-        return render_template('no_results.html', type=type, base_html=base_html())
+        return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
 @app.route('/clearsaves')
@@ -120,6 +131,13 @@ def clear_saves():
     conn.close()
     flash('Saved searches successfully cleared.', 'notice')
     return redirect(url_for('index'))
+
+@app.route('/manageaccount', methods=["GET", "POST"])
+def delete_saves():
+    del_form = forms.DeleteSavesForm()
+    saves = get_savenames_params()
+    del_form.saves.choices = [k+': '+ str(v) for k,v in saves.items()]
+    return render_template('manage.html', form=del_form)
 
 @app.route('/logout')
 def logout():
