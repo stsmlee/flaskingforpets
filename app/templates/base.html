@@ -4,13 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type = "text/css" href={{ url_for('static', filename = 'styles.css') }}>
-    <title>Flasking for Pets!</title>
+    <title>{%block title%}{% endblock %}</title>
   </head>
   <body>
-    <div>
-      <a href="/">Home</a><br/>
+    <div class = "header">
+      <h4><a href="/">Home</a></h4>
+      {%if session['username']%}
+      <nav><a href="{{url_for('clear_saves')}}" class="logout_link">Clear Your Saved Searches</a> <a href="{{url_for('logout')}}" class="logout_link">Log Out</a></nav>
+      {%endif%}
     </div>
+
+    <div>{% with notices = get_flashed_messages(category_filter=['notice']) %}
+      {% if notices %}
+        <ul class="notice" >
+        {% for message in notices %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}</div>
+
+
     {% block content %}
     {% endblock %}
-  </body>
+
+    <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
+      {% if errs %}
+        <ul class="alert">
+        {% for message in errs %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}</div>
+
+</body>
+
 </html>

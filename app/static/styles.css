@@ -1,6 +1,13 @@
 h1 {
     color:midnightblue
 }
+
+.header {
+    /* background: #ccc;  */
+    display: flex;
+    justify-content: space-between;
+}
+
 a:link {
     color:navy
 }
@@ -35,11 +42,22 @@ a.logout_link {
     text-decoration: none;
     display: inline-block;
     padding: 8px 16px;
+    margin-top: 10px;
 }
 
 .alert {
-    padding: 20px;
-    margin: 5px;
+    display: inline-block;
+    padding: 0px 50px;
+    margin: 5px 5px;
     color: #970020;
     background-color: #ffd5de;
+}
+
+.notice {
+    /* display: inline-block; */
+    float: right;
+    padding: 0px 50px;
+    margin: 5px 5px;
+    color: #1e0246;
+    background-color: #c8b8f4d0;
 }

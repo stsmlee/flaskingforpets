@@ -1,8 +1,11 @@
-{%extends base_html%}
+{%extends 'base.html'%}
+
+<title>{%block title%}Flasking for {{type}}s{% endblock %}</title>
+
 {%block content%}
 
-{% if form.is_submitted() and form.errors|count > 0 %}
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
+<!-- {% if form.is_submitted() and form.errors|count > 0 %} -->
+<!-- <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{ form.errors|count }} error(s):
     <ul>
         {% for field_name, field_errors in form.errors|dictsort if field_errors %}
@@ -11,9 +14,9 @@
         {% endfor %}
     {% endfor %}
     </ul>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endif %} 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" data-close></button>
+</div> -->
+<!-- {% endif %} -->
 
 <h1>So you want {{type | lower}}s!</h1>
 
@@ -41,4 +44,37 @@
   </form>
 </p>
 
-{%endblock%}
+<!-- <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
+    {% if errs %}
+      <ul class=alert>
+      {% for message in errs %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}</div> -->
+
+<!-- {% if form.is_submitted() and form.savename.errors|count > 0 %}
+<div class="alert" data-closable>
+    <p style="text-align:center"><br/>
+        {% for error in form.savename.errors %}
+        {{form.savename.label}}: {{error}}
+        {% endfor %}
+    </p>
+    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+   <!-- </div> -->
+<!-- {% endif %}  --> 
+
+<!-- {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %} -->
+
+{%endblock%} 

@@ -16,6 +16,7 @@ def get_db_connection():
 
 def logged_in():
     if 'username' in session:
+    # if session['username']:
         return True
     return False
 
@@ -39,11 +40,11 @@ def get_user_id(username):
 def save_search(savename,params):
     conn = get_db_connection()
     # conn.execute('INSERT OR REPLACE INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
-    try:
-        conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
-        conn.commit()
-    except sqlite3.IntegrityError:
-        print('Needs a unique savename.')
+    # try:
+    conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
+    conn.commit()
+    # except sqlite3.IntegrityError:
+    #     print('Needs a unique savename.')
     conn.close()
 
 def get_savenames():
@@ -53,9 +54,6 @@ def get_savenames():
     results = [row['savename'] for row in res]
     return results
 
-def delete_db():
-    pass
-
 def get_params(savename):
     conn = get_db_connection()
     res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename, session['user id'])).fetchone()
@@ -63,8 +61,8 @@ def get_params(savename):
     return res[0]
 
 def base_html():
-    if logged_in():
-        return 'base_logged_in.html'
+    # if logged_in():
+    #     return 'base_logged_in.html'
     return 'base.html'
 
 @app.route('/', methods=["GET", "POST"])
@@ -87,14 +85,8 @@ def index():
         type = payload['type']
         return redirect(url_for('search', payload=json.dumps(payload), type = type, page=1))        
     if logged_in():
-        return render_template('index.html', pet_types_dict = pet_types_dict, username=session['username'], base_html='base_logged_in.html', re_form = reuse_form)
-    return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form, base_html='base.html')
-
-@app.route('/logout')
-def logout():
-    # session.pop('username', None)
-    session.clear()
-    return redirect(url_for('index'))
+        return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
+    return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form)
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
@@ -103,13 +95,20 @@ def animals(type):
     my_form.breed2.choices = my_form.breed1.choices
     my_form.color.choices = ['N/A'] + pet_types_dict[type]['Colors']
     my_form.coat.choices = ['N/A'] + pet_types_dict[type]['Coats']
-    my_form.savename.validators = [NoneOf(get_savenames()), Length(max=20)]
+    if logged_in():
+        savenames = get_savenames()
+        my_form.savename.validators = [NoneOf(savenames), Length(max=20)]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:
             save_search(my_form.savename.data, json.dumps(payload))
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
-    return render_template('animal.html', form = my_form, type=type, base_html = base_html(), login = logged_in())
+    elif logged_in() and my_form.savename.errors:
+        savestring = ', '.join(savenames)
+        msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
+        flash(msg, 'error')
+        return render_template('animal.html', form = my_form, type=type, login = logged_in())
+    return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
 @app.route('/animals/<type>/page<int:page>/<payload>')
 def search(type,payload,page):
@@ -117,9 +116,21 @@ def search(type,payload,page):
     payload['page'] = page
     res_json = pet_info.get_request(payload)
     if not res_json:
-        return render_template('no_results.html', type=type)
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), base_html=base_html())
+        return render_template('no_results.html', type=type, base_html=base_html())
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
+@app.route('/clearsaves')
+def clear_saves():
+    conn = get_db_connection()
+    conn.execute('DELETE FROM saves WHERE user_id = ?', (session['user id'],))
+    conn.commit()
+    conn.close()
+    flash('Saved searches successfully cleared.', 'notice')
+    return redirect(url_for('index'))
 
-
-
+@app.route('/logout')
+def logout():
+    # session.pop('username', None)
+    session.clear()
+    # flash('Successfully logged out.')
+    return redirect(url_for('index'))

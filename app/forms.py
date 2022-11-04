@@ -18,7 +18,6 @@ class FilterForm(FlaskForm):
     color = SelectField('Color')
     coat = SelectField('Coat')
     gender = SelectField('Gender', choices = ['N/A', 'Male', 'Female'])
-    # age = SelectMultipleField('Age', choices = ['Baby', 'Young', 'Adult', 'Senior'] )
     baby = BooleanField('Baby')   
     young = BooleanField('Young')
     adult = BooleanField('Adult')
