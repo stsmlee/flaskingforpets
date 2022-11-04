@@ -39,12 +39,8 @@ def get_user_id(username):
 
 def save_search(savename,params):
     conn = get_db_connection()
-    # conn.execute('INSERT OR REPLACE INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
-    # try:
     conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
     conn.commit()
-    # except sqlite3.IntegrityError:
-    #     print('Needs a unique savename.')
     conn.close()
 
 def get_savenames():
@@ -59,11 +55,6 @@ def get_params(savename):
     res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename, session['user id'])).fetchone()
     conn.close()
     return res[0]
-
-def base_html():
-    # if logged_in():
-    #     return 'base_logged_in.html'
-    return 'base.html'
 
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
@@ -113,8 +104,10 @@ def animals(type):
 @app.route('/animals/<type>/page<int:page>/<payload>')
 def search(type,payload,page):
     payload = json.loads(payload)
+    payload = pet_info.return_the_slash(payload)
     payload['page'] = page
     res_json = pet_info.get_request(payload)
+    print(res_json)
     if not res_json:
         return render_template('no_results.html', type=type, base_html=base_html())
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))

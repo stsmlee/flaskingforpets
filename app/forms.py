@@ -30,6 +30,6 @@ class FilterForm(FlaskForm):
     dogs = BooleanField('Good with Dogs')
     cats = BooleanField('Good with Cats')
     zipcode = StringField('Zipcode (Required)', default = '11101', validators = [InputRequired()])
-    distance = IntegerField('Distance (Miles)', default = 100, validators = [NumberRange(min=0, max=500), InputRequired()])
+    distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()])
     savename = StringField('Save Name')
     submit = SubmitField('Submit')

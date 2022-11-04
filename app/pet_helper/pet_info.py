@@ -65,6 +65,7 @@ animals_url = 'https://api.petfinder.com/v2/animals'
 
 def get_request(payload):
     res = requests.get(animals_url, headers = header, params = payload)
+    print(res)
     res_json = res.json()
     pagination = res_json['pagination']   
     total_hits = pagination['total_count']
@@ -128,7 +129,6 @@ def parse_res_animals(res_animals):
             if key != 'address' and val:
                 contact_info[key.title()] = val
             elif val:
-                # contact_info['Address'] = {}
                 contact_info = ""
                 for k,v in val.items():
                     if v:
@@ -202,4 +202,13 @@ def build_params(my_data, type):
         payload['good_with_dogs'] = 1
     if my_data['cats']:
         payload['good_with_cats'] = 1
+    for key, value in payload.items():
+        if isinstance(value,str):
+            payload[key] = value.replace('/', '%2F')
+    return payload
+
+def return_the_slash(payload):
+    for key, value in payload.items():
+        if isinstance(value, str):
+            payload[key] = value.replace('%2F','/')
     return payload
