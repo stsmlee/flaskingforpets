@@ -2,6 +2,7 @@ from app.pet_helper.sneaky import secret_dict
 # from asyncore import write
 import requests
 import json
+import html
 
 def get_types_dict():
     with open('types.json', 'r') as openfile:
@@ -112,7 +113,7 @@ def parse_res_animals(res_animals):
                 enviro.append(attr.title())
         current['Environment, Good with'] = ', '.join(enviro)
         current['Tags'] = ', '.join(pet['tags'])
-        current['Description'] = pet['description']
+        current['Description'] = html.unescape(pet['description'])
         if pet['organization_animal_id']:
             current['Organization Animal ID'] = pet['organization_animal_id']
         photo_links = []

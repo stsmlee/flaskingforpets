@@ -22,21 +22,21 @@
         {% endif %}  
     {% endfor %}
 </p>
+
 <hr style="height:5px;border-width:0;color:gray;background-color:rgb(81, 81, 238)">   
+
 <p style="text-align:center;">
     Results per page: {{pag['Results per page']}}<br/>
     Total number of results: {{pag['Total number of results']}}<br/>
     Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
-    {% if pag['Previous'] and pag['Next'] %}
-    <p style="width:500px; margin:auto">        
-        <span style="float:left"><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a></span>
-        <span style="float:right"><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a></span>
-        <br/><br/>     
-    </p>
-    {% elif pag['Previous'] %}
-        <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a><br/>
-    {% elif pag['Next'] %}
-        <br/><a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a><br/>
-    {% endif %}
 </p>
+<nav style="text-align:center;padding-bottom: 10px;">
+    {% if pag['Previous'] %}
+    <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a>
+    {% endif %}
+    {% if pag['Next'] %}
+    <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a>
+    {% endif %}
+</nav>
+
 {%endblock%}

@@ -1,8 +1,9 @@
 {%extends 'base.html'%}
+
 <title>{%block title%}No Results :({% endblock %}</title>
+
 {%block content%}
 <h3>
     <a href = "{{url_for('animals', type=type)}}">No results! Give it another try?</a> 
 </h3>
-
 {%endblock%}

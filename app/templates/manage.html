@@ -1,11 +1,25 @@
 {%extends 'base.html'%}
 
-{%block title%}Manage your saved searches here!{%endblock%}
+{%block title%}Manage Account{%endblock%}
 
 {%block content%}
+<style>
+/* ul,li {list-style:none; margin: 0px;cpadding: 0px;}  */
+
+ul,li { list-style-type: none;
+        list-style-position:inside;
+        margin:0;
+        padding:0; }
+</style>
+
+<h1>Manage your account here!</h1>
+<h4>Select which saved search(es) you would like to delete.</h4>
 <form method="POST"><p>
     {{ form.hidden_tag() }}
-    {{ form.saves.label }} {{ form.saves() }}
+    <!-- {{ form.saves.label }}  -->
+    {{ form.saves() }}
+    <br>
     {{form.submit()}}
 </p></form>
+
 {%endblock%}
