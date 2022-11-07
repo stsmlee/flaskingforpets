@@ -45,7 +45,7 @@ def save_search(savename,params):
     conn.commit()
     conn.close()
 
-def save_results(results, savename):
+def save_results_db(results, savename):
     conn = get_db_connection()
     conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, session['user id']))
     conn.commit()
@@ -111,15 +111,13 @@ def index():
             return redirect(url_for('search', payload=json.dumps(payload), type = type, page=1))   
         return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
     if login_form.validate_on_submit():
-        print('WE LOGGED IN')
+        # print('WE LOGGED IN')
         session['username'] = login_form.username.data
         session['user id'] = get_user_id(session['username'])
         flash("Login successful. Welcome back.", 'notice')
         return redirect(url_for('index'))
     else:
         flash_errors(login_form)  
-    # if logged_in():
-    #     return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
     return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form)
 
 @app.route('/register', methods=["GET", "POST"])
@@ -146,25 +144,37 @@ def animals(type):
         my_form.savename.validators = [NoneOf(savenames), Length(max=20)]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
-        save = 0
         if my_form.savename.data:
             save_search(my_form.savename.data, json.dumps(payload))
-        return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1, save=my_form.savename.data))
+            return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=1, savename=my_form.savename.data))
+        return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
     elif logged_in() and my_form.savename.errors:
         savestring = ', '.join(savenames)
         msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
         flash(msg, 'error')
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
-@app.route('/animals/<type>/page<int:page>/<payload>/save<save>')
-def search(type,payload,page,save):
+@app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
+def search_saved(type,payload,page,savename):
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
     res_json = pet_info.get_request(payload)
-    if save != 0:
-        results = pet_info.save_results(res_json, payload, saved_dict={})
-        save_results(results, save)
+    if not res_json:
+        return render_template('no_results.html', type=type)
+    print('MADE IT')
+    results = pet_info.save_results(res_json, saved_dict={})
+    print(results)
+    save_results_db(json.dumps(results), savename)
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+
+@app.route('/animals/<type>/page<int:page>/<payload>')
+def search(type,payload,page):
+    # print('MADE IT TO SEARCH')
+    payload = json.loads(payload)
+    payload = pet_info.return_the_slash(payload)
+    payload['page'] = page
+    res_json = pet_info.get_request(payload)
     if not res_json:
         return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))

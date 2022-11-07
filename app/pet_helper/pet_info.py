@@ -53,12 +53,12 @@ def update_all_types_breeds():
     for key in types_dict.keys():
         get_breeds(key)        
 
-types_dict = update_types()
+# types_dict = update_types()
 # update_all_types_breeds()
 # json_obj = json.dumps(types_dict, indent = 4)
 # with open('types.json', 'w') as outfile:
 #     outfile.write(json_obj)
-# pet_types_dict = get_types_dict()
+types_dict = get_types_dict()
 
 base_url = 'https://api.petfinder.com'
 animals_url = 'https://api.petfinder.com/v2/animals'
@@ -163,19 +163,21 @@ def parse_res_pag(res_pag):
             pag['Next'] = False
     return pag
 
-def save_results(res_json, payload, saved_dict = {}):
-    for i in range(len(res_json['animals'])):
-        saved_dict[res_json['animals'][i]['id']] = 0
-    pagination = res_json['pagination']
-    pag_links = pagination.get('_links', False)
-    if pag_links:
-        next = pag_links.get('next', False)
-        if next:
-            next = next['href']
-            res = requests.get(base_url + next, headers = header, params = payload)
-            save_results(res.json(), payload, saved_dict=saved_dict)
+def save_results(res_json, saved_dict = {}):
+    if res_json():
+        for i in range(len(res_json['animals'])):
+            saved_dict[res_json['animals'][i]['id']] = 0
+        pagination = res_json['pagination']
+        pag_links = pagination.get('_links', False)
+        if pag_links:
+            next = pag_links.get('next', False)
+            if next:
+                next = next['href']
+                print(next)
+                res = requests.get(base_url + next, headers = header)
+                save_results(res.json(), saved_dict=saved_dict)
     return saved_dict
-    # saved_searches[save_name]['results'] = saved_dict
+
 
 def build_params(my_data, type):
     payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':20}
