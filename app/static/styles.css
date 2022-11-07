@@ -90,3 +90,13 @@ a.page_links, a.page_links:visited {
     color: #1e0246;
     background-color: #c8b8f4d0;
 }
+
+.response_error {
+    display: inline-block;
+    /* float: right; */
+    padding: 10px 20px;
+    margin: 5px 5px;
+    font-size: 1.3em;
+    color: #1e0246;
+    background-color: #c8b8f4d0;
+}

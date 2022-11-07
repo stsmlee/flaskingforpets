@@ -108,7 +108,7 @@ def index():
             payload = get_params(reuse_form.savename.data)
             payload = json.loads(payload)
             type = payload['type']
-            return redirect(url_for('search', payload=json.dumps(payload), type = type, page=1))   
+            return redirect(url_for('search_saved', payload=json.dumps(payload), type = type, page=1, savename = reuse_form.savename.data))   
         return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
     if login_form.validate_on_submit():
         # print('WE LOGGED IN')
@@ -160,6 +160,10 @@ def search_saved(type,payload,page,savename):
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
     res_json = pet_info.get_request(payload)
+    # print(res_json)
+    if isinstance(res_json, int):
+        flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
+        return redirect(url_for('index'))
     if not res_json:
         return render_template('no_results.html', type=type)
     print('MADE IT')
@@ -175,6 +179,9 @@ def search(type,payload,page):
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
     res_json = pet_info.get_request(payload)
+    if isinstance(res_json, int):
+        flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
+        return redirect(url_for('index'))
     if not res_json:
         return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))

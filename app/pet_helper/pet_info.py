@@ -67,12 +67,17 @@ animals_url = 'https://api.petfinder.com/v2/animals'
 def get_request(payload):
     res = requests.get(animals_url, headers = header, params = payload)
     print(res)
-    res_json = res.json()
-    pagination = res_json['pagination']   
-    total_hits = pagination['total_count']
-    if total_hits <= 0:
-        return None
-    return res_json
+    # print(res.status_code)
+    if res.status_code == 200:
+        res_json = res.json()
+        pagination = res_json['pagination']   
+        total_hits = pagination['total_count']
+        if total_hits <= 0:
+            return None
+        return res_json
+    else:
+        # print(res.status_code)
+        return res.status_code
 
 null = None
 false = False

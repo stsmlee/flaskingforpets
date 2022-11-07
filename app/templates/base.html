@@ -32,6 +32,16 @@
       {% endif %}
     {% endwith %}</div>
 
+    <div style="text-align: center;">{% with notices = get_flashed_messages(category_filter=['response error']) %}
+      {% if notices %}
+        <div class="response_error">
+        {% for message in notices %}
+          {{ message }}
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}</div>
+
 
     {% block content %}
     {% endblock %}
