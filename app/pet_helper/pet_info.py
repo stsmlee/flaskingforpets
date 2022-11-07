@@ -163,8 +163,22 @@ def parse_res_pag(res_pag):
             pag['Next'] = False
     return pag
 
+def save_results(res_json, payload, saved_dict = {}):
+    for i in range(len(res_json['animals'])):
+        saved_dict[res_json['animals'][i]['id']] = 0
+    pagination = res_json['pagination']
+    pag_links = pagination.get('_links', False)
+    if pag_links:
+        next = pag_links.get('next', False)
+        if next:
+            next = next['href']
+            res = requests.get(base_url + next, headers = header, params = payload)
+            save_results(res.json(), payload, saved_dict=saved_dict)
+    return saved_dict
+    # saved_searches[save_name]['results'] = saved_dict
+
 def build_params(my_data, type):
-    payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':10}
+    payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':20}
     if my_data['breed1'] != 'N/A':
         payload['breed'] = my_data['breed1']
     if my_data['breed2'] != 'N/A':

@@ -7,9 +7,9 @@ def get_db_connection():
 
 def get_tofu(username):
     conn = get_db_connection()
-    userid = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
-    print(userid['id'])
-    print(userid[0])
+    res = conn.execute('SELECT username, password FROM users WHERE username = ?', (username,)).fetchone()
+    print(res['password'])
+    conn.close()
 
 def get_info():
     conn = get_db_connection()
@@ -22,6 +22,7 @@ def get_info():
             # print(row[1])
             print(row['id'])
             print(row['username'])
+            print(row['password'])
     saved = conn.execute('SELECT * FROM saves').fetchall()
     if not saved:
         print('No saved searches in the database.')

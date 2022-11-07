@@ -15,7 +15,9 @@
 <p>Do you want to log in to your session?</p>
 <form method="POST"><p>
     {{ form.hidden_tag() }}
-    {{form.username.label}}: {{form.username()}} {{form.submit()}}
+    {{form.username.label}}: {{form.username()}} 
+    {{form.password.label}}: {{form.password()}}
+    {{form.submit()}}
 </p></form>
 {% endif %}
 

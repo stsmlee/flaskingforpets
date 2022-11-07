@@ -4,8 +4,8 @@ from flask_session import Session
 import json
 from app.pet_helper import pet_info
 import sqlite3
-from wtforms.validators import NoneOf, Length
-
+from wtforms.validators import NoneOf, Length, ValidationError
+from argon2 import PasswordHasher
 
 pet_types_dict = pet_info.get_types_dict()
 
@@ -14,22 +14,24 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f"Error in {field} field - {error}", 'error')
+
+def register_user_db(username, password):
+    ph = PasswordHasher()
+    hash = ph.hash(password)
+    conn = get_db_connection()
+    conn.execute('INSERT INTO users (username, password) VALUES (?,?)', (username,hash))
+    flash(f'Successfully registered. Welcome {username}!', 'notice')
+    conn.commit()
+    conn.close()
+
 def logged_in():
     if 'username' in session:
-    # if session['username']:
         return True
     return False
-
-def check_user(username):
-    conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users WHERE username = ?',
-                        (username,)).fetchone()
-    if user is None:
-        conn.execute('INSERT INTO users (username) VALUES (?)',
-            (username,))
-        conn.commit()
-    conn.close()
-    return
 
 def get_user_id(username):
     conn = get_db_connection()
@@ -40,6 +42,12 @@ def get_user_id(username):
 def save_search(savename,params):
     conn = get_db_connection()
     conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
+    conn.commit()
+    conn.close()
+
+def save_results(results, savename):
+    conn = get_db_connection()
+    conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, session['user id']))
     conn.commit()
     conn.close()
 
@@ -87,29 +95,44 @@ def delete_save(req_list):
     conn.close()
     flash('Selected saved searches successfully cleared.', 'notice')
         
-
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
     login_form = forms.LoginForm()
     reuse_form = forms.ReuseForm()
-    if login_form.validate_on_submit():
-        session['username'] = login_form.username.data
-        check_user(session['username'])
-        session['user id'] = get_user_id(session['username'])
-        return redirect(url_for('index'))
     if logged_in():  
         session['user id'] = get_user_id(session['username'])
         res = get_savenames()
         reuse_form.savename.choices = res
-    if reuse_form.validate_on_submit():
-        payload = get_params(reuse_form.savename.data)
-        payload = json.loads(payload)
-        type = payload['type']
-        return redirect(url_for('search', payload=json.dumps(payload), type = type, page=1))        
-    if logged_in():
+        if reuse_form.validate_on_submit():
+            payload = get_params(reuse_form.savename.data)
+            payload = json.loads(payload)
+            type = payload['type']
+            return redirect(url_for('search', payload=json.dumps(payload), type = type, page=1))   
         return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
+    if login_form.validate_on_submit():
+        print('WE LOGGED IN')
+        session['username'] = login_form.username.data
+        session['user id'] = get_user_id(session['username'])
+        flash("Login successful. Welcome back.", 'notice')
+        return redirect(url_for('index'))
+    else:
+        flash_errors(login_form)  
+    # if logged_in():
+    #     return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
     return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form)
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    form = forms.RegisterForm()
+    flash_errors(form)
+    if form.validate_on_submit():
+        register_user_db(form.username.data,form.password.data)
+        session['username'] = form.username.data
+        return redirect(url_for('index'))
+    else:
+        flash_errors(form)
+    return render_template('register.html', form = form)
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
@@ -123,23 +146,25 @@ def animals(type):
         my_form.savename.validators = [NoneOf(savenames), Length(max=20)]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
+        save = 0
         if my_form.savename.data:
             save_search(my_form.savename.data, json.dumps(payload))
-        return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
+        return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1, save=my_form.savename.data))
     elif logged_in() and my_form.savename.errors:
         savestring = ', '.join(savenames)
         msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
         flash(msg, 'error')
-        return render_template('animal.html', form = my_form, type=type, login = logged_in())
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
-@app.route('/animals/<type>/page<int:page>/<payload>')
-def search(type,payload,page):
+@app.route('/animals/<type>/page<int:page>/<payload>/save<save>')
+def search(type,payload,page,save):
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
     res_json = pet_info.get_request(payload)
-    print(res_json)
+    if save != 0:
+        results = pet_info.save_results(res_json, payload, saved_dict={})
+        save_results(results, save)
     if not res_json:
         return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
@@ -168,5 +193,5 @@ def manage_account():
 def logout():
     # session.pop('username', None)
     session.clear()
-    # flash('Successfully logged out.')
+    flash('Successfully logged out.', 'notice')
     return redirect(url_for('index'))

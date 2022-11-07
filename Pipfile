@@ -9,6 +9,7 @@ wtforms = "*"
 flask-wtf = "*"
 requests = "*"
 flask-session = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 
