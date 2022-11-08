@@ -166,9 +166,8 @@ def search_saved(type,payload,page,savename):
         return redirect(url_for('index'))
     if not res_json:
         return render_template('no_results.html', type=type)
-    print('MADE IT')
     results = pet_info.save_results(res_json, saved_dict={})
-    print(results)
+    print(len(results))
     save_results_db(json.dumps(results), savename)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 

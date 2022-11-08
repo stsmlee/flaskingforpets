@@ -118,7 +118,8 @@ def parse_res_animals(res_animals):
                 enviro.append(attr.title())
         current['Environment, Good with'] = ', '.join(enviro)
         current['Tags'] = ', '.join(pet['tags'])
-        current['Description'] = html.unescape(pet['description'])
+        if pet['description']:
+            current['Description'] = html.unescape(pet['description'])
         if pet['organization_animal_id']:
             current['Organization Animal ID'] = pet['organization_animal_id']
         photo_links = []
@@ -168,19 +169,20 @@ def parse_res_pag(res_pag):
             pag['Next'] = False
     return pag
 
-def save_results(res_json, saved_dict = {}):
-    if res_json():
+def save_results(res_json, saved_dict = {}, count=1):
+    if res_json:
         for i in range(len(res_json['animals'])):
             saved_dict[res_json['animals'][i]['id']] = 0
         pagination = res_json['pagination']
         pag_links = pagination.get('_links', False)
-        if pag_links:
+        if pag_links and count < 10:
             next = pag_links.get('next', False)
             if next:
                 next = next['href']
-                print(next)
+                # print(next)
+                count += 1
                 res = requests.get(base_url + next, headers = header)
-                save_results(res.json(), saved_dict=saved_dict)
+                save_results(res.json(), saved_dict=saved_dict, count=count)
     return saved_dict
 
 
