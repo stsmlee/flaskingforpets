@@ -181,7 +181,7 @@ def save_results(res_json, saved_dict = {}, count=1):
             saved_dict[res_json['animals'][i]['id']] = 0
         pagination = res_json['pagination']
         pag_links = pagination.get('_links', False)
-        if pag_links and count < 10:
+        if pag_links and count < 5:
             next = pag_links.get('next', False)
             if next:
                 next = next['href']
@@ -191,34 +191,33 @@ def save_results(res_json, saved_dict = {}, count=1):
                 save_results(res.json(), saved_dict=saved_dict, count=count)
     return saved_dict
 
-def check_for_new_results(savename, user_id):
-    new = False
+def check_for_new_results(user_id):
     conn = get_db_connection()
-    saved_search = conn.execute('SELECT results,payload FROM saves WHERE savename = ? AND user_id = ?', (savename, user_id)).fetchone()
+    saved_searches = conn.execute('SELECT savename, results, params FROM saves WHERE user_id = ?', (user_id,)).fetchall()
     conn.close()
-    prev_results = json.loads(saved_search['results'])
-    params = json.loads(saved_search['params'])
-    new_req = get_request(params)
-    if isinstance(new_req, int):
-        return new_req.statuscode
-    new_results = save_results(new_req)
-    if new_results and not prev_results:
-        print('You went from zero to new results!')
-        new = True
-    elif not new_results:
-        print('No results.')
-        new = False
-    else:
-        for id in new_results:
-            # str(id?)
-            if id not in prev_results:
-                print('You have new results!')
-                new = True
-                break
-    return new
-
-# print(check_for_new_results('akis', 1))
-
+    results = {}
+    for row in saved_searches:
+        print(row['savename'])
+        prev_results = json.loads(row['results'])
+        print(prev_results)
+        params = json.loads(row['params'])
+        new_req = get_request(params)
+        # print(new_req['animals'][0]['id'])
+        if isinstance(new_req, int):
+            results[row['savename']] = new_req
+            continue
+        new_results = save_results(new_req, saved_dict={}, count = 1)
+        print(new_results)
+        if new_results and not prev_results:
+            print('You went from zero to new results!')
+            results[row['savename']] = 'New'
+        else:
+            for id in new_results:
+                if str(id) not in prev_results:
+                    print('You have new results!')
+                    results[row['savename']] = 'New'
+                    break
+    return results
 
 def build_params(my_data, type):
     payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':20}

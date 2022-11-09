@@ -1,5 +1,5 @@
 from app import forms, app
-from flask import Flask, render_template, redirect, url_for, session, flash
+from flask import Flask, render_template, redirect, url_for, session, flash, request
 from flask_session import Session
 import json
 from app.pet_helper import pet_info
@@ -134,8 +134,20 @@ def register():
 
 @app.route('/whatsnews')
 def check_updates():
-    conn = get_db_connection()
-    
+    results = pet_info.check_for_new_results(session['user id'])
+    new_stuff = []
+    for savename, result in results.items():
+        if isinstance(result, int):
+            flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
+            return redirect(url_for('index'))
+        else:
+            new_stuff.append(savename)
+    if new_stuff:
+        for search in new_stuff:
+            flash(f'{search} has new results!', 'notice')
+    else:
+        flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
+    return redirect(request.referrer)
 
 
 @app.route('/animals/<type>', methods=["GET", "POST"])

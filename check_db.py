@@ -5,12 +5,6 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def get_tofu(username):
-    conn = get_db_connection()
-    res = conn.execute('SELECT username, password FROM users WHERE username = ?', (username,)).fetchone()
-    print(res['password'])
-    conn.close()
-
 def get_info():
     conn = get_db_connection()
     user = conn.execute('SELECT * FROM users').fetchall()
@@ -42,10 +36,8 @@ def get_savenames():
     print(results) 
 
 get_info()
-# get_tofu('Tofu')
-# get_saved_searches()
 
-conn = get_db_connection()
-change = conn.execute('UPDATE saves SET results  = ? WHERE savename = ? AND user_id = ?', ("{}", 'akis', 1))
-conn.commit()
-conn.close()
+# conn = get_db_connection()
+# change = conn.execute('UPDATE saves SET results  = ? WHERE user_id = ?', ("{}", 1))
+# conn.commit()
+# conn.close()
