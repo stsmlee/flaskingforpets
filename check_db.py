@@ -30,7 +30,8 @@ def get_info():
         for row in saved:
             print(row[0])
             print(row[1])
-            print(row[2])       
+            print(row[2])
+            print(row[3])
     conn.close()
 
 def get_savenames():
@@ -43,3 +44,8 @@ def get_savenames():
 get_info()
 # get_tofu('Tofu')
 # get_saved_searches()
+
+conn = get_db_connection()
+change = conn.execute('UPDATE saves SET results  = ? WHERE savename = ? AND user_id = ?', ("{}", 'akis', 1))
+conn.commit()
+conn.close()

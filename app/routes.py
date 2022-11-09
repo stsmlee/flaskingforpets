@@ -132,6 +132,12 @@ def register():
         flash_errors(form)
     return render_template('register.html', form = form)
 
+@app.route('/whatsnews')
+def check_updates():
+    conn = get_db_connection()
+    
+
+
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
     my_form = forms.FilterForm()
@@ -160,7 +166,6 @@ def search_saved(type,payload,page,savename):
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
     res_json = pet_info.get_request(payload)
-    # print(res_json)
     if isinstance(res_json, int):
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))

@@ -3,6 +3,12 @@ from app.pet_helper.sneaky import secret_dict
 import requests
 import json
 import html
+import sqlite3
+
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def get_types_dict():
     with open('types.json', 'r') as openfile:
@@ -179,11 +185,39 @@ def save_results(res_json, saved_dict = {}, count=1):
             next = pag_links.get('next', False)
             if next:
                 next = next['href']
-                # print(next)
+                print(next)
                 count += 1
                 res = requests.get(base_url + next, headers = header)
                 save_results(res.json(), saved_dict=saved_dict, count=count)
     return saved_dict
+
+def check_for_new_results(savename, user_id):
+    new = False
+    conn = get_db_connection()
+    saved_search = conn.execute('SELECT results,payload FROM saves WHERE savename = ? AND user_id = ?', (savename, user_id)).fetchone()
+    conn.close()
+    prev_results = json.loads(saved_search['results'])
+    params = json.loads(saved_search['params'])
+    new_req = get_request(params)
+    if isinstance(new_req, int):
+        return new_req.statuscode
+    new_results = save_results(new_req)
+    if new_results and not prev_results:
+        print('You went from zero to new results!')
+        new = True
+    elif not new_results:
+        print('No results.')
+        new = False
+    else:
+        for id in new_results:
+            # str(id?)
+            if id not in prev_results:
+                print('You have new results!')
+                new = True
+                break
+    return new
+
+# print(check_for_new_results('akis', 1))
 
 
 def build_params(my_data, type):
