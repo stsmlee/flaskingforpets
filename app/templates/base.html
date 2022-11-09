@@ -7,56 +7,57 @@
     <title>{%block title%}{% endblock %}</title>
   </head>
   <body>
-    <div class = "header">
-      <div><a href="/">Home</a></div>
-      <nav>
-        <ul>      
-        {%if session['username']%}
-        <li><a href="{{url_for('check_updates')}}">What's News?</a></li>
-        <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
-        <li><a href="{{url_for('logout')}}">Log Out</a></li>
-        {%else%}
-        <li><a href="{{url_for('register')}}">Register</a></li>
-        {%endif%}
-        </ul>
-      </nav>
-    </div>
-    <hr style="height:1px;border-width:0;color:gray;background-color:rgb(81, 81, 238)">   
+    <div id="container">
+      <div class = "header">
+        <div><a href="/">Home</a></div>
+        <nav>
+          <ul>      
+          {%if session['username']%}
+          <li><a href="{{url_for('check_updates')}}">What's News?</a></li>
+          <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
+          <li><a href="{{url_for('logout')}}">Log Out</a></li>
+          {%else%}
+          <li><a href="{{url_for('register')}}">Register</a></li>
+          {%endif%}
+          </ul>
+        </nav>
+      </div>
+      <!-- <hr style="height:1px;border-width:0;color:gray;background-color:rgb(81, 81, 238)">    -->
 
-    <div>{% with notices = get_flashed_messages(category_filter=['notice']) %}
-      {% if notices %}
-        <ul class="notice" >
-        {% for message in notices %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}</div>
+      <div>{% with notices = get_flashed_messages(category_filter=['notice']) %}
+        {% if notices %}
+          <ul class="notice" >
+          {% for message in notices %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}</div>
 
-    <div style="text-align: center;">{% with notices = get_flashed_messages(category_filter=['response error']) %}
-      {% if notices %}
-        <div class="response_error">
-        {% for message in notices %}
-          {{ message }}
-        {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}</div>
+      <div style="text-align: center;">{% with notices = get_flashed_messages(category_filter=['response error']) %}
+        {% if notices %}
+          <div class="response_error">
+          {% for message in notices %}
+            {{ message }}
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}</div>
 
 
-    {% block content %}
-    {% endblock %}
+      {% block content %}
+      {% endblock %}
 
-    <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
-      {% if errs %}
-        <ul class="alert">
-        {% for message in errs %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}</div>
-
+      <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
+        {% if errs %}
+          <ul class="alert">
+          {% for message in errs %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}</div>
+  </div>
 </body>
 
 </html>
