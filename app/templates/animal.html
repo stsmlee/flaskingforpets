@@ -44,6 +44,12 @@
   </form>
 </p>
 
+{% if type == 'Dog' %}
+<div class = 'sticker'>
+    <img src = "{{ url_for('static', filename = 'kimchibun.png') }}" alt = "the cutest pitbull ever, Kimchi Bun" style = "width:200px;height:auto;">
+</div>
+{% endif %}
+
 <!-- <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
     {% if errs %}
       <ul class=alert>

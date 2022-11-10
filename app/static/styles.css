@@ -1,6 +1,20 @@
 html, body {
     padding: 0;
     margin: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1em;
+}
+
+.form_font {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 100%;
+}
+
+.submit_button {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 100%;
+    color: #1e0246;
+    background-color: #cebff5d0;
 }
 
 h1 {
@@ -91,7 +105,7 @@ a.page_links, a.page_links:visited {
     /* display: inline-block; */
     float: right;
     padding: 0px 50px;
-    margin: 5px 5px;
+    margin: 10px 5px;
     color: #1e0246;
     background-color: #c8b8f4d0;
 }

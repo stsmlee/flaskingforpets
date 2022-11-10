@@ -46,16 +46,16 @@ def verify_password(form,field):
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), Length(min=1, max=20), verify_user])
     password = PasswordField('Password', validators= [InputRequired(), verify_password])
-    submit = SubmitField('Login')
+    submit = SubmitField('Login',render_kw= {'class': 'submit_button'})
 
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), Length(min=1, max=20), username_check])
     password = PasswordField('Password', validators= [InputRequired(), password_check])
-    submit = SubmitField('Register')
+    submit = SubmitField('Register', render_kw= {'class': 'submit_button'})
 
 class ReuseForm(FlaskForm):
-    savename = SelectField('Saved Searches')
-    submit = SubmitField('Let\'s Go!')
+    savename = SelectField('Saved Searches', render_kw= {'class': 'form_font'})
+    submit = SubmitField('Let\'s Go!', render_kw= {'class': 'submit_button'})
 
 class FilterForm(FlaskForm):
     breed1 = SelectField('Breed1')
@@ -77,7 +77,7 @@ class FilterForm(FlaskForm):
     zipcode = StringField('Zipcode (Required)', default = '11101', validators = [InputRequired()])
     distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()])
     savename = StringField('Save Name', validators=[Length(min=3)])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
@@ -85,4 +85,4 @@ class MultiCheckboxField(SelectMultipleField):
 
 class DeleteSavesForm(FlaskForm):
     saves = MultiCheckboxField('Saved Searches')
-    submit = SubmitField('Delete')
+    submit = SubmitField('Delete', render_kw= {'class': 'submit_button'})
