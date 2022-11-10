@@ -58,11 +58,11 @@ class ReuseForm(FlaskForm):
     submit = SubmitField('Let\'s Go!', render_kw= {'class': 'submit_button'})
 
 class FilterForm(FlaskForm):
-    breed1 = SelectField('Breed1')
-    breed2 = SelectField('Breed2')
-    color = SelectField('Color')
-    coat = SelectField('Coat')
-    gender = SelectField('Gender', choices = ['N/A', 'Male', 'Female'])
+    breed1 = SelectField('Breed1', render_kw= {'class': 'form_font'})
+    breed2 = SelectField('Breed2', render_kw= {'class': 'form_font'})
+    color = SelectField('Color', render_kw= {'class': 'form_font'})
+    coat = SelectField('Coat', render_kw= {'class': 'form_font'})
+    gender = SelectField('Gender', choices = ['N/A', 'Male', 'Female'], render_kw= {'class': 'form_font'})
     baby = BooleanField('Baby')   
     young = BooleanField('Young')
     adult = BooleanField('Adult')
@@ -85,4 +85,4 @@ class MultiCheckboxField(SelectMultipleField):
 
 class DeleteSavesForm(FlaskForm):
     saves = MultiCheckboxField('Saved Searches')
-    submit = SubmitField('Delete', render_kw= {'class': 'submit_button'})
+    submit = SubmitField('Delete Saved Search(es)', render_kw= {'class': 'submit_button'})

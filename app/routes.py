@@ -190,7 +190,6 @@ def search_saved(type,payload,page,savename):
 
 @app.route('/animals/<type>/page<int:page>/<payload>')
 def search(type,payload,page):
-    # print('MADE IT TO SEARCH')
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
@@ -202,25 +201,34 @@ def search(type,payload,page):
         return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
-# @app.route('/clearsaves')
-# def clear_saves():
-#     conn = get_db_connection()
-#     conn.execute('DELETE FROM saves WHERE user_id = ?', (session['user id'],))
-#     conn.commit()
-#     conn.close()
-#     flash('Saved searches successfully cleared.', 'notice')
-#     return redirect(url_for('index'))
+@app.route('/deleteaccount')
+def delete_account():
+    return render_template('delete.html')
+
+@app.route('/deleteaccount/confirm')
+def confirm_delete():
+    conn = get_db_connection()
+    conn.execute('DELETE FROM users WHERE id = ?', (session['user id'],))
+    conn.commit()
+    conn.close()
+    flash('Account successfully deleted.', 'notice')
+    session.clear()
+    return redirect(url_for('index'))
 
 @app.route('/manageaccount', methods=["GET", "POST"])
 def manage_account():
     del_form = forms.DeleteSavesForm()
     saved = get_savenames_params()
-    del_form.saves.choices = [k+': '+ str(v) for k,v in saved.items()]
-    if del_form.validate_on_submit():
-        req_list = clean_up_req_dels(del_form.saves.data)
-        delete_save(req_list)
-        return redirect(url_for('manage_account'))
-    return render_template('manage.html', form=del_form)
+    if saved:
+        del_form.saves.choices = [k+': '+ str(v) for k,v in saved.items()]
+        if del_form.validate_on_submit():
+            req_list = clean_up_req_dels(del_form.saves.data)
+            delete_save(req_list)
+            return redirect(url_for('manage_account'))
+        return render_template('manage.html', form=del_form)
+    if not saved:
+        return render_template('manage.html')
+
 
 @app.route('/logout')
 def logout():

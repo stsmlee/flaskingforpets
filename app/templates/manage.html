@@ -3,9 +3,8 @@
 {%block title%}Manage Account{%endblock%}
 
 {%block content%}
-<style>
-/* ul,li {list-style:none; margin: 0px;cpadding: 0px;}  */
 
+<style>
 ul,li { list-style-type: none;
         list-style-position:inside;
         margin:0;
@@ -13,6 +12,7 @@ ul,li { list-style-type: none;
 </style>
 
 <h1>Manage your account here!</h1>
+{%if form%}
 <h4>Select which saved search(es) you would like to delete.</h4>
 <form method="POST"><p>
     {{ form.hidden_tag() }}
@@ -21,5 +21,11 @@ ul,li { list-style-type: none;
     <br>
     {{form.submit()}}
 </p></form>
+{%else%}
+<h4>No saved searches at the moment.</h4>
+{%endif%}
 
+
+<h4>Delete your account completely?</h4>
+    <a href="{{url_for('delete_account')}}" class = 'delete_link'>Delete!</a>
 {%endblock%}
