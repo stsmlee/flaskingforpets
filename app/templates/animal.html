@@ -50,15 +50,13 @@
 </div>
 {% endif %}
 
-<!-- <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
-    {% if errs %}
-      <ul class=alert>
-      {% for message in errs %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}</div> -->
+
+{% if type == 'Cat' %}
+<div class = 'sticker'>
+    <img src = "{{ url_for('static', filename = 'sieg.png') }}" alt = "the softest cat ever, Siegfried" style = "width:300px;height:auto;">
+</div>
+{% endif %}
+
 
 <!-- {% if form.is_submitted() and form.savename.errors|count > 0 %}
 <div class="alert" data-closable>
@@ -73,14 +71,5 @@
    <!-- </div> -->
 <!-- {% endif %}  --> 
 
-<!-- {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %} -->
 
 {%endblock%} 

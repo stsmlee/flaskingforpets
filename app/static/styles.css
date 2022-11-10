@@ -144,7 +144,6 @@ a.delete_link {
 }
 
 div.sticker {
-    /* position: -webkit-sticky; */
     position: absolute;
     bottom: 0;
     right: 0;
