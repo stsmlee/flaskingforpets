@@ -4,24 +4,28 @@
 
 {%block content%}
 <h1>Results!</h1>
-<p>
     {% for pet in res %}
+    <p>
         {% for key, value in pet.items() %}
                 {% if key == 'Profile Link' %}
                     <b>{{key}} :</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a><br/>
                 {% elif key == 'Photos' %}
+                <span class = 'pics'>
                     {% for pic in value %}
-                    <img src="{{pic}}" alt="photo of {{pet['Name']}}">
+                    <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = 'results'>
                     {% endfor %}<br/>
+                </span>
                 {% else %}
                     <b>{{key}}:</b> {{value}}<br/>
                 {% endif %}          
         {% endfor %}
         {% if res.index(pet) != res|length-1 %}
-            <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+            <br>
+            <hr style="height:3px;border-width:0;border-radius:10px;color:gray;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #7461a5, #7461a5, #7461a5, rgba(0, 0, 0, 0));">
+            <br>
         {% endif %}  
+    </p>
     {% endfor %}
-</p>
 
 <hr style="height:5px;border-width:0;border-radius:10px;color:gray;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #cebff5d0, #cebff5d0, #cebff5d0, rgba(0, 0, 0, 0));">
 

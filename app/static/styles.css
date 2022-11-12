@@ -7,6 +7,7 @@ html, body {
 
 p {
     font-size: 1em;
+    line-height: 2em;
 }
 
 .form_font {
@@ -148,4 +149,18 @@ div.sticker {
     bottom: 0;
     right: 0;
     height: 218px;
+}
+
+img.results {
+    height: 200px;
+    width: auto;
+    margin-right: 2px;
+}
+
+span.pics {
+    display:flex; 
+    align-items:center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
