@@ -93,10 +93,9 @@ def parse_res_animals(res_animals):
     parsed_list = []
     for pet in res_animals:
         current = {}
-        current['ID'] = pet['id']
-        current['Organization ID'] = pet['organization_id']
         current['Name'] = pet['name']
-        current['Profile Link'] = pet['url']
+        current['ID'] = pet['id']
+        current['Petfinder Profile Link'] = pet['url']
         current['Species'] = pet['species']        
         breeds = []
         for attr,br in pet['breeds'].items():
@@ -126,6 +125,8 @@ def parse_res_animals(res_animals):
         current['Tags'] = ', '.join(pet['tags'])
         if pet['description']:
             current['Description'] = html.unescape(pet['description'])
+        if pet['organization_id']:
+            current['Organization ID'] = pet['organization_id']
         if pet['organization_animal_id']:
             current['Organization Animal ID'] = pet['organization_animal_id']
         photo_links = []

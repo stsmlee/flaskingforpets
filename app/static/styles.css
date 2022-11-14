@@ -80,13 +80,6 @@ ul li {
 }
 
 a.page_links, a.page_links:visited {
-    /* background-color: rgb(120, 67, 246);
-    color: white;
-    text-decoration: none;
-    display: inline-block;
-    padding: 8px 16px;
-    margin: 1px 18%; */
-
     background-color: #cebff5d0;;
     color: #1e0246;
     text-decoration: none;
@@ -95,7 +88,7 @@ a.page_links, a.page_links:visited {
     border-style: outset;
     border-color: buttonborder;
     border-width: 2px;
-    margin: 1px 18%;
+    margin: 0px 18%;
     font-size: 95%;
 }
 
@@ -152,15 +145,19 @@ div.sticker {
 }
 
 img.results {
-    height: 200px;
+    height: 250px;
     width: auto;
-    margin-right: 2px;
+    min-width: 0;
+    min-height: 0;
+    flex: 0 1 auto;
 }
 
 span.pics {
     display:flex; 
     align-items:center;
+    gap: 2px 2px;
+    height: 250px;
     margin-top: 15px;
     margin-bottom: 15px;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 }

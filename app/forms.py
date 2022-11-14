@@ -74,9 +74,9 @@ class FilterForm(FlaskForm):
     children = BooleanField('Good with Children')
     dogs = BooleanField('Good with Dogs')
     cats = BooleanField('Good with Cats')
-    zipcode = StringField('Zipcode (Required)', default = '11101', validators = [InputRequired()])
-    distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()])
-    savename = StringField('Save Name', validators=[Length(min=3)])
+    zipcode = StringField('Zipcode (Required)', default = '11101', validators = [InputRequired()], render_kw= {'class': 'form_font'})
+    distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()], render_kw= {'class': 'form_font'})
+    savename = StringField('Save Name', validators=[Length(min=3)], render_kw= {'class': 'form_font'})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 class MultiCheckboxField(SelectMultipleField):

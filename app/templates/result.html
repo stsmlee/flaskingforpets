@@ -3,11 +3,11 @@
 <title>{%block title%}Results{% endblock %}</title>
 
 {%block content%}
-<h1>Results!</h1>
+<h1>{{pag['Total number of results']}} Results!</h1>
     {% for pet in res %}
     <p>
         {% for key, value in pet.items() %}
-                {% if key == 'Profile Link' %}
+                {% if key == 'Petfinder Profile Link' %}
                     <b>{{key}} :</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a><br/>
                 {% elif key == 'Photos' %}
                 <span class = 'pics'>
@@ -29,16 +29,12 @@
 
 <hr style="height:5px;border-width:0;border-radius:10px;color:gray;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #cebff5d0, #cebff5d0, #cebff5d0, rgba(0, 0, 0, 0));">
 
-<!-- /* background-color:#cebff5d0"   */ -->
-<!-- background: -webkit-gradient(linear, 0 0, 100% 0, from(transparent), to(transparent), color-stop(50%, #cebff5d0)) -->
-
-
 <p style="text-align:center;">
     Results per page: {{pag['Results per page']}}<br/>
     Total number of results: {{pag['Total number of results']}}<br/>
     Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
 </p>
-<nav style="text-align:center;padding-bottom: 10px;">
+<nav style="text-align:center;margin-top:15px;margin-bottom: 15px;">
     {% if pag['Previous'] %}
     <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a>
     {% endif %}

@@ -1,5 +1,5 @@
 from app import forms, app
-from flask import Flask, render_template, redirect, url_for, session, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, session
 from flask_session import Session
 import json
 from app.pet_helper import pet_info
@@ -228,7 +228,6 @@ def manage_account():
         return render_template('manage.html', form=del_form)
     if not saved:
         return render_template('manage.html')
-
 
 @app.route('/logout')
 def logout():
