@@ -22,7 +22,6 @@
           </ul>
         </nav>
       </div>
-      <!-- <hr style="height:1px;border-width:0;color:gray;background-color:rgb(81, 81, 238)">    -->
 
       <div>{% with notices = get_flashed_messages(category_filter=['notice']) %}
         {% if notices %}
@@ -44,20 +43,21 @@
         {% endif %}
       {% endwith %}</div>
 
-
       {% block content %}
       {% endblock %}
 
-      <div>{% with errs = get_flashed_messages(category_filter=['error']) %}
-        {% if errs %}
-          <ul class="alert">
-          {% for message in errs %}
-            <li>{{ message }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}</div>
-  </div>
-</body>
+      <div>
+        {% with errs = get_flashed_messages(category_filter=['error']) %}
+          {% if errs %}
+            <ul class="alert">
+            {% for message in errs %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      </div>
 
+    </div>
+  </body>
 </html>
