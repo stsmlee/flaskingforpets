@@ -1,9 +1,3 @@
-/* input {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-} */
-
 html, body {
     padding: 0;
     margin: 0;
@@ -142,30 +136,10 @@ ul li {
     padding: 8px 0px;
 }
 
-/* a.page_links, a.page_links:visited {
-    background-color: #cebff5d0;;
-    color: #1e0246;
-    text-decoration: none;
-    display: inline-block;
-    padding: 4px 8px;
-    border-style: outset;
-    border-color: buttonborder;
-    border-width: 2px;
-    margin: 0px 18%;
-    font-size: 95%;
-} */
-
-/* a.delete_link:link, a.delete_link:hover, a.delete_link:visited:hover, a.delete_link:active{
-    background-color: #cebff5d0;;
-    color: #1e0246 !important;
-    text-decoration: none;
-    display: inline-block;
-    padding: 1px 6px;
-    border-style: outset;
-    border-color: buttonborder;
-    border-width: 2px;
-    font-size: 95%;
-}  */
+.table {
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+}
 
 .alert {
     display: inline-block;

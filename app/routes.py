@@ -1,11 +1,12 @@
-from app import forms, app
-from flask import Flask, render_template, redirect, url_for, flash, request, session
-from flask_session import Session
 import json
-from app.pet_helper import pet_info
 import sqlite3
-from wtforms.validators import NoneOf, Length, ValidationError
 from argon2 import PasswordHasher
+from flask import (Flask, flash, redirect, render_template, request, session,
+                   url_for)
+from wtforms.validators import Length, NoneOf, ValidationError
+from app import app, forms
+from app.pet_helper import pet_info
+from flask_session import Session
 
 pet_types_dict = pet_info.get_types_dict()
 
@@ -217,17 +218,18 @@ def confirm_delete():
 
 @app.route('/manageaccount', methods=["GET", "POST"])
 def manage_account():
-    del_form = forms.DeleteSavesForm()
+    # del_form = forms.DeleteSavesForm()
     saved = get_savenames_params()
-    if saved:
-        del_form.saves.choices = [k+': '+ str(v) for k,v in saved.items()]
-        if del_form.validate_on_submit():
-            req_list = clean_up_req_dels(del_form.saves.data)
-            delete_save(req_list)
-            return redirect(url_for('manage_account'))
-        return render_template('manage.html', form=del_form)
-    if not saved:
-        return render_template('manage.html')
+    print(saved)
+    if request.method == 'POST':
+        req_list = request.form.getlist('savenames')
+        delete_save(req_list)
+        return redirect(url_for('manage_account'))
+    else:
+        if saved:
+            return render_template('manage.html', saves=saved)
+        if not saved:
+            return render_template('manage.html')
 
 @app.route('/logout')
 def logout():
