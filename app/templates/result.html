@@ -35,13 +35,22 @@
     Total number of results: {{pag['Total number of results']}}<br/>
     Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
 </p>
-<nav style="text-align:center;margin-top:15px;margin-bottom: 15px;">
+
+<nav class = 'page'>
     {% if pag['Previous'] %}
-    <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a>
+        <form method="GET" action="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" style = "display:inline">
+            <input type="submit" value="Previous" class = 'page_button'>
+        </form>
+    <!-- <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a> -->
     {% endif %}
+
     {% if pag['Next'] %}
-    <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a>
+        <form method="GET" action="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" style ="display:inline">
+            <input type="submit" value="Next" class = 'page_button'>
+        </form>
+    <!-- <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a> -->
     {% endif %}
 </nav>
+
 
 {%endblock%}

@@ -9,11 +9,11 @@
   <body>
     <div id="container">
       <div class = "header">
-        <div><a href="/">Home</a></div>
+        <div><a href="/" class='home'>Home</a></div>
         <nav>
           <ul>      
           {%if session['username']%}
-          <li><a href="{{url_for('check_updates')}}">What's News?</a></li>
+          <li><a href="{{url_for('check_updates')}}" class ='news'>What's News?</a></li>
           <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
           <li><a href="{{url_for('logout')}}">Log Out</a></li>
           {%else%}

@@ -27,5 +27,9 @@ ul,li { list-style-type: none;
 
 
 <h4>Delete your account completely?</h4>
-    <a href="{{url_for('delete_account')}}" class = 'delete_link'>Delete!</a>
-{%endblock%}
+    <!-- <a href="{{url_for('delete_account')}}" class = 'delete_link'>Delete!</a> -->
+    <form method="GET" action="{{url_for('delete_account')}}" >
+    <input type="submit" value="Delete!" class = 'submit_button'>
+     </form>
+
+    {%endblock%}
