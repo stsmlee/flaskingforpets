@@ -98,10 +98,6 @@ nav ul {
     padding: 0;
   }
 
-/* body {
-    font-size: 100%;
-} */
-
 a {
     position:relative;
     cursor: pointer;
@@ -155,22 +151,32 @@ ul.index > li::before {
     margin-right: .6em;
     /* background-position: 0 .4em; */
     background-position: center;
-    vertical-align: middle;
+    vertical-align: middle;flas
   }
 
 ul.index > li > a {
-top:1px;
+    top:1px;
 }
 
 ul.index > li > a:active {
-top:2px;
+    top:2px;
 }
 
 .table {
-    border-collapse: separate;
-    border-spacing:0px 16px;
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
+    line-height: 1.5em;
+}
+
+.table td {
+    /* border: black 1px solid; */
+    vertical-align: top;
+}
+
+input.checkbox {
+    margin-top: .5em;
+    margin-left: 0;
+    margin-right: .5em;
 }
 
 .alert {

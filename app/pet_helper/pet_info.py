@@ -95,7 +95,8 @@ def parse_res_animals(res_animals):
         current['Name'] = pet['name']
         current['ID'] = pet['id']
         current['Petfinder Profile Link'] = pet['url']
-        current['Species'] = pet['species']        
+        if pet['species'] not in {'Dog', 'Cat', 'Rabbit', 'Horse'}:
+            current['Species'] = pet['species']        
         breeds = []
         for attr,br in pet['breeds'].items():
             if attr == 'mixed' and br:
