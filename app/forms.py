@@ -1,10 +1,13 @@
-from flask import Flask
-from argon2 import PasswordHasher
-import requests
 import sqlite3
+import requests
+from argon2 import PasswordHasher
+from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, TextAreaField, RadioField, BooleanField, SelectField, IntegerField, SelectMultipleField, widgets
-from wtforms.validators import DataRequired, InputRequired, NumberRange, Length, NoneOf, ValidationError, StopValidation
+from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
+                     SelectField, SelectMultipleField, StringField,
+                     SubmitField, TextAreaField, widgets)
+from wtforms.validators import (DataRequired, InputRequired, Length, NoneOf,
+                                NumberRange, StopValidation, ValidationError)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -74,6 +77,7 @@ class FilterForm(FlaskForm):
     children = BooleanField('Good with Children')
     dogs = BooleanField('Good with Dogs')
     cats = BooleanField('Good with Cats')
+    housetrained = BooleanField('Housetrained')
     zipcode = StringField('Zipcode (Required)', default = '11101', validators = [InputRequired()], render_kw= {'class': 'form_font'})
     distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()], render_kw= {'class': 'form_font'})
     savename = StringField('Save Name', validators=[Length(min=3)], render_kw= {'class': 'form_font'})

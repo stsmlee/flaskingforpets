@@ -41,14 +41,12 @@
         <form method="GET" action="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" style = "display:inline">
             <input type="submit" value="Previous" class = 'page_button'>
         </form>
-    <!-- <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" class="page_links">Previous Page</a> -->
     {% endif %}
 
     {% if pag['Next'] %}
         <form method="GET" action="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" style ="display:inline">
             <input type="submit" value="Next" class = 'page_button'>
         </form>
-    <!-- <a href="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" class="page_links">Next Page</a> -->
     {% endif %}
 </nav>
 

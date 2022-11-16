@@ -31,7 +31,6 @@ def get_token():
     return response.json()['access_token']
 
 token = get_token()
-# print(token)
 auth = "Bearer " + token
 header = {"Authorization": auth}
 
@@ -112,9 +111,11 @@ def parse_res_animals(res_animals):
         current['Age'] = pet['age']
         current['Size'] = pet['size']
         current['Coat'] = pet['coat']
+        if pet['attributes']['house_trained']:
+            current['Housetrained'] = "Yes! What a good doggo."
         additional_attr = []
         for attr, val in pet['attributes'].items():
-            if val:
+            if val and attr != 'house_trained':
                 additional_attr.append(' '.join(attr.split('_')).title())
         current['Attributes'] = ', '.join(additional_attr)
         enviro = []
@@ -243,6 +244,8 @@ def build_params(my_data, type):
         age.append('senior')
     if age:
         payload['age'] = ','.join(age)
+    if my_data['housetrained']:
+        payload['house_trained'] = 1
     size = []
     if my_data['small']:
         size.append('small')

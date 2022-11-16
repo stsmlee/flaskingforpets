@@ -98,9 +98,9 @@ nav ul {
     padding: 0;
   }
 
-body {
+/* body {
     font-size: 100%;
-}
+} */
 
 a {
     position:relative;
@@ -132,9 +132,31 @@ a:active {
     color:#c19ff1 !important;
 }
 
-ul li {
+/* ul li {
     padding: 8px 0px;
+} */
+
+ul.index {
+    list-style-type: none; 
+    /* list-style: square; */
+    /* list-style-image: url('pawicon.svg'); */
+    margin: 0;
+    padding: 0;
 }
+
+ul.index > li::before {
+    content: '';
+    display:inline-block; height:2px; width:2px;
+    background-size: contain;
+    background-image: url('pawicon.svg');
+    background-repeat: no-repeat;
+    padding: 1em 0px 1em .5em;
+    margin-left: 1em;
+    margin-right: .6em;
+    /* background-position: 0 .4em; */
+    background-position: center;
+    vertical-align: middle;
+  }
 
 .table {
     margin-block-start: 1.33em;

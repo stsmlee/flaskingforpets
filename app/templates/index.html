@@ -24,7 +24,7 @@
 
 <p>
 What type are you looking for?
-<ul>
+<ul class="index">
     {% for type in pet_types_dict %} 
         <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
     {% endfor %}

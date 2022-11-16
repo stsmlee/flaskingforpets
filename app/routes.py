@@ -73,7 +73,8 @@ def get_savenames_params():
     for row in res:
         parastring = str(row['params'])[1:-1]
         parastring = parastring.replace('\"', '')
-        names_params[row['savename']] = parastring
+        parastring = parastring.replace('_', ' ')
+        names_params[row['savename']] = parastring.lower()
     return names_params
 
 def clean_up_req_dels(formdata):
@@ -95,6 +96,12 @@ def delete_save(req_list):
     conn.commit()
     conn.close()
     flash('Selected saved searches successfully cleared.', 'notice')
+
+def refresh_token():
+    pet_info.token = pet_info.get_token()
+    pet_info.auth = "Bearer " + pet_info.token
+    pet_info.header = {"Authorization": pet_info.auth}
+    flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
         
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
@@ -180,6 +187,9 @@ def search_saved(type,payload,page,savename):
     payload['page'] = page
     res_json = pet_info.get_request(payload)
     if isinstance(res_json, int):
+        if res_json == 401:
+            refresh_token()
+            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page, savename = savename))
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))
     if not res_json:
@@ -196,6 +206,9 @@ def search(type,payload,page):
     payload['page'] = page
     res_json = pet_info.get_request(payload)
     if isinstance(res_json, int):
+        if res_json == 401:
+            refresh_token()
+            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page, savename = savename))
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))
     if not res_json:

@@ -14,7 +14,7 @@ ul,li { list-style-type: none;
 <h1>Manage your account here!</h1>
 {%if saves%}
 <h4>Select which saved search(es) you would like to delete.</h4>
-<form method="POST" name="req_deletes">
+<form method="POST" name="req_deletes"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <table class="table">
       {% for savename, params in saves.items() %}
       <tr>
@@ -36,7 +36,7 @@ ul,li { list-style-type: none;
 
 <h4>Delete your account completely?</h4>
     <form method="GET" action="{{url_for('delete_account')}}" >
-    <input type="submit" value="Delete!" class = 'submit_button'>
-     </form>
+        <input type="submit" value="Delete!" class = 'submit_button'>
+    </form>
 
     {%endblock%}
