@@ -167,10 +167,14 @@ ul.index > li::before {
   }
 
 .table {
-    border-spacing:0px;
+    border-collapse: separate;
+    border-spacing:0px 16px;
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
+    /* margin-bottom: 1em; */
 }
+
+
 
 .alert {
     display: inline-block;

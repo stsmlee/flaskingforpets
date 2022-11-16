@@ -82,11 +82,6 @@ def get_savenames_params():
                 v = 'yes'            
             param_list.append(k + ': ' + str(v))
         names_params[savename] = ' | '.join(param_list).lower()
-
-        # parastring = str(row['params'])[1:-1]
-        # parastring = parastring.replace('\"', '')
-        # parastring = parastring.replace('_', ' ')
-        # names_params[row['savename']] = parastring.lower()
     return names_params
 
 def clean_up_req_dels(formdata):
@@ -243,9 +238,7 @@ def confirm_delete():
 
 @app.route('/manageaccount', methods=["GET", "POST"])
 def manage_account():
-    # del_form = forms.DeleteSavesForm()
     saved = get_savenames_params()
-    print(saved)
     if request.method == 'POST':
         req_list = request.form.getlist('savenames')
         delete_save(req_list)
