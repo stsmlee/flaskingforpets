@@ -208,7 +208,7 @@ def search(type,payload,page):
     if isinstance(res_json, int):
         if res_json == 401:
             refresh_token()
-            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page, savename = savename))
+            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page))
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))
     if not res_json:
