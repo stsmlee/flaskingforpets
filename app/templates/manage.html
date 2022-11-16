@@ -8,7 +8,7 @@
 {%if saves%}
 <h4>Select which saved search(es) you would like to delete.</h4>
 <form method="POST" name="req_deletes"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-<table class="mgmt_table">
+    <table class="mgmt_table">
       {% for savename, params in saves.items() %}
       <tr>
         <td>
@@ -20,8 +20,8 @@
       {% endfor %}
     </table>
     <input type="submit" value="Delete Saved Search(es)" class = 'submit_button'>
-  </form>
-  <br>
+</form>
+<br>
 
 {%else%}
 <h4>No saved searches at the moment.</h4>

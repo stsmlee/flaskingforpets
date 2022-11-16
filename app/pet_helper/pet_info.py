@@ -201,27 +201,29 @@ def check_for_new_results(user_id):
     saved_searches = conn.execute('SELECT savename, results, params FROM saves WHERE user_id = ?', (user_id,)).fetchall()
     conn.close()
     results = {}
-    for row in saved_searches:
-        print(row['savename'])
-        prev_results = json.loads(row['results'])
-        print(prev_results)
-        params = json.loads(row['params'])
-        new_req = get_request(params)
-        # print(new_req['animals'][0]['id'])
-        if isinstance(new_req, int):
-            results[row['savename']] = new_req
-            continue
-        new_results = save_results(new_req, saved_dict={}, count = 1)
-        print(new_results)
-        if new_results and not prev_results:
-            print('You went from zero to new results!')
-            results[row['savename']] = 'New'
-        else:
-            for id in new_results:
-                if str(id) not in prev_results:
-                    print('You have new results!')
-                    results[row['savename']] = 'New'
-                    break
+    if saved_searches:
+        for row in saved_searches:
+            print(row['savename'])
+            prev_results = json.loads(row['results'])
+            print('Old:')
+            print(prev_results)
+            params = json.loads(row['params'])
+            new_req = get_request(params)
+            if isinstance(new_req, int):
+                results[row['savename']] = new_req
+                continue
+            new_results = save_results(new_req, saved_dict={})
+            print('New:')
+            print(new_results)
+            if new_results and not prev_results:
+                print('You went from zero to new results!')
+                results[row['savename']] = 'New'
+            else:
+                for id in new_results:
+                    if str(id) not in prev_results:
+                        print('You have new results!')
+                        results[row['savename']] = 'New'
+                        break
     return results
 
 def build_params(my_data, type):

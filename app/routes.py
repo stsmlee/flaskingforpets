@@ -149,20 +149,23 @@ def register():
 
 @app.route('/whatsnews')
 def check_updates():
-    results = pet_info.check_for_new_results(session['user id'])
-    new_stuff = []
-    for savename, result in results.items():
-        if isinstance(result, int):
-            flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
-            return redirect(url_for('index'))
+    if get_savenames():
+        results = pet_info.check_for_new_results(session['user id'])
+        new_stuff = []
+        for savename, result in results.items():
+            if isinstance(result, int):
+                flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
+                return redirect(url_for('index'))
+            else:
+                new_stuff.append(savename)
+        if new_stuff:
+            for search in new_stuff:
+                flash(f'{search} has new results!', 'notice')
         else:
-            new_stuff.append(savename)
-    if new_stuff:
-        for search in new_stuff:
-            flash(f'{search} has new results!', 'notice')
+            flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
     else:
-        flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
-    return redirect(request.referrer)
+        flash('You actually don"t have any saved searches right now.', 'notice')
+    return redirect(request.referrer) 
 
 
 @app.route('/animals/<type>', methods=["GET", "POST"])
