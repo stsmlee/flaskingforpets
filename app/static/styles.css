@@ -158,23 +158,20 @@ ul.index > li::before {
     vertical-align: middle;
   }
 
-  ul.index > li > a {
-    top:1px;
-  }
+ul.index > li > a {
+top:1px;
+}
 
-  ul.index > li > a:active {
-    top:2px;
-  }
+ul.index > li > a:active {
+top:2px;
+}
 
 .table {
     border-collapse: separate;
     border-spacing:0px 16px;
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
-    /* margin-bottom: 1em; */
 }
-
-
 
 .alert {
     display: inline-block;

@@ -4,12 +4,12 @@
 
 {%block content%}
 
-<style>
+<!-- <style>
 ul,li { list-style-type: none;
         list-style-position:inside;
         margin:0;
         padding:0; }
-</style>
+</style> -->
 
 <h1>Manage your account here!</h1>
 {%if saves%}
@@ -19,26 +19,25 @@ ul,li { list-style-type: none;
       {% for savename, params in saves.items() %}
       <tr>
         <td>
-        <label>
             <input type="checkbox" name="savenames" value="{{ savename }}"/>
-        </label>
-        <b>{{ savename }}</b>: {{ params }}
+        </td><td>
+            <label for name = 'savenames'><b>{{ savename }}</b>: {{ params }}</label>
         </td>
       </tr>
       {% endfor %}
     </table>
     <input type="submit" value="Delete Saved Search(es)" class = 'submit_button'>
   </form>
+  <br>
 
 {%else%}
 <h4>No saved searches at the moment.</h4>
 {%endif%}
 
-<br>
-
 <h4>Delete your account completely?</h4> <br>
-    <form method="GET" action="{{url_for('delete_account')}}" >
-        <input type="submit" value="Delete!" class = 'submit_button'>
-    </form>
 
-    {%endblock%}
+<form method="GET" action="{{url_for('delete_account')}}" >
+    <input type="submit" value="Delete!" class = 'submit_button'>
+</form>
+
+{%endblock%}

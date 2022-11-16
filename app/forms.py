@@ -83,10 +83,10 @@ class FilterForm(FlaskForm):
     savename = StringField('Save Name', validators=[Length(min=3)], render_kw= {'class': 'form_font'})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
-class MultiCheckboxField(SelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
-    option_widget = widgets.CheckboxInput()
+# class MultiCheckboxField(SelectMultipleField):
+#     widget = widgets.ListWidget(prefix_label=False)
+#     option_widget = widgets.CheckboxInput()
 
-class DeleteSavesForm(FlaskForm):
-    saves = MultiCheckboxField('Saved Searches')
-    submit = SubmitField('Delete Saved Search(es)', render_kw= {'class': 'submit_button'})
+# class DeleteSavesForm(FlaskForm):
+#     saves = MultiCheckboxField('Saved Searches')
+#     submit = SubmitField('Delete Saved Search(es)', render_kw= {'class': 'submit_button'})
