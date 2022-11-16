@@ -44,9 +44,9 @@ nav.page {
     justify-content: space-around;
 }
 
-input[type="submit"].page_button {
+.page_button {
     font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 95%;
+    font-size: 99%;
     color: #1e0246;
     background-color: #cebff5d0;
     box-sizing: content-box;
@@ -156,6 +156,14 @@ ul.index > li::before {
     /* background-position: 0 .4em; */
     background-position: center;
     vertical-align: middle;
+  }
+
+  ul.index > li > a {
+    top:1px;
+  }
+
+  ul.index > li > a:active {
+    top:2px;
   }
 
 .table {

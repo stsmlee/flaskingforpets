@@ -115,7 +115,9 @@ def parse_res_animals(res_animals):
             current['Housetrained'] = "Yes! What a good doggo."
         additional_attr = []
         for attr, val in pet['attributes'].items():
-            if val and attr != 'house_trained':
+            if val and attr == 'spayed_neutered':
+                additional_attr.append('Spayed/Neutered')
+            elif val and attr != 'house_trained':
                 additional_attr.append(' '.join(attr.split('_')).title())
         current['Attributes'] = ', '.join(additional_attr)
         enviro = []

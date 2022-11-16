@@ -61,8 +61,8 @@ class ReuseForm(FlaskForm):
     submit = SubmitField('Let\'s Go!', render_kw= {'class': 'submit_button'})
 
 class FilterForm(FlaskForm):
-    breed1 = SelectField('Breed1', render_kw= {'class': 'form_font'})
-    breed2 = SelectField('Breed2', render_kw= {'class': 'form_font'})
+    breed1 = SelectField('Breed #1', render_kw= {'class': 'form_font'})
+    breed2 = SelectField('Breed #2', render_kw= {'class': 'form_font'})
     color = SelectField('Color', render_kw= {'class': 'form_font'})
     coat = SelectField('Coat', render_kw= {'class': 'form_font'})
     gender = SelectField('Gender', choices = ['N/A', 'Male', 'Female'], render_kw= {'class': 'form_font'})
