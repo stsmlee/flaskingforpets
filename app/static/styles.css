@@ -167,6 +167,7 @@ ul.index > li::before {
   }
 
 .table {
+    border-spacing:0px;
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
 }

@@ -71,10 +71,22 @@ def get_savenames_params():
     conn.close()
     names_params = {}
     for row in res:
-        parastring = str(row['params'])[1:-1]
-        parastring = parastring.replace('\"', '')
-        parastring = parastring.replace('_', ' ')
-        names_params[row['savename']] = parastring.lower()
+        param_list = []
+        savename = row['savename']
+        params = json.loads(row['params'])
+        for k, v in params.items():
+            k = k.replace('_', ' ')
+            if isinstance(v, str):
+                v = v.replace(',', ', ')
+            if v == 1 and k != 'distance':
+                v = 'yes'            
+            param_list.append(k + ': ' + str(v))
+        names_params[savename] = ' | '.join(param_list).lower()
+
+        # parastring = str(row['params'])[1:-1]
+        # parastring = parastring.replace('\"', '')
+        # parastring = parastring.replace('_', ' ')
+        # names_params[row['savename']] = parastring.lower()
     return names_params
 
 def clean_up_req_dels(formdata):
