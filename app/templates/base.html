@@ -8,12 +8,12 @@
   </head>
   <body>
     <div id="container">
-      <div class = "header">
-        <div><a href="/" class='home'>Home</a></div>
+      <div id = "header">
+        <div><a href="/" id='home'>Home</a></div>
         <nav>
           <ul>      
           {%if session['username']%}
-          <li><a href="{{url_for('check_updates')}}" class ='news'>What's News?</a></li>
+          <li><a href="{{url_for('check_updates')}}" id ='news' onclick="patience()">What's News?</a></li>
           <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
           <li><a href="{{url_for('logout')}}">Log Out</a></li>
           {%else%}
@@ -23,7 +23,12 @@
         </nav>
       </div>
 
-      <div>{% with notices = get_flashed_messages(category_filter=['notice']) %}
+      <div id="popup" style="display: none;">
+        hello we are loading
+      </div>
+
+      <div>
+        {% with notices = get_flashed_messages(category_filter=['notice']) %}
         {% if notices %}
           <ul class="notice" >
           {% for message in notices %}
@@ -31,17 +36,20 @@
           {% endfor %}
           </ul>
         {% endif %}
-      {% endwith %}</div>
+      {% endwith %}
+      </div>
 
-      <div style="text-align: center;">{% with notices = get_flashed_messages(category_filter=['response error']) %}
-        {% if notices %}
+      <div style="text-align: center;">
+        {% with res_errors = get_flashed_messages(category_filter=['response error']) %}
+        {% if res_errors %}
           <div class="response_error">
-          {% for message in notices %}
+          {% for message in res_errors %}
             {{ message }}
           {% endfor %}
           </div>
         {% endif %}
-      {% endwith %}</div>
+        {% endwith %}
+      </div>
 
       {% block content %}
       {% endblock %}
@@ -57,7 +65,17 @@
           {% endif %}
         {% endwith %}
       </div>
-
     </div>
+
+    <script>
+      function patience() {
+          let popup = document.getElementById('popup');
+          if (popup.style.display === "none") {
+            popup.style.display = "block";
+          } else {
+            popup.style.display = "none";
+          }
+      }
+    </script>
   </body>
 </html>

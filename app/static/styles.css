@@ -16,6 +16,15 @@ p {
     min-height: calc(100vh - 16px);
 }
 
+#popup {
+    /* display:none; */
+    float: right;
+    padding: 0px 50px;
+    margin: 10px 5px;
+    color: #1e0246;
+    background-color: #c8b8f4d0;
+}
+
 div.sticker {
     position: absolute;
     bottom: 0;
@@ -59,7 +68,7 @@ h1 {
     color:midnightblue
 }
 
-.header {
+#header {
     font-size: 1em;
     margin-top: 5px;
     display: flex;
@@ -67,25 +76,29 @@ h1 {
     align-items: center;
 }
 
-.home {
-    cursor: context-menu;
-}
-
-.news {
-    cursor:help;
-}
-
-.header a:link{
+#header a:link{
     text-decoration: underline overline dotted;
     text-underline-offset: 3px;
     top: 0px;
 }
 
-.header a:hover{
+#header a:hover{
     text-decoration: none;
     color:#1e0246 !important;
 }
 
+#home {
+    cursor: context-menu;
+}
+
+a#news:active{
+    cursor:wait !important;
+    /* color: pink  !important; */
+}
+
+#news {
+    cursor:help;
+}
 
 nav li {
     display: inline;
@@ -97,6 +110,14 @@ nav ul {
     list-style: none;
     padding: 0;
   }
+
+/* #updates:not(:target) {
+	display: none;
+}
+
+#updates:target {
+	display: block;
+} */
 
 a {
     position:relative;
@@ -151,7 +172,7 @@ ul.index > li::before {
     margin-right: .6em;
     /* background-position: 0 .4em; */
     background-position: center;
-    vertical-align: middle;flas
+    vertical-align: middle;
   }
 
 ul.index > li > a {
@@ -162,13 +183,13 @@ ul.index > li > a:active {
     top:2px;
 }
 
-.table {
+.mgmt_table {
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
     line-height: 1.5em;
 }
 
-.table td {
+.mgmt_table td {
     /* border: black 1px solid; */
     vertical-align: top;
 }

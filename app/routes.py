@@ -244,10 +244,7 @@ def manage_account():
         delete_save(req_list)
         return redirect(url_for('manage_account'))
     else:
-        if saved:
-            return render_template('manage.html', saves=saved)
-        if not saved:
-            return render_template('manage.html')
+        return render_template('manage.html', saves=saved)
 
 @app.route('/logout')
 def logout():
