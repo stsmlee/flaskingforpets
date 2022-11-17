@@ -17,12 +17,27 @@ p {
 }
 
 #popup {
-    /* display:none; */
+    display:flex;
+    height: 30px;
+    width: 320px;
     float: right;
-    padding: 0px 50px;
+    padding: 2px 10px;
     margin: 10px 5px;
     color: #1e0246;
     background-color: #c8b8f4d0;
+    line-height: 0em;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#popup #msg {
+    min-width: 0;
+    min-height: 0;
+}
+
+#popup img {
+    height:30px;
+    width:auto;
 }
 
 div.sticker {
@@ -195,7 +210,7 @@ ul.index > li > a:active {
 }
 
 input.checkbox {
-    margin-top: .5em;
+    margin-top: .2em;
     margin-left: 0;
     margin-right: .5em;
 }
@@ -209,7 +224,6 @@ input.checkbox {
 }
 
 .notice {
-    /* display: inline-block; */
     float: right;
     padding: 0px 50px;
     margin: 10px 5px;

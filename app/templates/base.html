@@ -23,8 +23,11 @@
         </nav>
       </div>
 
-      <div id="popup" style="display: none;">
-        hello we are loading
+      <!-- <div id="popup" style="display: none;"> -->
+      <div id="popup">
+        <div><img src={{ url_for('static', filename = 'meow.gif') }}></div>
+        <div id = "msg">Please wait while we take a look!</div>
+        <div><img src={{ url_for('static', filename = 'meow.gif') }}></div>
       </div>
 
       <div>
@@ -71,10 +74,11 @@
       function patience() {
           let popup = document.getElementById('popup');
           if (popup.style.display === "none") {
-            popup.style.display = "block";
-          } else {
-            popup.style.display = "none";
-          }
+            popup.style.display = "flex";
+          } 
+          // else {
+          //   popup.style.display = "none";
+          // }
       }
     </script>
   </body>

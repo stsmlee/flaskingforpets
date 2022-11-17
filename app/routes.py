@@ -147,27 +147,6 @@ def register():
         flash_errors(form)
     return render_template('register.html', form = form)
 
-@app.route('/whatsnews')
-def check_updates():
-    if get_savenames():
-        results = pet_info.check_for_new_results(session['user id'])
-        new_stuff = []
-        for savename, result in results.items():
-            if isinstance(result, int):
-                flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
-                return redirect(url_for('index'))
-            else:
-                new_stuff.append(savename)
-        if new_stuff:
-            for search in new_stuff:
-                flash(f'{search} has new results!', 'notice')
-        else:
-            flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
-    else:
-        flash('You actually don"t have any saved searches right now.', 'notice')
-    return redirect(request.referrer) 
-
-
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
     my_form = forms.FilterForm()
@@ -224,6 +203,26 @@ def search(type,payload,page):
     if not res_json:
         return render_template('no_results.html', type=type)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+
+@app.route('/whatsnews')
+def check_updates():
+    if get_savenames():
+        results = pet_info.check_for_new_results(session['user id'])
+        new_stuff = []
+        for savename, result in results.items():
+            if isinstance(result, int):
+                flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
+                return redirect(url_for('index'))
+            else:
+                new_stuff.append(savename)
+        if new_stuff:
+            for search in new_stuff:
+                flash(f'{search} has new results!', 'notice')
+        else:
+            flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
+    else:
+        flash('You actually don"t have any saved searches right now.', 'notice')
+    return redirect(request.referrer)   
 
 @app.route('/deleteaccount')
 def delete_account():
