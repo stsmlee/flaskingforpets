@@ -80,7 +80,7 @@ class FilterForm(FlaskForm):
     housetrained = BooleanField('Housetrained')
     zipcode = StringField('Zipcode (Required)', default = '11101', validators = [InputRequired()], render_kw= {'class': 'form_font'})
     distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()], render_kw= {'class': 'form_font'})
-    savename = StringField('Save Name', validators=[Length(min=3)], render_kw= {'class': 'form_font'})
+    savename = StringField('Save Name', render_kw= {'class': 'form_font'})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 # class MultiCheckboxField(SelectMultipleField):

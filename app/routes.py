@@ -3,7 +3,7 @@ import sqlite3
 from argon2 import PasswordHasher
 from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for)
-from wtforms.validators import Length, NoneOf, ValidationError
+from wtforms.validators import Length, NoneOf, ValidationError, StopValidation
 from app import app, forms
 from app.pet_helper import pet_info
 from flask_session import Session
@@ -18,7 +18,8 @@ def get_db_connection():
 def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
-            flash(f"Error in {field} field - {error}", 'error')
+            # flash(f"Error in {field} field - {error}", 'error')
+            flash(f"Error: {error}", 'error')
 
 def register_user_db(username, password):
     ph = PasswordHasher()
@@ -104,6 +105,15 @@ def delete_save(req_list):
     conn.close()
     flash('Selected saved searches successfully cleared.', 'notice')
 
+def check_savecount(form,field):
+    conn = get_db_connection()
+    count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (session['user id'],)).fetchone()
+    conn.close()
+    count = count[0]
+    print(count)
+    if count >= 20:
+        raise StopValidation('You have reached the maximum number of saved searches (20), please go to \'Manage Your Account\' to make space for more.')
+
 def refresh_token():
     pet_info.token = pet_info.get_token()
     pet_info.auth = "Bearer " + pet_info.token
@@ -124,9 +134,8 @@ def index():
             payload = json.loads(payload)
             type = payload['type']
             return redirect(url_for('search_saved', payload=json.dumps(payload), type = type, page=1, savename = reuse_form.savename.data))   
-        return render_template('index.html', username = session['username'], pet_types_dict = pet_types_dict, re_form = reuse_form)
+        return render_template('index.html', pet_types_dict = pet_types_dict, re_form = reuse_form)
     if login_form.validate_on_submit():
-        # print('WE LOGGED IN')
         session['username'] = login_form.username.data
         session['user id'] = get_user_id(session['username'])
         flash("Login successful. Welcome back.", 'notice')
@@ -156,7 +165,9 @@ def animals(type):
     my_form.coat.choices = ['N/A'] + pet_types_dict[type]['Coats']
     if logged_in():
         savenames = get_savenames()
-        my_form.savename.validators = [NoneOf(savenames), Length(max=20)]
+        savestring = ', '.join(savenames)
+        err_msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
+        my_form.savename.validators = [check_savecount, NoneOf(savenames, message=err_msg), Length(min=1, max=20)]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:
@@ -164,9 +175,7 @@ def animals(type):
             return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=1, savename=my_form.savename.data))
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
     elif logged_in() and my_form.savename.errors:
-        savestring = ', '.join(savenames)
-        msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
-        flash(msg, 'error')
+        flash_errors(my_form)
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>')

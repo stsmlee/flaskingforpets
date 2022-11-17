@@ -22,7 +22,7 @@ p {
     width: 100%;
     max-width: 310px;
     float: right;
-    padding: 2px 20px;
+    padding: 2px 12px;
     margin: 10px 25px;
     color: #1e0246;
     background-color: #c8b8f4d0;
@@ -31,9 +31,6 @@ p {
     justify-content: space-between;
     border-radius: 30px;
 }
-
-/* #popup #msg {
-} */
 
 #popup img {
     height:25px;
@@ -205,11 +202,12 @@ input.checkbox {
 
 ul.alert {
     display: inline-block;
-    padding: 2px 50px;
-    margin: 5px 5px;
+    padding: 2px 16px;
+    /* margin: 5px 5px; */
+    margin: 0;
     color: #970020;
     background-color: #ffd5de;
-    border-radius: 30px;
+    border-radius: 10px;
     list-style: none;
 }
 
@@ -231,11 +229,11 @@ ul.alert > li {
 
 ul.notice {
     float: right;
-    padding: 2px 30px;
-    margin: 10px 5px;
+    padding: 2px 16px;
+    margin: 10px 25px;
     color: #1e0246;
     background-color: #c8b8f4d0;
-    border-radius: 30px;
+    border-radius: 10px;
     list-style: none;
 }
 

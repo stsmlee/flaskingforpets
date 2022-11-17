@@ -4,10 +4,10 @@
 
 {%block content%}
 
-{% if not username %}
+{% if not session['username'] %}
 <h1>SUP DOG</h1>
 {% else %}
-<h1>Welcome, {{username}}!!</h1>
+<h1>Welcome, {{session['username']}}!!</h1>
 {% endif %}
 
 <h2>Petfinder has so many types of pets that need good loving homes!</h2>
