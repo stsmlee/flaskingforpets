@@ -35,7 +35,11 @@
         {% if notices %}
           <ul class="notice" >
           {% for message in notices %}
-            <li>{{ message }}</li>
+            {% if message == "Nothing new for you, I'm afraid. Maybe try a new search!"%}
+              <li>{{ message }}</li>
+            {% else %}
+              <li class="new">{{ message }}</li>
+            {% endif %}
           {% endfor %}
           </ul>
         {% endif %}

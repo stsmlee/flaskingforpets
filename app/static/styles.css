@@ -239,7 +239,7 @@ ul.notice {
     list-style: none;
 }
 
-ul.notice > li::before {
+ul.notice > li.new::before {
     content: '';
     display:inline-block; height:10px; width:10px;
     background-size: contain;
