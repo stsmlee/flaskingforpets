@@ -23,8 +23,8 @@
         </nav>
       </div>
 
-      <!-- <div id="popup" style="display: none;"> -->
-      <div id="popup">
+      <div id="popup" style="display: none;">
+      <!-- <div id="popup"> -->
         <div><img src={{ url_for('static', filename = 'meow.gif') }}></div>
         <div id = "msg">Please wait while we take a look!</div>
         <div><img src={{ url_for('static', filename = 'meow.gif') }}></div>
@@ -76,9 +76,9 @@
           if (popup.style.display === "none") {
             popup.style.display = "flex";
           } 
-          // else {
-          //   popup.style.display = "none";
-          // }
+          else {
+            popup.style.display = "none";
+          }
       }
     </script>
   </body>

@@ -18,25 +18,25 @@ p {
 
 #popup {
     display:flex;
-    height: 30px;
-    width: 320px;
+    height: 25px;
+    width: 100%;
+    max-width: 310px;
     float: right;
-    padding: 2px 10px;
-    margin: 10px 5px;
+    padding: 2px 20px;
+    margin: 10px 25px;
     color: #1e0246;
     background-color: #c8b8f4d0;
     line-height: 0em;
     align-items: center;
     justify-content: space-between;
+    border-radius: 30px;
 }
 
-#popup #msg {
-    min-width: 0;
-    min-height: 0;
-}
+/* #popup #msg {
+} */
 
 #popup img {
-    height:30px;
+    height:25px;
     width:auto;
 }
 
@@ -106,10 +106,10 @@ h1 {
     cursor: context-menu;
 }
 
-a#news:active{
+/* a#news:active{
     cursor:wait !important;
-    /* color: pink  !important; */
-}
+    color: pink  !important;
+} */
 
 #news {
     cursor:help;
@@ -125,14 +125,6 @@ nav ul {
     list-style: none;
     padding: 0;
   }
-
-/* #updates:not(:target) {
-	display: none;
-}
-
-#updates:target {
-	display: block;
-} */
 
 a {
     position:relative;
@@ -164,10 +156,6 @@ a:active {
     color:#c19ff1 !important;
 }
 
-/* ul li {
-    padding: 8px 0px;
-} */
-
 ul.index {
     list-style-type: none; 
     /* list-style: square; */
@@ -178,26 +166,26 @@ ul.index {
 
 ul.index > li::before {
     content: '';
-    display:inline-block; height:2px; width:2px;
+    display:inline-block; height:10px; width:10px;
     background-size: contain;
     background-image: url('pawicon.svg');
     background-repeat: no-repeat;
-    padding: 1em 0px 1em .5em;
+/*     padding: 1em 0px 1em .5em; */
     margin-left: 1em;
     margin-right: .6em;
-    /* background-position: 0 .4em; */
+/*     background-position: 0 .4em; */
     background-position: center;
     vertical-align: middle;
   }
 
+ul.index > li {
+    /* padding: 8px 0px; */
+    line-height: 2em;
+}
+
 ul.index > li > a {
-    top:1px;
+    vertical-align: middle;
 }
-
-ul.index > li > a:active {
-    top:2px;
-}
-
 .mgmt_table {
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
@@ -210,35 +198,71 @@ ul.index > li > a:active {
 }
 
 input.checkbox {
-    margin-top: .2em;
+    /* margin-top: .2em; */
     margin-left: 0;
     margin-right: .5em;
 }
 
-.alert {
+ul.alert {
     display: inline-block;
-    padding: 0px 50px;
+    padding: 2px 50px;
     margin: 5px 5px;
     color: #970020;
     background-color: #ffd5de;
+    border-radius: 30px;
+    list-style: none;
 }
 
-.notice {
+ul.alert > li::before {
+    content: '';
+    display:inline-block; height:10px; width:10px;
+    background-size: contain;
+    background-image: url('pawicon.svg');
+    background-repeat: no-repeat;
+    margin-bottom: 2px; 
+    margin-right: .5em;
+    background-position: center;
+    vertical-align: middle;
+  }
+
+ul.alert > li {
+    line-height: 1.5em;
+}
+
+ul.notice {
     float: right;
-    padding: 0px 50px;
+    padding: 2px 30px;
     margin: 10px 5px;
     color: #1e0246;
     background-color: #c8b8f4d0;
+    border-radius: 30px;
+    list-style: none;
+}
+
+ul.notice > li::before {
+    content: '';
+    display:inline-block; height:10px; width:10px;
+    background-size: contain;
+    background-image: url('pawicon.svg');
+    background-repeat: no-repeat;
+    margin-bottom: 2px; 
+    margin-right: .5em;
+    background-position: center;
+    vertical-align: middle;
+  }
+
+ul.notice > li {
+    line-height: 1.5em;
 }
 
 .response_error {
     display: inline-block;
-    /* float: right; */
-    padding: 10px 20px;
+    padding: 8px 16px;
     margin: 5px 5px;
     font-size: 1.3em;
     color: #1e0246;
     background-color: #c8b8f4d0;
+    border-radius: 30px;
 }
 
 hr.results_hr {
