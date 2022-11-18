@@ -6,6 +6,9 @@
 <br><br>
 <div style = 'text-align: center; margin:auto'>
 <h4>Are you sure you want to delete your account?</h4>
-<a href="{{url_for('confirm_delete')}}" class = 'delete_link'>Yes! Definitely! Delete!</a>
+<!-- <a href="{{url_for('confirm_delete')}}" class = 'submit_button'>Yes! Definitely! Delete!</a> -->
+<form method="GET" action="{{url_for('confirm_delete')}}">
+    <input type="submit" value="Yes! Definitely! Delete!" class = 'submit_button'>
+</form>
 </div>
 {%endblock%}

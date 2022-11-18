@@ -22,6 +22,7 @@ def flash_errors(form):
             flash(f"Error: {error}", 'error')
 
 def register_user_db(username, password):
+    username = username.lower()
     ph = PasswordHasher()
     hash = ph.hash(password)
     conn = get_db_connection()
@@ -36,6 +37,7 @@ def logged_in():
     return False
 
 def get_user_id(username):
+    username = username.lower()
     conn = get_db_connection()
     userid = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
     conn.close()
@@ -243,8 +245,8 @@ def confirm_delete():
     conn.execute('DELETE FROM users WHERE id = ?', (session['user id'],))
     conn.commit()
     conn.close()
-    flash('Account successfully deleted.', 'notice')
     session.clear()
+    flash('Account successfully deleted.', 'notice')
     return redirect(url_for('index'))
 
 @app.route('/manageaccount', methods=["GET", "POST"])

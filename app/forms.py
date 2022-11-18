@@ -20,7 +20,7 @@ def password_check(form,field):
         raise ValidationError('Password must be at least 8 characters long.')
 
 def username_check(form,field):
-    username = form.username.data
+    username = form.username.data.lower()
     conn = get_db_connection()
     user = conn.execute('SELECT * FROM users WHERE username = ?',
                         (username,)).fetchone()
@@ -29,7 +29,7 @@ def username_check(form,field):
         raise StopValidation('This username is already in use. If it is yours, perhaps try to log in with it, or else use a unique username.')
 
 def verify_user(form,field):
-    username = form.username.data
+    username = form.username.data.lower()
     conn = get_db_connection()
     res = conn.execute('SELECT username FROM users WHERE username = ?', (username,)).fetchone()
     if res is None:
