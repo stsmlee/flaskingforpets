@@ -31,20 +31,19 @@ p {line-height: 1.8em;}
     <p>{{ form.color.label }} {{ form.color()}}</p>
     <p>{{ form.coat.label }} {{ form.coat()}}</p>
     <p>{{ form.gender.label }} {{ form.gender()}}</p>
-    <h4>Care to filter by size?</h4>
+    <b>Care to filter by size?</b>
     <p>{{ form.small() }} {{ form.small.label }} {{ form.medium() }} {{ form.medium.label }} {{ form.large() }} {{ form.large.label }} {{ form.xlarge() }} {{ form.xlarge.label }}</p>
-    <h4>Care to filter by age?</h4>
+    <b>Care to filter by age?</b>
     <p>{{ form.baby() }} {{form.baby.label}} {{ form.young() }} {{form.young.label}} {{ form.adult() }} {{form.adult.label}} {{ form.senior() }} {{form.senior.label}} </p>
-    <h4>Care to filter by your home needs?</h4>
+    <b>Care to filter by your home needs?</b>
     <p>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }} 
         {% if type == 'Dog' %}
         {{form.housetrained()}} {{form.housetrained.label}}
         {% endif %}
     </p>
-    <h4>Where are you?</h4>
+    <b>Where are you?</b>
     <p>{{ form.zipcode.label }} {{ form.zipcode() }} {{ form.distance.label }} {{ form.distance() }}</p>
     {% if login %}
-    <!-- and (session['savecount'] < 2)  -->
     <p>If you want to save your search for future use, enter a name: {{ form.savename() }}</p>
     {% endif %}
     <p></p>

@@ -128,7 +128,11 @@ def index():
     login_form = forms.LoginForm()
     reuse_form = forms.ReuseForm()
     if logged_in():  
-        session['user id'] = get_user_id(session['username'])
+        try:
+            session['user id'] = get_user_id(session['username'])
+        except:
+            session.clear()
+            return redirect(url_for('index'))
         res = get_savenames()
         reuse_form.savename.choices = res
         if reuse_form.validate_on_submit():
@@ -232,7 +236,7 @@ def check_updates():
         else:
             flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
     else:
-        flash('You actually don"t have any saved searches right now.', 'notice')
+        flash('You actually don\'t have any saved searches right now.', 'notice')
     return redirect(request.referrer)   
 
 @app.route('/deleteaccount')

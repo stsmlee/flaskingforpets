@@ -13,7 +13,7 @@
 <h2>Petfinder has so many types of pets that need good loving homes!</h2>
 
 {% if form %}
-<p>Do you want to log in to your session?</p>
+<p><b>Do you want to log in to your session?</b></p>
 <form method="POST"><p>
     {{ form.hidden_tag() }}
     {{form.username.label}}: {{form.username()}} 
@@ -22,13 +22,12 @@
 </p></form>
 {% endif %}
 
-<p>
-What type are you looking for?
+<p><b>What type are you looking for?</b></p>
 <ul class="index">
     {% for type in pet_types_dict %} 
         <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
     {% endfor %}
-</ul></p>
+</ul>
 
 {% if re_form %}
 <p>You can reuse a search below.</p>
