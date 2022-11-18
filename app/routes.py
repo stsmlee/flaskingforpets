@@ -143,7 +143,6 @@ def index():
         return render_template('index.html', pet_types_dict = pet_types_dict, re_form = reuse_form)
     if login_form.validate_on_submit():
         session['username'] = login_form.username.data
-        session['user id'] = get_user_id(session['username'])
         flash("Login successful. Welcome back.", 'notice')
         return redirect(url_for('index'))
     else:

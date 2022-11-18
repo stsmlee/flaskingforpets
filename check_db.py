@@ -12,11 +12,9 @@ def get_info():
         print('No users in the database.')
     else:
         for row in user:
-            # print(row[0])
-            # print(row[1])
-            print(row['id'])
-            print(row['username'])
-            print(row['password'])
+            print(f"user_id: {row['id']}, user_name: {row['username']}")
+            # print(row['username'])
+            # print(row['password'])
     saved = conn.execute('SELECT * FROM saves').fetchall()
     if not saved:
         print('No saved searches in the database.')
@@ -41,15 +39,12 @@ def count_saves(user_id):
     conn.close()
     print(count[0])
 
-# get_info()
+get_info()
 
 # conn = get_db_connection()
 # change = conn.execute('UPDATE saves SET results  = ? WHERE user_id = ?', ("{}", 1))
 # conn.commit()
 # conn.close()
-
-# count_saves(1)
-# count_saves(2)
 
 def check_pragma_fkey():
     conn = get_db_connection()
