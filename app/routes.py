@@ -172,7 +172,7 @@ def animals(type):
         savenames = get_savenames()
         savestring = ', '.join(savenames)
         err_msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
-        my_form.savename.validators = [check_savecount, NoneOf(savenames, message=err_msg), Length(min=1, max=20)]
+        my_form.savename.validators = [check_savecount, NoneOf(savenames, message=err_msg), Length(max=20)]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:
@@ -264,7 +264,6 @@ def manage_account():
 
 @app.route('/logout')
 def logout():
-    # session.pop('username', None)
     session.clear()
     flash('Successfully logged out.', 'notice')
     return redirect(url_for('index'))
