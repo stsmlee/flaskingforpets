@@ -7,6 +7,7 @@ from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, 
 from app import app, forms
 from app.pet_helper import pet_info
 from flask_session import Session
+from app.sneaky import get_session_str
 
 pet_types_dict = pet_info.get_types_dict()
 
@@ -21,56 +22,97 @@ def flash_errors(form):
             flash(f"Error in {field} field - {error}", 'error')
             # flash(f"Error: {error}", 'error')
 
-def register_user_db(username, password):
+def register_user_db(username, password, nickname):
     username = username.lower()
     ph = PasswordHasher()
     hash = ph.hash(password)
     conn = get_db_connection()
-    conn.execute('INSERT INTO users (username, password) VALUES (?,?)', (username,hash))
-    flash(f'Successfully registered. Welcome {username}!', 'notice')
+    conn.execute('INSERT INTO users (username, password, nickname) VALUES (?,?,?)', (username,hash,nickname))
+    flash(f'Successfully registered. Welcome {nickname}!', 'notice')
     conn.commit()
     conn.close()
 
 def logged_in():
-    if 'username' in session:
+    # if 'username' in session:
+    if 'user_token' in session:
         return True
     return False
 
-def get_user_id(username):
+# def get_user_id(username):
+#     username = username.lower()
+#     conn = get_db_connection()
+#     userid = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
+#     conn.close()
+#     return userid['id']
+
+def get_user_id():
+    conn = get_db_connection()
+    user = conn.execute('SELECT user_id FROM session_table WHERE user_token = ?', (session['user_token'],)).fetchone()
+    conn.close()
+    return user[0]
+
+def get_username():
+    conn = get_db_connection()
+    user_id = get_user_id()
+    username = conn.execute('SELECT username FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+    return username[0]
+
+def login_session_db(username):
+    session['user_token'] = get_session_str()
     username = username.lower()
     conn = get_db_connection()
-    userid = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
+    user_id = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
+    user_id = user_id['id']
+    conn.execute('INSERT INTO session_table (user_token, user_id) VALUES (?,?)', (session['user_token'], user_id))
+    conn.commit()
     conn.close()
-    return userid['id']
+
+def check_session(token):
+    conn = get_db_connection()
+    check = conn.execute('SELECT * FROM session_table WHERE user_token = ?', (token,)).fetchone()
+    return check
+    
+def logout_db():
+    session.clear()
+    conn = get_db_connection()
+    conn.execute('DELETE FROM session_table WHERE user_token = ?', (session['user_token'],))
+    conn.commit()
+    conn.close()
 
 def save_search(savename,params):
     conn = get_db_connection()
-    conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, session['user id']))
+    user = get_user_id()
+    conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, user))
     conn.commit()
     conn.close()
 
 def save_results_db(results, savename):
     conn = get_db_connection()
-    conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, session['user id']))
+    user = get_user_id()
+    conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, user))
     conn.commit()
     conn.close()
 
 def get_savenames():
     conn = get_db_connection()
-    res = conn.execute('SELECT savename FROM saves WHERE user_id = ?', (session['user id'],)).fetchall()
+    user = get_user_id()
+    res = conn.execute('SELECT savename FROM saves WHERE user_id = ?', (user,)).fetchall()
     conn.close()
     results = [row['savename'] for row in res]
     return results
 
 def get_params(savename):
+    user = get_user_id()
     conn = get_db_connection()
-    res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename, session['user id'])).fetchone()
+    res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename,user)).fetchone()
     conn.close()
     return res[0]
 
 def get_savenames_params():
+    user = get_user_id()
     conn = get_db_connection()
-    res = conn.execute('SELECT savename,params FROM saves WHERE user_id = ?', (session['user id'],)).fetchall()
+    res = conn.execute('SELECT savename,params FROM saves WHERE user_id = ?', (user,)).fetchall()
     conn.close()
     names_params = {}
     for row in res:
@@ -100,16 +142,18 @@ def clean_up_req_dels(formdata):
     return req_dels
 
 def delete_save(req_list):
+    user = get_user_id()
     conn = get_db_connection()
     for savename in req_list:
-        conn.execute('DELETE FROM saves WHERE user_id = ? AND savename = ?', (session['user id'], savename))
+        conn.execute('DELETE FROM saves WHERE user_id = ? AND savename = ?', (user, savename))
     conn.commit()
     conn.close()
     flash('Selected saved searches successfully cleared.', 'notice')
 
 def check_savecount(form,field):
+    user = get_user_id()
     conn = get_db_connection()
-    count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (session['user id'],)).fetchone()
+    count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (user,)).fetchone()
     conn.close()
     count = count[0]
     print(count)
@@ -128,10 +172,10 @@ def index():
     login_form = forms.LoginForm()
     reuse_form = forms.ReuseForm()
     if logged_in():  
-        try:
-            session['user id'] = get_user_id(session['username'])
-        except:
-            session.clear()
+        # try:
+            # session['user id'] = get_user_id(session['username'])
+        if not check_session(session['user_token']):
+            logout_db()
             return redirect(url_for('index'))
         res = get_savenames()
         reuse_form.savename.choices = res
@@ -142,7 +186,7 @@ def index():
             return redirect(url_for('search_saved', payload=json.dumps(payload), type = type, page=1, savename = reuse_form.savename.data))   
         return render_template('index.html', pet_types_dict = pet_types_dict, re_form = reuse_form)
     if login_form.validate_on_submit():
-        session['username'] = login_form.username.data
+        login_session_db(login_form.username.data)
         flash("Login successful. Welcome back.", 'notice')
         return redirect(url_for('index'))
     else:
@@ -264,6 +308,6 @@ def manage_account():
 
 @app.route('/logout')
 def logout():
-    session.clear()
+    logout_db()
     flash('Successfully logged out.', 'notice')
     return redirect(url_for('index'))

@@ -7,7 +7,7 @@ from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
                      SelectField, SelectMultipleField, StringField,
                      SubmitField, TextAreaField, widgets)
 from wtforms.validators import (DataRequired, InputRequired, Length, NoneOf,
-                                NumberRange, StopValidation, ValidationError)
+                                NumberRange, StopValidation, ValidationError, Optional)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -46,6 +46,13 @@ def verify_password(form,field):
     except:
         raise ValidationError('Password incorrect.')
 
+class ChangePasswordForm(FlaskForm):
+    username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
+    nickname = StringField('Nickname (Optional)', validators= [Length(min=3, max=20), Optional()], render_kw= {'class': 'form_font'})
+    old_password = PasswordField('Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
+    new_word =  PasswordField('Password', validators= [InputRequired(), Length(min=8, max=20)], render_kw= {'class': 'form_font'})
+    submit = SubmitField('Login',render_kw= {'class': 'submit_button'})
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
     password = PasswordField('Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
@@ -54,6 +61,7 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), Length(min=3, max=20), username_check], render_kw= {'class': 'form_font'})
     password = PasswordField('Password', validators= [InputRequired(), Length(min=8, max=20)], render_kw= {'class': 'form_font'})
+    nickname = StringField('Nickname (Optional)', validators= [Length(min=3, max=20), Optional()], render_kw= {'class': 'form_font'})
     submit = SubmitField('Register', render_kw= {'class': 'submit_button'})
 
 class ReuseForm(FlaskForm):
