@@ -3,7 +3,7 @@ import sqlite3
 from argon2 import PasswordHasher
 from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for)
-from wtforms.validators import Length, NoneOf, ValidationError, StopValidation
+from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
 from app.pet_helper import pet_info
 from flask_session import Session
@@ -18,8 +18,8 @@ def get_db_connection():
 def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
-            # flash(f"Error in {field} field - {error}", 'error')
-            flash(f"Error: {error}", 'error')
+            flash(f"Error in {field} field - {error}", 'error')
+            # flash(f"Error: {error}", 'error')
 
 def register_user_db(username, password):
     username = username.lower()
@@ -172,7 +172,7 @@ def animals(type):
         savenames = get_savenames()
         savestring = ', '.join(savenames)
         err_msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
-        my_form.savename.validators = [check_savecount, NoneOf(savenames, message=err_msg), Length(max=20)]
+        my_form.savename.validators = [check_savecount, NoneOf(savenames, message=err_msg), Length(min=3,max=20), Optional()]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:
