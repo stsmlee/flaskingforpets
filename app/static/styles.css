@@ -37,6 +37,37 @@ p {
     width:auto;
 }
 
+
+#filter_form {
+    line-height: 2.5em;
+}
+
+#form_submit {
+    display:flex;
+    align-items: center;
+}
+
+
+#wait {
+    display:flex;
+    height: 25px;
+    width: 100%;
+    max-width: 290px;
+    padding: 2px 12px;
+    margin: 0px 8px;
+    color: #1e0246;
+    background-color: #c8b8f4d0;
+    line-height: 0em;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 30px; 
+}
+
+#wait img {
+    height:25px;
+    width:auto;
+}
+
 div.sticker {
     position: absolute;
     bottom: 0;
@@ -159,6 +190,8 @@ ul.index {
     /* list-style-image: url('pawicon.svg'); */
     margin: 0;
     padding: 0;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
 }
 
 ul.index > li::before {

@@ -17,39 +17,43 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" data-close></button>
 </div> -->
 <!-- {% endif %} -->
- <style>
-p {line-height: 1.8em;}
- </style>
+
 
 <h1>So you want {{type | lower}}s!</h1>
 
 <h3>Pick out some filters if you like!</h3>
-<p><form method="POST">
+<form method="POST" onsubmit="wait()" id = "filter_form">
     {{ form.hidden_tag() }}
-    <p>{{ form.breed1.label }} {{ form.breed1()}}</p>
-    <p>{{ form.breed2.label }} {{ form.breed2()}}</p>
-    <p>{{ form.color.label }} {{ form.color()}}</p>
-    <p>{{ form.coat.label }} {{ form.coat()}}</p>
-    <p>{{ form.gender.label }} {{ form.gender()}}</p>
+    <div>{{ form.breed1.label }} {{ form.breed1()}}</div>
+    <div>{{ form.breed2.label }} {{ form.breed2()}}</div>
+    <div>{{ form.color.label }} {{ form.color()}}</div>
+    <div>{{ form.coat.label }} {{ form.coat()}}</div>
+    <div>{{ form.gender.label }} {{ form.gender()}}</div>
     <b>Care to filter by size?</b>
-    <p>{{ form.small() }} {{ form.small.label }} {{ form.medium() }} {{ form.medium.label }} {{ form.large() }} {{ form.large.label }} {{ form.xlarge() }} {{ form.xlarge.label }}</p>
+    <div>{{ form.small() }} {{ form.small.label }} {{ form.medium() }} {{ form.medium.label }} {{ form.large() }} {{ form.large.label }} {{ form.xlarge() }} {{ form.xlarge.label }}</div>
     <b>Care to filter by age?</b>
-    <p>{{ form.baby() }} {{form.baby.label}} {{ form.young() }} {{form.young.label}} {{ form.adult() }} {{form.adult.label}} {{ form.senior() }} {{form.senior.label}} </p>
+    <div>{{ form.baby() }} {{form.baby.label}} {{ form.young() }} {{form.young.label}} {{ form.adult() }} {{form.adult.label}} {{ form.senior() }} {{form.senior.label}} </div>
     <b>Care to filter by your home needs?</b>
-    <p>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }} 
+    <div>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }} 
         {% if type == 'Dog' %}
         {{form.housetrained()}} {{form.housetrained.label}}
         {% endif %}
-    </p>
+    </div>
     <b>Where are you?</b>
-    <p>{{ form.zipcode.label }} {{ form.zipcode() }} {{ form.distance.label }} {{ form.distance() }}</p>
+    <div>{{ form.zipcode.label }} {{ form.zipcode() }} {{ form.distance.label }} {{ form.distance() }}</div>
     {% if login %}
-    <p>If you want to save your search for future use, enter a name: {{ form.savename() }}</p>
+    <div>If you want to save your search for future use, enter a name: {{ form.savename() }}</div>
     {% endif %}
-    <p></p>
-    <p>{{ form.submit() }}</p>
+    <div id = "form_submit"> 
+        <div>{{ form.submit() }}</div>
+        <div id="wait" style="display: none;">
+        <!-- <div id="wait"> -->
+            <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
+            <div id = "msg">Please wait while we take a look!</div>
+            <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
+        </div>
+    </div>
   </form>
-</p>
 
 {% if type == 'Dog' %}
 <div class = 'sticker'>
@@ -63,6 +67,19 @@ p {line-height: 1.8em;}
     <img src = "{{ url_for('static', filename = 'sieg.png') }}" alt = "the softest cat ever, Siegfried" style = "width:auto;height:218px;">
 </div>
 {% endif %}
+
+<script>
+    function wait() {
+        let popup = document.getElementById('wait');
+        if (popup.style.display === "none") {
+          popup.style.display = "flex";
+        } 
+        else {
+          popup.style.display = "none";
+        }
+    }
+</script>
+
 
 
 <!-- {% if form.is_submitted() and form.savename.errors|count > 0 %}
