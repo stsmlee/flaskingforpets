@@ -30,12 +30,6 @@
 </ul>
 
 {% if re_form %}
-<!-- <p><b>You can reuse a search below.</b></p>
-<form method="POST"><div>
-    {{ re_form.hidden_tag() }}
-    {{ re_form.savename.label }}: {{ re_form.savename() }}    {{ re_form.submit() }}
-</div></form> -->
-
 <form method="POST" onsubmit="wait()">
     <div id = "form_submit">
         {{ re_form.hidden_tag() }}
@@ -47,7 +41,6 @@
         </div>
     </div>
 </form>
-
 {% endif %}
 
 <div class = 'sticker'>

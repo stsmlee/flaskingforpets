@@ -4,12 +4,12 @@
 
 {% block content %}
 <h4>Register an account and save your searches!</h4>
-<form method="POST"><p>
+<form method="POST"><div style="line-height:2em;">
     {{ form.hidden_tag() }}
     {{form.username.label}}: {{form.username()}} 
     {{form.password.label}}: {{form.password()}}
     {{form.submit()}}
-</p></form>
+</div></form>
 
 
 {% endblock %}
