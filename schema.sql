@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS session_table;
 CREATE TABLE users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
-    nickname TEXT NOT NULL,
+    nickname TEXT,
     password TEXT NOT NULL
 );
 

@@ -74,11 +74,11 @@ def check_pragma_fkey():
 
 get_info()
 
-def get_user_id():
-    conn = get_db_connection()
-    user = conn.execute('SELECT user_id FROM session_table WHERE user_token = ?', ("239748492dfsdfsdf3",)).fetchone()
-    conn.close()
-    return user[0]
+# def get_user_id():
+#     conn = get_db_connection()
+#     user = conn.execute('SELECT user_id FROM session_table WHERE user_token = ?', ("239748492dfsdfsdf3",)).fetchone()
+#     conn.close()
+#     return user[0]
 
 # conn = get_db_connection()
 # res= conn.execute('SELECT username FROM users INNER JOIN session_table ON users.id = session_table.user_id').fetchone()

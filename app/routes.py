@@ -22,7 +22,7 @@ def flash_errors(form):
             flash(f"Error in {field} field - {error}", 'error')
             # flash(f"Error: {error}", 'error')
 
-def register_user_db(username, password, nickname):
+def register_user_db(username, password, nickname=None):
     username = username.lower()
     ph = PasswordHasher()
     hash = ph.hash(password)
@@ -58,6 +58,13 @@ def get_username():
     conn.close()
     return username[0]
 
+def get_user_nickname():
+    conn = get_db_connection()
+    user_id = get_user_id()
+    res = conn.execute('SELECT username, nickname FROM users WHERE id = ?', (user_id,)).fetchone()
+    names = {'username':res['username'], 'nickname':res['nickname']}
+    return names
+
 def login_session_db(username):
     session['user_token'] = get_session_str()
     username = username.lower()
@@ -74,11 +81,11 @@ def check_session(token):
     return check
     
 def logout_db():
-    session.clear()
     conn = get_db_connection()
     conn.execute('DELETE FROM session_table WHERE user_token = ?', (session['user_token'],))
     conn.commit()
     conn.close()
+    session.clear()
 
 def save_search(savename,params):
     conn = get_db_connection()
@@ -172,19 +179,22 @@ def index():
     login_form = forms.LoginForm()
     reuse_form = forms.ReuseForm()
     if logged_in():  
-        # try:
-            # session['user id'] = get_user_id(session['username'])
         if not check_session(session['user_token']):
             logout_db()
             return redirect(url_for('index'))
         res = get_savenames()
         reuse_form.savename.choices = res
+        names = get_user_nickname()
+        if names['nickname']:
+            name = names['nickname']
+        else:
+            name = names['username']
         if reuse_form.validate_on_submit():
             payload = get_params(reuse_form.savename.data)
             payload = json.loads(payload)
             type = payload['type']
             return redirect(url_for('search_saved', payload=json.dumps(payload), type = type, page=1, savename = reuse_form.savename.data))   
-        return render_template('index.html', pet_types_dict = pet_types_dict, re_form = reuse_form)
+        return render_template('index.html', pet_types_dict = pet_types_dict, re_form = reuse_form, name = name)
     if login_form.validate_on_submit():
         login_session_db(login_form.username.data)
         flash("Login successful. Welcome back.", 'notice')
@@ -198,8 +208,8 @@ def register():
     form = forms.RegisterForm()
     flash_errors(form)
     if form.validate_on_submit():
-        register_user_db(form.username.data,form.password.data)
-        session['username'] = form.username.data
+        register_user_db(form.username.data,form.password.data, form.nickname.data)
+        login_session_db(form.username.data)
         return redirect(url_for('index'))
     else:
         flash_errors(form)
@@ -265,7 +275,7 @@ def search(type,payload,page):
 @app.route('/whatsnews')
 def check_updates():
     if get_savenames():
-        results = pet_info.check_for_new_results(session['user id'])
+        results = pet_info.check_for_new_results(get_user_id())
         new_stuff = []
         for savename, result in results.items():
             if isinstance(result, int):
@@ -289,7 +299,7 @@ def delete_account():
 @app.route('/deleteaccount/confirm')
 def confirm_delete():
     conn = get_db_connection()
-    conn.execute('DELETE FROM users WHERE id = ?', (session['user id'],))
+    conn.execute('DELETE FROM users WHERE id = ?', (get_user_id(),))
     conn.commit()
     conn.close()
     session.clear()

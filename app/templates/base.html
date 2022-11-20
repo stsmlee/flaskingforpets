@@ -16,7 +16,7 @@
         <div><a href="/" id='home'>Home</a></div>
         <nav>
           <ul>      
-          {%if session['username']%}
+          {%if session['user_token']%}
           <li><a href="{{url_for('check_updates')}}" id ='news' onclick="patience()">What's News?</a></li>
           <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
           <li><a href="{{url_for('logout')}}">Log Out</a></li>
