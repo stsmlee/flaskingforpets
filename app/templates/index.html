@@ -1,0 +1,61 @@
+{%extends 'base.html'%}
+
+{%block title%}Flasking for Pets{%endblock%}
+
+{%block content%}
+
+{% if not session['user_token'] %}
+<h1>SUP DOG</h1>
+{% else %}
+<h1>Welcome, {{name}}!!</h1>
+{% endif %}
+
+<h2>Petfinder has so many types of pets that need good loving homes!</h2>
+
+{% if form %}
+<h4>Do you want to log in to your session?</h4>
+<form method="POST"><div>
+    {{ form.hidden_tag() }}
+    {{form.username.label}}: {{form.username()}} 
+    {{form.password.label}}: {{form.password()}}
+    {{form.submit()}}
+<div></form>
+{% endif %}
+
+<h4>What type are you looking for?</h4>
+<ul class="index">
+    {% for type in pet_types_dict %} 
+        <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
+    {% endfor %}
+</ul>
+
+{% if re_form %}
+<form method="POST" onsubmit="wait()">
+    <div id = "form_submit">
+        {{ re_form.hidden_tag() }}
+        <div>{{ re_form.savename.label }}: {{ re_form.savename() }} {{ re_form.submit() }}</div>
+        <div id="wait" style="display: none;">
+            <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
+            <div id = "msg">Please wait while we take a look!</div>
+            <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
+        </div>
+    </div>
+</form>
+{% endif %}
+
+<div class = 'sticker'>
+    <img src = "{{ url_for('static', filename = 'kimchibun.png') }}" alt = "the cutest pitbull ever, Kimchi Bun" style = "width:auto;height:218px;">
+</div>
+
+<script>
+    function wait() {
+        let popup = document.getElementById('wait');
+        if (popup.style.display === "none") {
+          popup.style.display = "flex";
+        } 
+        else {
+          popup.style.display = "none";
+        }
+    }
+</script>
+{%endblock%}

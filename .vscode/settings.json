@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./app/pet_types",
+        "./app/pet_helper"
+    ]
+}

@@ -1,0 +1,13 @@
+{%extends 'base.html'%}
+
+{%block title%}Delete Account?{%endblock%}
+
+{%block content%}
+<br><br>
+<div style = 'text-align: center; margin:auto'>
+<h4>Are you sure you want to delete your account?</h4>
+<form method="GET" action="{{url_for('confirm_delete')}}">
+    <input type="submit" value="Yes! Definitely! Delete!" class = 'submit_button'>
+</form>
+</div>
+{%endblock%}

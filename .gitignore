@@ -1,0 +1,5 @@
+sneaky.py
+database.db
+flask_session/
+app/__pycache__
+app/pet_helper/__pycache__

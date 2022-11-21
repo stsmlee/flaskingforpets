@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename = 'styles.css') }}">
+    <!-- <link rel="icon"
+      type="image/ico"
+      href="static/favicon.ico"> -->
+    <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}">
+    <title>{%block title%}{% endblock %}</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id = "header">
+        <div><a href="/" id='home'>Home</a></div>
+        <nav>
+          <ul>      
+          {%if session['user_token']%}
+          <li><a href="{{url_for('check_updates')}}" id ='news' onclick="patience()">What's News?</a></li>
+          <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
+          <li><a href="{{url_for('logout')}}">Log Out</a></li>
+          {%else%}
+          <li><a href="{{url_for('register')}}">Register</a></li>
+          {%endif%}
+          </ul>
+        </nav>
+      </div>
+
+      <div id="popup" style="display: none;">
+      <!-- <div id="popup"> -->
+        <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
+        <div id = "msg">Please wait while we take a look!</div>
+        <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
+      </div>
+
+      <div>
+        {% with notices = get_flashed_messages(category_filter=['notice']) %}
+        {% if notices %}
+          <ul class="notice" >
+          {% for message in notices %}
+            {% if message == "Nothing new for you, I'm afraid. Maybe try a new search!"%}
+              <li>{{ message }}</li>
+            {% else %}
+              <li class="new">{{ message }}</li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+      </div>
+
+      <div style="text-align: center;">
+        {% with res_errors = get_flashed_messages(category_filter=['response error']) %}
+        {% if res_errors %}
+          <div class="response_error">
+          {% for message in res_errors %}
+            {{ message }}
+          {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+      {% block content %}
+      {% endblock %}
+
+      <div>
+        {% with errs = get_flashed_messages(category_filter=['error']) %}
+          {% if errs %}
+            <ul class="alert">
+            {% for message in errs %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+
+    <script>
+      function patience() {
+          let popup = document.getElementById('popup');
+          if (popup.style.display === "none") {
+            popup.style.display = "flex";
+          } 
+          else {
+            popup.style.display = "none";
+          }
+      }
+    </script>
+  </body>
+</html>
