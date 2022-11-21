@@ -1,7 +1,7 @@
 import sqlite3
 import requests
 from argon2 import PasswordHasher
-from flask import Flask
+from flask import Flask, Markup
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
                      SelectField, SelectMultipleField, StringField,
@@ -28,7 +28,7 @@ def verify_user(form,field):
     conn = get_db_connection()
     res = conn.execute('SELECT username FROM users WHERE username = ?', (username,)).fetchone()
     if res is None:
-        raise StopValidation('Username does not exist, please double check your entry or register a new account.')
+        raise StopValidation(Markup('Username does not exist, please double check your entry or <a href="/register">register a new account</a>.'))
 
 def verify_password(form,field):
     ph = PasswordHasher()

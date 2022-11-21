@@ -2,7 +2,7 @@ import json
 import sqlite3
 from argon2 import PasswordHasher
 from flask import (Flask, flash, redirect, render_template, request, session,
-                   url_for)
+                   url_for, Markup)
 from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
 from app.pet_helper import pet_info
@@ -21,7 +21,10 @@ def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
             flash(f"Error in {field} field - {error}", 'error')
-            # flash(f"Error: {error}", 'error')
+
+def flash_basic_error(form_field):
+    for error in form_field.errors:
+        flash(error, 'error')
 
 def login_errors(login_form):
     if login_form.username.errors:
@@ -74,13 +77,6 @@ def logged_in():
     if 'user_token' in session:
         return True
     return False
-
-# def get_user_id(username):
-#     username = username.lower()
-#     conn = get_db_connection()
-#     userid = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
-#     conn.close()
-#     return userid['id']
 
 def get_user_id():
     conn = get_db_connection()
@@ -193,7 +189,7 @@ def check_savecount(form,field):
     count = count[0]
     print(count)
     if count >= 20:
-        raise StopValidation('You have reached the maximum number of saved searches (20), please go to \'Manage Your Account\' to make space for more.')
+        raise StopValidation(Markup('You have reached the maximum number of saved searches (20), please go to <a href="/manageaccount">Manage Your Account</a> to make space for more.'))
 
 def refresh_token():
     pet_info.token = pet_info.get_token()
@@ -231,18 +227,6 @@ def index():
         login_errors(login_form)
     return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form)
 
-@app.route('/register', methods=["GET", "POST"])
-def register():
-    form = forms.RegisterForm()
-    flash_errors(form)
-    if form.validate_on_submit():
-        register_user_db(form.username.data,form.password.data, form.nickname.data)
-        login_session_db(form.username.data)
-        return redirect(url_for('index'))
-    else:
-        flash_errors(form)
-    return render_template('register.html', form = form)
-
 @app.route('/animals/<type>', methods=["GET", "POST"])
 def animals(type):
     my_form = forms.FilterForm()
@@ -262,7 +246,9 @@ def animals(type):
             return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=1, savename=my_form.savename.data))
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
     elif logged_in() and my_form.savename.errors:
-        flash_errors(my_form)
+        flash_basic_error(my_form.savename)
+        # for error in my_form.savename.errors:
+        #     flash(error, 'error')
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
@@ -320,18 +306,22 @@ def check_updates():
         flash('You actually don\'t have any saved searches right now.', 'notice')
     return redirect(request.referrer)   
 
-@app.route('/deleteaccount')
-def delete_account():
-    return render_template('delete.html')
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    form = forms.RegisterForm()
+    flash_errors(form)
+    if form.validate_on_submit():
+        register_user_db(form.username.data,form.password.data, form.nickname.data)
+        login_session_db(form.username.data)
+        return redirect(url_for('index'))
+    else:
+        flash_errors(form)
+    return render_template('register.html', form = form)
 
-@app.route('/deleteaccount/confirm')
-def confirm_delete():
-    conn = get_db_connection()
-    conn.execute('DELETE FROM users WHERE id = ?', (get_user_id(),))
-    conn.commit()
-    conn.close()
-    session.clear()
-    flash('Account successfully deleted.', 'notice')
+@app.route('/logout')
+def logout():
+    logout_db()
+    flash('Successfully logged out.', 'notice')
     return redirect(url_for('index'))
 
 @app.route('/manageaccount', methods=["GET", "POST"])
@@ -357,8 +347,16 @@ def manage_account():
         flash_errors(change_form)
     return render_template('manage.html', saves=saved, change_form = change_form)
 
-@app.route('/logout')
-def logout():
-    logout_db()
-    flash('Successfully logged out.', 'notice')
+@app.route('/deleteaccount')
+def delete_account():
+    return render_template('delete.html')
+
+@app.route('/deleteaccount/confirm')
+def confirm_delete():
+    conn = get_db_connection()
+    conn.execute('DELETE FROM users WHERE id = ?', (get_user_id(),))
+    conn.commit()
+    conn.close()
+    session.clear()
+    flash('Account successfully deleted.', 'notice')
     return redirect(url_for('index'))
