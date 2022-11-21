@@ -203,18 +203,18 @@ def check_for_new_results(user_id):
     results = {}
     if saved_searches:
         for row in saved_searches:
-            print(row['savename'])
+            # print(row['savename'])
             prev_results = json.loads(row['results'])
-            print('Old:')
-            print(prev_results)
+            # print('Old:')
+            # print(prev_results)
             params = json.loads(row['params'])
             new_req = get_request(params)
             if isinstance(new_req, int):
                 results[row['savename']] = new_req
                 continue
             new_results = save_results(new_req, saved_dict={})
-            print('New:')
-            print(new_results)
+            # print('New:')
+            # print(new_results)
             if new_results and not prev_results:
                 print('You went from zero to new results!')
                 results[row['savename']] = 'New'
@@ -225,6 +225,7 @@ def check_for_new_results(user_id):
                         results[row['savename']] = 'New'
                         break
     return results
+
 
 def build_params(my_data, type):
     payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':20}

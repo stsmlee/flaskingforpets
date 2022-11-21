@@ -296,8 +296,12 @@ def check_updates():
         new_stuff = []
         for savename, result in results.items():
             if isinstance(result, int):
-                flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
-                return redirect(url_for('index'))
+                if result == 401:
+                    refresh_token()
+                    return redirect(url_for('check_updates'))
+                else:
+                    flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
+                    return redirect(url_for('index'))
             else:
                 new_stuff.append(savename)
         if new_stuff:
