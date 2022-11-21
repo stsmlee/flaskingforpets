@@ -21,9 +21,9 @@ def get_info():
     else:
         print('SAVED TABLE')
         for row in saved:
-            print("savename:", row[0], "user_id:", row[3])
-            print("params:", row[1])
-            print("results:", row[2])
+            print("savename:", row['savename'], ", user_id:", row['user_id'])
+            print("params:", row['params'])
+            print("results:", row['results'])
     session = conn.execute('SELECT * FROM session_table').fetchall()
     if not session:
         print('No sessions in the database.')
@@ -80,7 +80,6 @@ def joinery():
         for col in row:
             print(col)
     
-# get_info()
+get_info()
 # delete_expired_sessions(30)
-
-joinery()
+# joinery()
