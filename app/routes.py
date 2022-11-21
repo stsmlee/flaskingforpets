@@ -40,7 +40,11 @@ def register_user_db(username, password, nickname=None):
     hash = ph.hash(password)
     conn = get_db_connection()
     conn.execute('INSERT INTO users (username, password, nickname) VALUES (?,?,?)', (username,hash,nickname))
-    flash(f'Successfully registered. Welcome {nickname}!', 'notice')
+    if nickname:
+        name = nickname
+    else:
+        name = username
+    flash(f'Successfully registered. Welcome, {name}!', 'notice')
     conn.commit()
     conn.close()
 
@@ -92,9 +96,12 @@ def get_username():
 
 def get_user_nickname():
     conn = get_db_connection()
-    res = conn.execute('SELECT username, nickname FROM users WHERE id = ?', (get_user_id(),)).fetchone()
-    names = {'username':res['username'], 'nickname':res['nickname']}
-    return names
+    names = conn.execute('SELECT username, nickname FROM users WHERE id = ?', (get_user_id(),)).fetchone()
+    if names['nickname']:
+        name = names['nickname']
+    else:
+        name = names['username']
+    return name
 
 def login_session_db(username):
     session['user_token'] = get_session_str()
@@ -208,11 +215,7 @@ def index():
             return redirect(url_for('index'))
         res = get_savenames()
         reuse_form.savename.choices = res
-        names = get_user_nickname()
-        if names['nickname']:
-            name = names['nickname']
-        else:
-            name = names['username']
+        name = get_user_nickname()
         if reuse_form.validate_on_submit():
             payload = get_params(reuse_form.savename.data)
             payload = json.loads(payload)
@@ -221,7 +224,8 @@ def index():
         return render_template('index.html', pet_types_dict = pet_types_dict, re_form = reuse_form, name = name)
     if login_form.validate_on_submit():
         login_session_db(login_form.username.data)
-        flash("Login successful. Welcome back.", 'notice')
+        name = get_user_nickname()
+        flash(f"Login successful. Welcome back, {name}.", 'notice')
         return redirect(url_for('index'))
     else:
         login_errors(login_form)
@@ -247,8 +251,6 @@ def animals(type):
         return redirect(url_for('search', type=type, payload=json.dumps(payload), page=1))
     elif logged_in() and my_form.savename.errors:
         flash_basic_error(my_form.savename)
-        # for error in my_form.savename.errors:
-        #     flash(error, 'error')
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
@@ -309,7 +311,6 @@ def check_updates():
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = forms.RegisterForm()
-    flash_errors(form)
     if form.validate_on_submit():
         register_user_db(form.username.data,form.password.data, form.nickname.data)
         login_session_db(form.username.data)
