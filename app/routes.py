@@ -254,6 +254,22 @@ def animals(type):
         flash_basic_error(my_form.savename)
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
+@app.route('/animals/<type>/page<int:page>/<payload>')
+def search(type,payload,page):
+    payload = json.loads(payload)
+    payload = pet_info.return_the_slash(payload)
+    payload['page'] = page
+    res_json = pet_info.get_request(payload)
+    if isinstance(res_json, int):
+        if res_json == 401:
+            refresh_token()
+            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page))
+        flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
+        return redirect(url_for('index'))
+    if not res_json:
+        return render_template('no_results.html', type=type)
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
 def search_saved(type,payload,page,savename):
     payload = json.loads(payload)
@@ -273,42 +289,22 @@ def search_saved(type,payload,page,savename):
     save_results_db(json.dumps(results), savename)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
-@app.route('/animals/<type>/page<int:page>/<payload>')
-def search(type,payload,page):
-    payload = json.loads(payload)
-    payload = pet_info.return_the_slash(payload)
-    payload['page'] = page
-    res_json = pet_info.get_request(payload)
-    if isinstance(res_json, int):
-        if res_json == 401:
-            refresh_token()
-            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page))
-        flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
-        return redirect(url_for('index'))
-    if not res_json:
-        return render_template('no_results.html', type=type)
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
-
 @app.route('/whatsnews')
 def check_updates():
     if get_savenames():
         results = pet_info.check_for_new_results(get_user_id())
-        new_stuff = []
-        for savename, result in results.items():
-            if isinstance(result, int):
-                if result == 401:
-                    refresh_token()
-                    return redirect(url_for('check_updates'))
-                else:
-                    flash(f'There was an issue with Petfinder, please try again later. Status code {str(result)}.', 'response error')
-                    return redirect(url_for('index'))
+        if isinstance(results, int):
+            if results == 401:
+                refresh_token()
+                return redirect(url_for('check_updates'))
             else:
-                new_stuff.append(savename)
-        if new_stuff:
-            for search in new_stuff:
-                flash(f'{search} has new results!', 'notice')
-        else:
+                flash(f'There was an issue with Petfinder, please try again later. Status code {str(results)}.', 'response error')
+                return redirect(url_for('index'))
+        elif not results: 
             flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
+        else:
+            for savename in results:
+                flash(f'{savename} has new results!', 'notice')
     else:
         flash('You actually don\'t have any saved searches right now.', 'notice')
     return redirect(request.referrer)   

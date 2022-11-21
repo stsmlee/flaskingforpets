@@ -12,23 +12,23 @@ def get_info():
     if not user:
         print('No users in the database.')
     else:
+        print('USERS TABLE')
         for row in user:
             print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}")
-            # print(row['username'])
-            # print(row['password'])
     saved = conn.execute('SELECT * FROM saves').fetchall()
     if not saved:
         print('No saved searches in the database.')
     else:
+        print('SAVED TABLE')
         for row in saved:
-            print("savename:", row[0])
+            print("savename:", row[0], "user_id:", row[3])
             print("params:", row[1])
             print("results:", row[2])
-            print("user_id:", row[3])
     session = conn.execute('SELECT * FROM session_table').fetchall()
     if not session:
         print('No sessions in the database.')
     else:
+        print('SESSIONS TABLE')
         for row in session:
             print("user_token:", row['user_token'])
             print("user_id:", row['user_id'])
@@ -67,5 +67,20 @@ def delete_expired_sessions(set_days):
     conn.commit()
     conn.close()
 
-get_info()
-delete_expired_sessions(30)
+def clear_results(savename):
+    conn = get_db_connection()
+    conn.execute('UPDATE saves SET results = "{}" WHERE savename = ?', (savename,))
+    conn.commit()
+    conn.close()
+
+def joinery():
+    conn = get_db_connection()
+    res = conn.execute('SELECT username, savename FROM users JOIN saves ON id = user_id').fetchall()
+    for row in res:
+        for col in row:
+            print(col)
+    
+# get_info()
+# delete_expired_sessions(30)
+
+joinery()
