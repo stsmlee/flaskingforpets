@@ -53,10 +53,9 @@ def check_pragma_fkey():
     print(conn.execute("PRAGMA foreign_keys"))
     conn.close()
 
-def check_expired_sessions():
+def delete_expired_sessions(set_days):
     conn = get_db_connection()
-    set_time = 30
-    expire = datetime.now() - timedelta(days=set_time)
+    expire = datetime.now() - timedelta(days=set_days)
     res = conn.execute('SELECT age,user_id FROM session_table WHERE age < ?', (expire,)).fetchall()
     if res:
         print('These sessions are too old and will be deleted:')
@@ -69,4 +68,4 @@ def check_expired_sessions():
     conn.close()
 
 get_info()
-check_expired_sessions()
+delete_expired_sessions(30)

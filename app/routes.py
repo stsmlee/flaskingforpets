@@ -10,7 +10,7 @@ from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
 
-pet_types_dict = pet_info.get_types_dict()
+pet_types_dict = pet_info.types_dict
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
