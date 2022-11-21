@@ -13,6 +13,7 @@ pet_types_dict = pet_info.get_types_dict()
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
+    conn.execute("PRAGMA foreign_keys = ON")
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -53,15 +54,13 @@ def get_user_id():
 
 def get_username():
     conn = get_db_connection()
-    user_id = get_user_id()
-    username = conn.execute('SELECT username FROM users WHERE id = ?', (user_id,)).fetchone()
+    username = conn.execute('SELECT username FROM users WHERE id = ?', (get_user_id(),)).fetchone()
     conn.close()
     return username[0]
 
 def get_user_nickname():
     conn = get_db_connection()
-    user_id = get_user_id()
-    res = conn.execute('SELECT username, nickname FROM users WHERE id = ?', (user_id,)).fetchone()
+    res = conn.execute('SELECT username, nickname FROM users WHERE id = ?', (get_user_id(),)).fetchone()
     names = {'username':res['username'], 'nickname':res['nickname']}
     return names
 
@@ -89,37 +88,32 @@ def logout_db():
 
 def save_search(savename,params):
     conn = get_db_connection()
-    user = get_user_id()
-    conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, user))
+    conn.execute('INSERT INTO saves (savename, params, user_id) VALUES (?,?,?)', (savename, params, get_user_id()))
     conn.commit()
     conn.close()
 
 def save_results_db(results, savename):
     conn = get_db_connection()
-    user = get_user_id()
-    conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, user))
+    conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, get_user_id()))
     conn.commit()
     conn.close()
 
 def get_savenames():
     conn = get_db_connection()
-    user = get_user_id()
-    res = conn.execute('SELECT savename FROM saves WHERE user_id = ?', (user,)).fetchall()
+    res = conn.execute('SELECT savename FROM saves WHERE user_id = ?', (get_user_id(),)).fetchall()
     conn.close()
     results = [row['savename'] for row in res]
     return results
 
 def get_params(savename):
-    user = get_user_id()
     conn = get_db_connection()
-    res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename,user)).fetchone()
+    res = conn.execute('SELECT params FROM saves WHERE savename = ? AND user_id = ?', (savename,get_user_id())).fetchone()
     conn.close()
     return res[0]
 
 def get_savenames_params():
-    user = get_user_id()
     conn = get_db_connection()
-    res = conn.execute('SELECT savename,params FROM saves WHERE user_id = ?', (user,)).fetchall()
+    res = conn.execute('SELECT savename,params FROM saves WHERE user_id = ?', (get_user_id(),)).fetchall()
     conn.close()
     names_params = {}
     for row in res:
@@ -149,18 +143,16 @@ def clean_up_req_dels(formdata):
     return req_dels
 
 def delete_save(req_list):
-    user = get_user_id()
     conn = get_db_connection()
     for savename in req_list:
-        conn.execute('DELETE FROM saves WHERE user_id = ? AND savename = ?', (user, savename))
+        conn.execute('DELETE FROM saves WHERE user_id = ? AND savename = ?', (get_user_id(), savename))
     conn.commit()
     conn.close()
     flash('Selected saved searches successfully cleared.', 'notice')
 
 def check_savecount(form,field):
-    user = get_user_id()
     conn = get_db_connection()
-    count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (user,)).fetchone()
+    count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (get_user_id(),)).fetchone()
     conn.close()
     count = count[0]
     print(count)

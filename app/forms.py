@@ -14,11 +14,6 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# def password_check(form,field):
-#     password = form.password.data
-#     if len(password) < 8 and len(password) > 20:
-#         raise ValidationError('Password must be between 8-25 characters long.')
-
 def username_check(form,field):
     username = form.username.data.lower()
     conn = get_db_connection()

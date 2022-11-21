@@ -92,8 +92,4 @@ get_info()
 # conn.close()
 # print(username[0]) 
 
-
-conn = get_db_connection()
-check = conn.execute('SELECT * FROM session_table WHERE user_token = ?', ('222',)).fetchone()
-if check:
-    print("YAS")
+# check_pragma_fkey()

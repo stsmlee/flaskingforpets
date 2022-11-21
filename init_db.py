@@ -2,7 +2,7 @@ import sqlite3
 
 connection = sqlite3.connect('database.db')
 
-connection.execute("PRAGMA foreign_keys = ON")
+# connection.execute("PRAGMA foreign_keys = ON")
 
 with open('schema.sql') as f:
     connection.executescript(f.read())
