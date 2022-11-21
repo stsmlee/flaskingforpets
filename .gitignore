@@ -1,5 +1,4 @@
 sneaky.py
 database.db
 flask_session/
-app/__pycache__
-app/pet_helper/_pycache__/
+**/__pycache__
