@@ -39,14 +39,23 @@ def verify_password(form,field):
     try:
         ph.verify(res['password'], password)
     except:
-        raise ValidationError('Password incorrect.')
+        raise ValidationError('Password does not match username entered.')
+
+def update_something(form,field):
+    a = form.nickname.data
+    b = form.new_password.data
+    if a or b:
+        form.nickname.validators.append(Optional())
+        form.new_password.validators.append(Optional())
+    else:
+        raise StopValidation('You have not changed anything.')
 
 class ChangePasswordForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
-    nickname = StringField('Nickname (Optional)', validators= [Length(min=3, max=20), Optional()], render_kw= {'class': 'form_font'})
-    old_password = PasswordField('Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
-    new_word =  PasswordField('Password', validators= [InputRequired(), Length(min=8, max=20)], render_kw= {'class': 'form_font'})
-    submit = SubmitField('Login',render_kw= {'class': 'submit_button'})
+    nickname = StringField('New Nickname', validators= [update_something, Length(min=3, max=20)], render_kw= {'class': 'form_font'})
+    password = PasswordField('Current Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
+    new_password =  PasswordField('New Password', validators= [update_something, Length(min=8, max=20)], render_kw= {'class': 'form_font'})
+    submit = SubmitField('Save Changes',render_kw= {'class': 'submit_button'})
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})

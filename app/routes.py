@@ -23,6 +23,14 @@ def flash_errors(form):
             flash(f"Error in {field} field - {error}", 'error')
             # flash(f"Error: {error}", 'error')
 
+def login_errors(login_form):
+    if login_form.username.errors:
+        for error in login_form.username.errors:
+            flash(error, 'error')
+    else:
+        for error in login_form.password.errors:
+            flash(error, 'error') 
+
 def register_user_db(username, password, nickname=None):
     username = username.lower()
     ph = PasswordHasher()
@@ -30,6 +38,34 @@ def register_user_db(username, password, nickname=None):
     conn = get_db_connection()
     conn.execute('INSERT INTO users (username, password, nickname) VALUES (?,?,?)', (username,hash,nickname))
     flash(f'Successfully registered. Welcome {nickname}!', 'notice')
+    conn.commit()
+    conn.close()
+
+def update_user_pw_nickname_db(username,password,nickname):
+    username = username.lower()
+    ph = PasswordHasher()
+    hash = ph.hash(password)
+    conn = get_db_connection()
+    conn.execute('UPDATE users SET password = ?, nickname = ? WHERE username = ?', (hash,nickname,username))
+    flash(f'Your account changes have been saved, {nickname}.', 'notice')
+    conn.commit()
+    conn.close()
+
+def update_user_pw_db(username,password):
+    username = username.lower()
+    ph = PasswordHasher()
+    hash = ph.hash(password)
+    conn = get_db_connection()
+    conn.execute('UPDATE users SET password = ? WHERE username = ?', (hash,username))
+    flash('Your password has been updated.', 'notice')
+    conn.commit()
+    conn.close()
+
+def update_user_nickname_db(username,nickname):
+    username = username.lower()
+    conn = get_db_connection()
+    conn.execute('UPDATE users SET nickname = ? WHERE username = ?', (nickname,username))
+    flash(f'Your nickname has been updated, {nickname}.', 'notice')
     conn.commit()
     conn.close()
 
@@ -192,7 +228,7 @@ def index():
         flash("Login successful. Welcome back.", 'notice')
         return redirect(url_for('index'))
     else:
-        flash_errors(login_form)  
+        login_errors(login_form)
     return render_template('index.html', pet_types_dict = pet_types_dict, form=login_form)
 
 @app.route('/register', methods=["GET", "POST"])
@@ -300,13 +336,26 @@ def confirm_delete():
 
 @app.route('/manageaccount', methods=["GET", "POST"])
 def manage_account():
+    change_form = forms.ChangePasswordForm()
     saved = get_savenames_params()
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form.getlist('savenames'):
         req_list = request.form.getlist('savenames')
         delete_save(req_list)
         return redirect(url_for('manage_account'))
+    if change_form.validate_on_submit():
+        username = change_form.username.data
+        nickname = change_form.nickname.data
+        new_password = change_form.new_password.data
+        if nickname and new_password:
+            update_user_pw_nickname_db(username, new_password, nickname)
+        elif nickname:
+            update_user_nickname_db(username, nickname)
+        else:
+            update_user_pw_db(username, new_password)
+        return redirect(url_for('manage_account'))
     else:
-        return render_template('manage.html', saves=saved)
+        flash_errors(change_form)
+    return render_template('manage.html', saves=saved, change_form = change_form)
 
 @app.route('/logout')
 def logout():

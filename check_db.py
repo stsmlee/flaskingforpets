@@ -14,7 +14,7 @@ def get_info():
         for row in user:
             print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}")
             # print(row['username'])
-            # print(row['password'])
+            print(row['password'])
     saved = conn.execute('SELECT * FROM saves').fetchall()
     if not saved:
         print('No saved searches in the database.')

@@ -26,10 +26,20 @@
 <h4>No saved searches at the moment.</h4>
 {%endif%}
 
+<h4>Update your nickname or change your password?</h4>
+<form method="POST"><div style="line-height:2.5em;">
+    {{ change_form.hidden_tag() }}
+    <div>{{change_form.username.label}}: {{change_form.username()}} </div>
+    <div>{{change_form.nickname.label}}: {{change_form.nickname()}} </div>
+    <div>{{change_form.password.label}}: {{change_form.password()}}</div>
+    <div>{{change_form.new_password.label}}: {{change_form.new_password()}}</div>
+    <div>{{change_form.submit()}}</div>
+</div></form>
+
 <h4>Delete your account completely?</h4>
 
-<form method="GET" action="{{url_for('delete_account')}}">
+<form method="GET" action="{{url_for('delete_account')}}"> <div style = "line-height: 2.5em;;">
     <input type="submit" value="Delete!" class = 'submit_button'>
-</form>
+</div></form>
 
 {%endblock%}
