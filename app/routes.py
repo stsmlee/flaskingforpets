@@ -8,11 +8,12 @@ from app import app, forms
 from app.pet_helper import pet_info
 from flask_session import Session
 from app.sneaky import get_session_str
+from datetime import datetime
 
 pet_types_dict = pet_info.get_types_dict()
 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA foreign_keys = ON")
     conn.row_factory = sqlite3.Row
     return conn
@@ -77,7 +78,6 @@ def update_user_nickname_db(username,nickname):
     conn.close()
 
 def logged_in():
-    # if 'username' in session:
     if 'user_token' in session:
         return True
     return False
@@ -106,14 +106,15 @@ def get_user_nickname():
 def login_session_db(username):
     session['user_token'] = get_session_str()
     username = username.lower()
+    now = datetime.now()
     conn = get_db_connection()
     user_id = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
     user_id = user_id['id']
-    conn.execute('INSERT INTO session_table (user_token, user_id) VALUES (?,?)', (session['user_token'], user_id))
+    conn.execute('INSERT INTO session_table (user_token, user_id, age) VALUES (?,?,?)', (session['user_token'], user_id, now))
     conn.commit()
     conn.close()
 
-def check_session(token):
+def active_session(token):
     conn = get_db_connection()
     check = conn.execute('SELECT * FROM session_table WHERE user_token = ?', (token,)).fetchone()
     return check
@@ -210,7 +211,7 @@ def index():
     login_form = forms.LoginForm()
     reuse_form = forms.ReuseForm()
     if logged_in():  
-        if not check_session(session['user_token']):
+        if not active_session(session['user_token']):
             logout_db()
             return redirect(url_for('index'))
         res = get_savenames()

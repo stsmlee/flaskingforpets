@@ -23,6 +23,7 @@ CREATE TABLE saves(
 CREATE TABLE session_table(
     user_token TEXT UNIQUE PRIMARY KEY,
     user_id INTEGER NOT NULL,
+    age TIMESTAMP,
         -- ON CONFLICT REPLACE,
         -- if you replace it will log out their other sessions on other devices/browsers
     FOREIGN KEY (user_id) REFERENCES users(id)

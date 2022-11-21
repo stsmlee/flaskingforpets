@@ -1,7 +1,8 @@
 import sqlite3
+from datetime import datetime, timedelta
 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -31,6 +32,7 @@ def get_info():
         for row in session:
             print(row['user_token'])
             print(row['user_id'])
+            print(row[2])
     conn.close()
 
 def get_savenames():
@@ -51,45 +53,21 @@ def check_pragma_fkey():
     print(conn.execute("PRAGMA foreign_keys"))
     conn.close()
 
-# conn = get_db_connection()
-# change = conn.execute('UPDATE saves SET results  = ? WHERE user_id = ?', ("{}", 1))
-# conn.commit()
-# conn.close()
-
-# conn = get_db_connection()
-# conn.execute('INSERT INTO session_table (user_token, user_id) VALUES (?,?)', ("239748492dfsdfsdf3", 1))
-# conn.commit()
-# conn.close()
-
-# conn = get_db_connection()
-# conn.execute('DELETE FROM session_table WHERE user_token = ?', ("239748492dfsdfsdf3",))
-# conn.commit()
-# conn.close()
-
-# conn = get_db_connection()
-# conn.execute('INSERT INTO users (username, nickname, password) VALUES (?,?, ?)', ('tofu', 'Tofu', 'password'))
-# conn.execute('INSERT INTO session_table (user_token, user_id) VALUES (?,?)', ("239748492dfsdfsdf3", 1))
-# conn.commit()
-# conn.close()
+def check_expired_sessions():
+    conn = get_db_connection()
+    set_time = 30
+    expire = datetime.now() - timedelta(days=set_time)
+    res = conn.execute('SELECT age,user_id FROM session_table WHERE age < ?', (expire,)).fetchall()
+    if res:
+        print('These sessions are too old and will be deleted')
+        for row in res:
+            print(row['age'])
+            print('user_id:', row['user_id'])
+    else:
+        print('No expired sessions.')
+    conn.execute('DELETE FROM session_table WHERE age < ?', (expire,))
+    conn.commit()
+    conn.close()
 
 get_info()
-
-# def get_user_id():
-#     conn = get_db_connection()
-#     user = conn.execute('SELECT user_id FROM session_table WHERE user_token = ?', ("239748492dfsdfsdf3",)).fetchone()
-#     conn.close()
-#     return user[0]
-
-# conn = get_db_connection()
-# res= conn.execute('SELECT username FROM users INNER JOIN session_table ON users.id = session_table.user_id').fetchone()
-# conn.close()
-# print(res['username'])
-
-# conn = get_db_connection()
-# user_id = get_user_id()
-# # username = conn.execute('SELECT username FROM users INNER JOIN session_table ON users.id = session_table.user_id').fetchone()
-# username = conn.execute('SELECT username FROM users WHERE id = ?', (user_id,)).fetchone()
-# conn.close()
-# print(username[0]) 
-
-# check_pragma_fkey()
+check_expired_sessions()
