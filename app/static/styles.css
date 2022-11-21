@@ -44,6 +44,7 @@ p {
 
 #form_submit {
     display:flex;
+    height:25px;
     align-items: center;
 }
 
