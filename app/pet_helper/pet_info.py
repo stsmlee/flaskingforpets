@@ -1,5 +1,4 @@
 from app.pet_helper.sneaky import secret_dict
-# from asyncore import write
 import requests
 import json
 import html
@@ -58,21 +57,21 @@ def update_all_types_breeds():
     for key in types_dict.keys():
         get_breeds(key)        
 
-# types_dict = update_types()
-# update_all_types_breeds()
-# json_obj = json.dumps(types_dict, indent = 4)
-# with open('types.json', 'w') as outfile:
-#     outfile.write(json_obj)
+def update_types_json():
+    types_dict = update_types()
+    update_all_types_breeds()
+    json_obj = json.dumps(types_dict, indent = 4)
+    with open('types.json', 'w') as outfile:
+        outfile.write(json_obj)
+
 types_dict = get_types_dict()
 
 base_url = 'https://api.petfinder.com'
 animals_url = 'https://api.petfinder.com/v2/animals'
 
-
 def get_request(payload):
     res = requests.get(animals_url, headers = header, params = payload)
     print(res)
-    # print(res.status_code)
     if res.status_code == 200:
         res_json = res.json()
         pagination = res_json['pagination']   
@@ -81,7 +80,6 @@ def get_request(payload):
             return None
         return res_json
     else:
-        # print(res.status_code)
         return res.status_code
 
 null = None
@@ -223,7 +221,6 @@ def check_for_new_results(user_id):
                         results.append(row['savename'])
                         break
     return results
-
 
 def build_params(my_data, type):
     payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':20}
