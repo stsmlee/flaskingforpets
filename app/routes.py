@@ -195,7 +195,7 @@ def check_savecount(form,field):
     count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (get_user_id(),)).fetchone()
     conn.close()
     count = count[0]
-    print(count)
+    # print(count)
     if count >= 20:
         raise StopValidation(Markup('You have reached the maximum number of saved searches (20), please go to <a href="/manageaccount">Manage Your Account</a> to make space for more.'))
 
@@ -285,7 +285,7 @@ def search_saved(type,payload,page,savename):
     if not res_json:
         return render_template('no_results.html', type=type)
     results = pet_info.save_results(res_json, saved_dict={})
-    print(len(results))
+    # print(len(results))
     save_results_db(json.dumps(results), savename)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 

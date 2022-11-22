@@ -224,10 +224,12 @@ def check_for_new_results(user_id):
 
 def build_params(my_data, type):
     payload = {'type':type, 'location' : my_data['zipcode'], 'distance' : my_data['distance'], 'limit':20}
+    breeds = []
     if my_data['breed1'] != 'N/A':
-        payload['breed'] = my_data['breed1']
+        breeds.append(my_data['breed1'])
     if my_data['breed2'] != 'N/A':
-        payload['breed'] += ',' + my_data['breed2']
+        breeds.append(my_data['breed2'])
+    payload['breed'] = ','.join(breeds)
     if my_data['color'] != 'N/A':
         payload['color'] = my_data['color']
     if my_data['coat'] != 'N/A':

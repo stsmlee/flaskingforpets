@@ -80,6 +80,6 @@ def joinery():
         for col in row:
             print(col)
     
-get_info()
+# get_info()
 # delete_expired_sessions(30)
 # joinery()
