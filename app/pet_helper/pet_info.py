@@ -136,7 +136,7 @@ def parse_res_animals(res_animals):
         photo_links = []
         for entry in pet['photos']:
             for key, val in entry.items():
-                if key == 'medium':
+                if key == 'large':
                     photo_links.append(val)
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()

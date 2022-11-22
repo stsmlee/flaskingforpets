@@ -12,10 +12,12 @@
 
             {% elif key == 'Photos' %}
         </p>
-            <div class = 'flex_pics'>
+            <div class = 'flex_pics_container'>
+                
                 {% for pic in value %}
                 <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
                 {% endfor %}
+
             </div>
         <p>
             {% else %}
