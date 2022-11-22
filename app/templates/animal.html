@@ -18,8 +18,13 @@
 </div> -->
 <!-- {% endif %} -->
 
-
+{% if type == 'Small & Furry' %}
+<h1>So you want something small and furry!</h1>
+{% elif type == 'Barnyard' %}
+<h1>So you want a barnyard friend!</h1>
+{% else %}
 <h1>So you want {{type | lower}}s!</h1>
+{% endif %}
 
 <h3>Pick out some filters if you like!</h3>
 <form method="POST" onsubmit="wait()" id = "filter_form">
@@ -44,7 +49,7 @@
     {% if login %}
     <div>If you want to save your search for future use, enter a name: {{ form.savename() }}</div>
     {% endif %}
-    <div id = "form_submit"> 
+    <div id = "form_submit" style = "height:40px"> 
         <div>{{ form.submit() }}</div>
         <div id="wait" style="display: none;">
         <!-- <div id="wait"> -->
@@ -67,6 +72,76 @@
     <img src = "{{ url_for('static', filename = 'sieg.png') }}" alt = "the softest cat ever, Siegfried" style = "width:auto;height:218px;">
 </div>
 {% endif %}
+
+{% if type == 'Rabbit' %}
+<div class = 'sticker'>
+    <div style = "text-align:center">
+        <img src = "{{ url_for('static', filename = 'rabbit_grooming.png') }}" alt = "rabbit grooming" style = "width:auto;height:218px;">
+    </div>
+    <div class = "pic_credit">
+        <a href="https://commons.wikimedia.org/wiki/File:House_rabbit_grooming.jpg">Ethan Sahagun</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+    </div>
+</div>
+{% endif %}
+
+{% if type == 'Small & Furry' %}
+<div class = 'sticker'>
+    <div style = "text-align:center">
+        <img src = "{{ url_for('static', filename = 'blossomsbabies.png') }}" alt = "BlossomsBabiesDay2Sept25_008.jpg" style = "width:auto;height:218px;">
+    </div>
+    <div class = "pic_credit">
+        <a href="https://commons.wikimedia.org/wiki/File:BlossomsBabiesDay2Sept25_008.jpg">Mieux2002</a>, Public domain, via Wikimedia Commons
+    </div>
+</div>
+{% endif %}
+
+{% if type == 'Horse' %}
+<div class = 'sticker'>
+    <div style = "text-align:center">
+        <img src = "{{ url_for('static', filename = 'horse.png') }}" alt = "Horse Animation Cartoon Video Game Sprite Clipart Left Front.png" style = "width:auto;height:218px;">
+    </div>
+    <div class = "pic_credit">
+        <a href="https://commons.wikimedia.org/wiki/File:Horse_Animation_Cartoon_Video_Game_Sprite_Clipart_Left_Front.png">Kurt Kaiser</a>, CC0, via Wikimedia Commons
+    </div>
+</div>
+{% endif %}
+
+{% if type == 'Bird' %}
+<div class = 'sticker'>
+    <div style = "text-align:center">
+        <img src = "{{ url_for('static', filename = 'lovebirds.png') }}" alt = "Rosy-faced lovebirds (Agapornis roseicollis roseicollis)" style = "width:auto;height:218px;">
+    </div>
+    <div class = "pic_credit">
+        <a href="https://commons.wikimedia.org/wiki/File:Rosy-faced_lovebirds_(Agapornis_roseicollis_roseicollis)_composite_3_of_3.jpg">Charles J. Sharp</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+    </div>
+</div>
+{% endif %}
+
+{% if type == 'Scales, Fins & Other' %}
+<div class = 'sticker'>
+    <div style = "text-align:end">
+        <img src = "{{ url_for('static', filename = 'turtle.png') }}" alt = "florida box turtle" style = "width:auto;height:218px;">
+    </div>
+    <div class = "pic_credit">
+        <a href="https://commons.wikimedia.org/wiki/File:Florida_Box_Turtle_Digon3_re-edited.jpg">“Jonathan Zander, digitally altered from its original version. Modifications made by CarolSpears.</a>, <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, via Wikimedia Commons
+    </div>
+</div>
+{% endif %}
+
+{% if type == 'Barnyard' %}
+<div class = 'sticker'>
+    <div style = "text-align:end">
+        <img src = "{{ url_for('static', filename = 'pig.png') }}" alt = "A Juliana pig is wearing a pink harness. Her name is Mollie" style = "width:auto;height:218px;">
+    </div>
+    <div class = "pic_credit">
+        <a href="https://commons.wikimedia.org/wiki/File:Juliana_pig_wears_harness.jpg">Life With Pigs</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+    </div>
+</div>
+{% endif %}
+
+
+
+
 
 <script>
     function wait() {

@@ -7,7 +7,11 @@
 <div style = 'text-align: center; margin:auto'>
 <h4>Are you sure you want to delete your account?</h4>
 <form method="GET" action="{{url_for('confirm_delete')}}">
-    <input type="submit" value="Yes! Definitely! Delete!" class = 'submit_button'>
+    <input type="submit" value="Yes! Definitely! Delete!" class = 'delete_button'>
+</form>
+<br>
+<form method="GET" action="{{url_for('manage_account')}}">
+    <input type="submit" value="Oh no, take me back!" class = 'submit_button'>
 </form>
 </div>
 {%endblock%}

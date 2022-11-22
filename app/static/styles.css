@@ -44,7 +44,6 @@ p {
 
 #form_submit {
     display:flex;
-    height:25px;
     align-items: center;
 }
 
@@ -83,10 +82,23 @@ div.sticker {
 
 .submit_button {
     font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 95%;
+    font-size: 100%;
     color: #1e0246;
     background-color: #cebff5d0;
     cursor: pointer;
+}
+
+.delete_button {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 100%;
+    color: #970020;
+    background-color: #ffd5de;
+    cursor: pointer;
+}
+
+.pic_credit {
+    font-size:.5em;
+    text-align: center;
 }
 
 nav.page {
@@ -131,13 +143,19 @@ h1 {
     color:#1e0246 !important;
 }
 
-#home {
-    cursor: context-menu;
+#home li {
+    margin-left:0;
 }
 
 /* a#news:active{
     cursor:wait !important;
     color: pink  !important;
+} */
+
+/* #header ul {
+    display: inline;
+    list-style: none;
+    padding: 0;
 } */
 
 #news {

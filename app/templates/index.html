@@ -30,9 +30,9 @@
 </ul>
 
 {% if re_form %}
+<h4>You can reuse a search below!</h4>
 <form method="POST" onsubmit="wait()">
-    <div id = "form_submit">
-        {{ re_form.hidden_tag() }}
+    <div id = "form_submit" style = "height:25px;"> {{ re_form.hidden_tag() }}
         <div>{{ re_form.savename.label }}: {{ re_form.savename() }} {{ re_form.submit() }}</div>
         <div id="wait" style="display: none;">
             <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>

@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename = 'styles.css') }}">
-    <!-- <link rel="icon"
-      type="image/ico"
-      href="static/favicon.ico"> -->
     <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}">
     <title>{%block title%}{% endblock %}</title>
   </head>
   <body>
     <div id="container">
       <div id = "header">
-        <div><a href="/" id='home'>Home</a></div>
+        <nav id = 'home'>
+          <ul>
+            <li><a href="/">Home</a></li>
+            {% if type %}
+              {% if type == 'Small & Furry' or type == 'Barnyard' %}
+                > <li><a href="{{url_for('animals', type=type)}}">{{type}}</a></li>
+              {% else %}
+                > <li><a href="{{url_for('animals', type=type)}}">{{type}}s</a></li>
+              {% endif  %}
+            {% endif %}
+          </ul>
+        </nav>
         <nav>
           <ul>      
           {%if session['user_token']%}
