@@ -128,7 +128,10 @@ def parse_res_animals(res_animals):
         current['Environment, Good with'] = ', '.join(enviro)
         current['Tags'] = ', '.join(pet['tags'])
         if pet['description']:
-            current['Description'] = html.unescape(pet['description'])
+            description = pet['description'].replace("&amp;", "&")
+            # description = pet['description'].replace("&amp;#39;", "'")
+            # description = description.replace("&amp;#34;", '"')
+            current['Description'] = html.unescape(description)
         if pet['organization_id']:
             current['Organization ID'] = pet['organization_id']
         if pet['organization_animal_id']:
