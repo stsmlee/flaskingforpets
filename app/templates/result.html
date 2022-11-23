@@ -9,15 +9,14 @@
         {% for key, value in pet.items() %}
             {% if key == 'Petfinder Profile Link' %}
                 <b>{{key}}:</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a><br/>
-
+            {% elif key == 'ID' %}
+                <b>{{key}}:</b> {{value}}<br/>
             {% elif key == 'Photos' %}
         </p>
             <div class = 'flex_pics_container'>
-                
                 {% for pic in value %}
                 <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
                 {% endfor %}
-
             </div>
         <p>
             {% else %}
@@ -51,6 +50,5 @@
         </form>
     {% endif %}
 </nav>
-
 
 {%endblock%}

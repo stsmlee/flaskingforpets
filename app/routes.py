@@ -263,7 +263,7 @@ def search(type,payload,page):
     if isinstance(res_json, int):
         if res_json == 401:
             refresh_token()
-            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page))
+            return redirect(url_for('search', type=type, payload=json.dumps(payload), page=page))
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))
     if not res_json:
@@ -285,7 +285,6 @@ def search_saved(type,payload,page,savename):
     if not res_json:
         return render_template('no_results.html', type=type)
     results = pet_info.save_results(res_json, saved_dict={})
-    # print(len(results))
     save_results_db(json.dumps(results), savename)
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 

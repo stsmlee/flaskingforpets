@@ -144,10 +144,6 @@
 </div>
 {% endif %}
 
-
-
-
-
 <script>
     function wait() {
         let popup = document.getElementById('wait');
@@ -159,21 +155,5 @@
         }
     }
 </script>
-
-
-
-<!-- {% if form.is_submitted() and form.savename.errors|count > 0 %}
-<div class="alert" data-closable>
-    <p style="text-align:center"><br/>
-        {% for error in form.savename.errors %}
-        {{form.savename.label}}: {{error}}
-        {% endfor %}
-    </p>
-    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-      <span aria-hidden="true">&times;</span>
-    </button> -->
-   <!-- </div> -->
-<!-- {% endif %}  --> 
-
 
 {%endblock%} 
