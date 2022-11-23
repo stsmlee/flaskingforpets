@@ -38,7 +38,7 @@
 
 <h4>Delete your account completely?</h4>
 
-<form method="GET" action="{{url_for('delete_account')}}"> <div style = "line-height: 2.5em;;">
+<form method="GET" action="{{url_for('delete_account')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> <div style = "line-height: 2.5em;;">
     <input type="submit" value="Delete!" class = 'submit_button'>
 </div></form>
 

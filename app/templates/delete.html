@@ -7,10 +7,12 @@
 <div style = 'text-align: center; margin:auto'>
 <h4>Are you sure you want to delete your account?</h4>
 <form method="GET" action="{{url_for('confirm_delete')}}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <input type="submit" value="Yes! Definitely! Delete!" class = 'delete_button'>
 </form>
 <br>
 <form method="GET" action="{{url_for('manage_account')}}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <input type="submit" value="Oh no, take me back!" class = 'submit_button'>
 </form>
 </div>

@@ -10,7 +10,8 @@
             {% if key == 'Petfinder Profile Link' %}
                 <b>{{key}}:</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a><br/>
             {% elif key == 'ID' %}
-                <b>{{key}}:</b> {{value}}<br/>
+                <b>{{key}}:</b> {{value}}
+                <br/>
             {% elif key == 'Photos' %}
         </p>
             <div class = 'flex_pics_container'>
@@ -40,12 +41,14 @@
 <nav class = 'page'>
     {% if pag['Previous'] %}
         <form method="GET" action="{{url_for('search', type=type, payload= payload, page = pag['Current page']-1)}}" style = "display:inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="submit" value="Previous" class = 'page_button'>
         </form>
     {% endif %}
 
     {% if pag['Next'] %}
         <form method="GET" action="{{url_for('search', type=type, payload= payload, page = pag['Current page']+1)}}" style ="display:inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="submit" value="Next" class = 'page_button'>
         </form>
     {% endif %}
