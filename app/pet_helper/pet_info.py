@@ -3,6 +3,7 @@ import requests
 import json
 import html
 import sqlite3
+import pytz
 from datetime import datetime, timezone
 
 def get_db_connection():
@@ -87,6 +88,9 @@ null = None
 false = False
 true = True
 
+def change_tz(dt, tz=pytz.timezone('US/Eastern')):
+    return dt.astimezone(tz)
+
 def parse_res_animals(res_animals):
     parsed_list = []
     for pet in res_animals:
@@ -128,8 +132,6 @@ def parse_res_animals(res_animals):
         current['Tags'] = ', '.join(pet['tags'])
         if pet['description']:
             description = pet['description'].replace("&amp;", "&")
-            # description = pet['description'].replace("&amp;#39;", "'")
-            # description = description.replace("&amp;#34;", '"')
             current['Description'] = html.unescape(description)
         if pet['organization_id']:
             current['Organization ID'] = pet['organization_id']
@@ -142,9 +144,10 @@ def parse_res_animals(res_animals):
                     photo_links.append(val)
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()
-        # current['Published at'] = pet['published_at'][:10] + ' at ' + pet['published_at'][11:16]
-        publish_date = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
-        publish_str = datetime.strftime(publish_date, "%b %d, %Y at %I:%M%p %Z")
+        publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
+        publish_date_est = change_tz(publish_date_utc)
+        # publish_date_est = publish_date_utc.astimezone(pytz.timezone('US/Eastern'))
+        publish_str = datetime.strftime(publish_date_est, "%b %d, %Y at %I:%M%p %Z")
         current['Published at'] = publish_str
         current['Distance'] = pet['distance']
         contact_info = {}
@@ -167,7 +170,7 @@ def parse_res_animals(res_animals):
         clean_cur = {k: v for k, v in current.items() if v}
         parsed_list.append(clean_cur)
     return parsed_list
-
+    
 def parse_res_pag(res_pag):
     pag = {}
     pag['Results per page'] = res_pag['count_per_page']

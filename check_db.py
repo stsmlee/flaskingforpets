@@ -1,5 +1,6 @@
 import sqlite3
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+import pytz
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -85,11 +86,15 @@ def joinery():
 # joinery()
 
 
-published_at ="2018-12-22T20:31:32+0000"
+# utc = pytz.utc
+# print(utc.zone)
+# eastern = pytz.timezone('US/Eastern')
+# print(eastern.zone)
+# published_at ="2018-12-22T20:31:32+0000"
+# date_published_utc = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%S%z")
+# print(datetime.strftime(date_published_utc, "%b %d, %Y at %I:%M%p %Z"))
+# date_published_est = date_published_utc.astimezone(pytz.timezone('US/Eastern'))
+# publish_str = datetime.strftime(date_published_est, "%b %d, %Y at %I:%M%p %Z")
+# print(publish_str)
 
-
-date_published = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%S%z")
-print(datetime.strftime(date_published, "%b %d, %Y at %I:%M%p %Z"))
-date_published.astimezone(timezone(EST))
-publish_str = datetime.strftime(date_published, "%b %d, %Y at %I:%M%p %Z")
-print(publish_str)
+# print(pytz.common_timezones)
