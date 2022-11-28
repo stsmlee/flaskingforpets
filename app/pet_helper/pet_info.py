@@ -3,6 +3,7 @@ import requests
 import json
 import html
 import sqlite3
+from datetime import datetime, timezone
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -141,7 +142,10 @@ def parse_res_animals(res_animals):
                     photo_links.append(val)
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()
-        current['Published at'] = pet['published_at'][:10]
+        # current['Published at'] = pet['published_at'][:10] + ' at ' + pet['published_at'][11:16]
+        publish_date = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
+        publish_str = datetime.strftime(publish_date, "%b %d, %Y at %I:%M%p %Z")
+        current['Published at'] = publish_str
         current['Distance'] = pet['distance']
         contact_info = {}
         for key, val in pet['contact'].items():

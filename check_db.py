@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -83,3 +83,13 @@ def joinery():
 # get_info()
 # delete_expired_sessions(30)
 # joinery()
+
+
+published_at ="2018-12-22T20:31:32+0000"
+
+
+date_published = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%S%z")
+print(datetime.strftime(date_published, "%b %d, %Y at %I:%M%p %Z"))
+date_published.astimezone(timezone(EST))
+publish_str = datetime.strftime(date_published, "%b %d, %Y at %I:%M%p %Z")
+print(publish_str)
