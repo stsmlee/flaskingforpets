@@ -254,7 +254,7 @@ def animals(type):
         flash_basic_error(my_form.savename)
     return render_template('animal.html', form = my_form, type=type, login = logged_in())
 
-@app.route('/animals/<type>/page<int:page>/<payload>')
+@app.route('/animals/<type>/page<int:page>/<payload>', methods=["GET", "POST"])
 def search(type,payload,page):
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
@@ -271,7 +271,7 @@ def search(type,payload,page):
     return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
-def search_saved(type,payload,page,savename):
+def search_saved(type,payload,page,savename, methods=["GET", "POST"]):
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page

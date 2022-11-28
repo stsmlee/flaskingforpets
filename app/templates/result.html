@@ -3,31 +3,31 @@
 <title>{%block title%}Results{% endblock %}</title>
 
 {%block content%}
+
+<style>
+p {
+    line-height: 1.5em;
+}
+</style>
+
 <h1>{{pag['Total number of results']}} Results!</h1>
     {% for pet in res %}
-    <p>
         {% for key, value in pet.items() %}
             {% if key == 'Petfinder Profile Link' %}
-                <b>{{key}}:</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a><br/>
-            {% elif key == 'ID' %}
-                <b>{{key}}:</b> {{value}}
-                <br/>
+                <p><b>{{key}}:</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a></p>
             {% elif key == 'Photos' %}
-        </p>
             <div class = 'flex_pics_container'>
                 {% for pic in value %}
                 <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
                 {% endfor %}
             </div>
-        <p>
             {% else %}
-                <b>{{key}}:</b> {{value}}<br/>
+                <p><b>{{key}}:</b> {{value}}</p>
             {% endif %}          
         {% endfor %}
         {% if res.index(pet) != res|length-1 %}
         <hr class="results_hr">
         {% endif %}  
-    </p>
     {% endfor %}
 
 <hr class = "pagination_hr">
