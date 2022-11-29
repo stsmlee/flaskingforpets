@@ -9,6 +9,7 @@ from app.pet_helper import pet_info
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
+import copy
 
 pet_types_dict = pet_info.types_dict
 
@@ -102,6 +103,21 @@ def get_user_nickname():
     else:
         name = names['username']
     return name
+
+def set_user_timezone(tz):
+    conn = get_db_connection()
+    conn.execute('UPDATE users SET timezone = ? WHERE id =?', (tz, get_user_id()))
+    conn.commit()
+    conn.close()
+
+def get_user_timezone():
+    conn = get_db_connection()
+    res = conn.execute('SELECT timezone FROM users WHERE id = ?', (get_user_id(),)).fetchone()
+    conn.close()
+    if res:
+        return res[0]
+    else:
+        return res
 
 def login_session_db(username):
     session['user_token'] = get_session_str()
@@ -268,7 +284,7 @@ def search(type,payload,page):
         return redirect(url_for('index'))
     if not res_json:
         return render_template('no_results.html', type=type)
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals'],get_user_timezone()), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
 def search_saved(type,payload,page,savename, methods=["GET", "POST"]):
@@ -286,7 +302,7 @@ def search_saved(type,payload,page,savename, methods=["GET", "POST"]):
         return render_template('no_results.html', type=type)
     results = pet_info.save_results(res_json, saved_dict={})
     save_results_db(json.dumps(results), savename)
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals'],get_user_timezone()), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
 
 @app.route('/whatsnews')
 def check_updates():
@@ -329,6 +345,17 @@ def logout():
 def manage_account():
     change_form = forms.ChangePasswordForm()
     saved = get_savenames_params()
+    tz_form = forms.SetTZForm()
+    tz_form.tz.choices = pet_info.tz_tuple_list
+    user_tz = get_user_timezone()
+    if user_tz:
+        tz_choices = copy.deepcopy(pet_info.tz_tuple_list)
+        for entry in tz_choices:
+            if entry[0] == user_tz:
+                tz_choices.remove(entry)
+                tz_choices.insert(0, entry)
+                break
+        tz_form.tz.choices = tz_choices
     if request.method == 'POST' and request.form.getlist('savenames'):
         req_list = request.form.getlist('savenames')
         delete_save(req_list)
@@ -344,9 +371,13 @@ def manage_account():
         else:
             update_user_pw_db(username, new_password)
         return redirect(url_for('manage_account'))
+    if tz_form.validate_on_submit():
+        set_user_timezone(tz_form.tz.data)
+        flash('Successfully set your timezone.', 'notice')
+        return redirect(url_for('manage_account'))
     else:
         flash_errors(change_form)
-    return render_template('manage.html', saves=saved, change_form = change_form)
+    return render_template('manage.html', saves=saved, change_form = change_form, tz_form=tz_form)
 
 @app.route('/deleteaccount')
 def delete_account():

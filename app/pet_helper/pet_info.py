@@ -6,6 +6,9 @@ import sqlite3
 import pytz
 from datetime import datetime, timezone
 
+
+tz_tuple_list = [('UTC', 'UTC'), ('America/Cancun', 'Mexico/Cancun'), ('America/Hermosillo', 'Mexico/Hermosillo'), ('America/Mexico_City', 'Mexico/Mexico_City'), ('America/Tijuana', 'Mexico/Tijuana'), ('Canada/Atlantic', 'Canada/Atlantic'), ('Canada/Central', 'Canada/Central'), ('Canada/Eastern', 'Canada/Eastern'), ('Canada/Mountain', 'Canada/Mountain'), ('Canada/Newfoundland', 'Canada/Newfoundland'), ('Canada/Pacific', 'Canada/Pacific'), ('US/Alaska', 'US/Alaska'), ('US/Arizona', 'US/Arizona'), ('US/Central', 'US/Central'), ('US/Eastern', 'US/Eastern'), ('US/Hawaii', 'US/Hawaii'), ('US/Mountain', 'US/Mountain'), ('US/Pacific', 'US/Pacific')]
+
 def get_db_connection():
     conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
@@ -89,10 +92,12 @@ null = None
 false = False
 true = True
 
-def change_tz(dt, tz=pytz.timezone('US/Eastern')):
-    return dt.astimezone(tz)
+def change_tz(dt, tz):
+    if not tz:
+        tz = pytz.timezone('US/Eastern')
+    return dt.astimezone(pytz.timezone(tz))
 
-def parse_res_animals(res_animals):
+def parse_res_animals(res_animals, tz):
     parsed_list = []
     for pet in res_animals:
         current = {}
@@ -143,9 +148,8 @@ def parse_res_animals(res_animals):
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()
         publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
-        publish_date_est = change_tz(publish_date_utc)
-        # publish_date_est = publish_date_utc.astimezone(pytz.timezone('US/Eastern'))
-        publish_str = datetime.strftime(publish_date_est, "%b %d, %Y at %I:%M%p %Z")
+        publish_date_tz = change_tz(publish_date_utc, tz)
+        publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
         current['Published at'] = publish_str
         current['Distance'] = str(pet['distance'])+" miles"
         if pet['organization_id']:

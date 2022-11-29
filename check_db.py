@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime, timedelta
 import pytz
+import copy
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -15,7 +16,7 @@ def get_info():
     else:
         print('USERS TABLE')
         for row in user:
-            print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}")
+            print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}, timezone: {row['timezone']}")
     saved = conn.execute('SELECT * FROM saves').fetchall()
     if not saved:
         print('No saved searches in the database.')
@@ -81,7 +82,7 @@ def joinery():
         for col in row:
             print(col)
     
-# get_info()
+get_info()
 # delete_expired_sessions(30)
 # joinery()
 
@@ -98,3 +99,22 @@ def joinery():
 # print(publish_str)
 
 # print(pytz.common_timezones)
+
+# tz_list = ['America/Cancun', 'America/Hermosillo', 'America/Mexico_City', 'America/Tijuana', 'Canada/Atlantic', 'Canada/Central', 'Canada/Eastern', 'Canada/Mountain', 'Canada/Newfoundland', 'Canada/Pacific', 'US/Alaska', 'US/Arizona', 'US/Central', 'US/Eastern', 'US/Hawaii', 'US/Mountain', 'US/Pacific']
+# tz_tuples = []
+# for tz in tz_list:
+#     tz_split = tz.split('/')
+#     if tz_split[0] == 'America':
+#         label = 'Mexico/'+tz_split[1]
+#         tz_tuples.append((tz, label))
+#     else:
+#         tz_tuples.append((tz,tz))
+# tz_tuples.append(('UTC','UTC'))
+# print(tz_tuples)
+
+# altered_tuples = copy.deepcopy(tz_tuples)
+# altered_tuples.remove(('UTC','UTC'))
+# altered_tuples.insert(0, ('UTC','UTC'))
+# print(altered_tuples)
+# print(tz_tuples)
+

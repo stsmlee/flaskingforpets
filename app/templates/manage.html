@@ -26,6 +26,15 @@
 <h4>No saved searches at the moment.</h4>
 {%endif%}
 
+<h4>Set your timezone?</h4>
+<form method="POST">
+    {{ change_form.hidden_tag() }}
+    <div class = "mgmt">
+    <div>{{tz_form.tz.label}} {{tz_form.tz()}}</div>
+    </div>
+    <div class="button_div">{{tz_form.submit()}}</div>
+</form>
+
 <h4>Update your nickname or change your password?</h4>
 <form method="POST">
     {{ change_form.hidden_tag() }}
@@ -37,6 +46,7 @@
     </div>
     <div class = "button_div">{{change_form.submit()}}</div>
 </form>
+
 
 <h4>Delete your account completely?</h4>
 
