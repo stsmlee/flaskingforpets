@@ -115,6 +115,7 @@ def parse_res_animals(res_animals):
         current['Colors'] = ', '.join(colors)
         current['Age'] = pet['age']
         current['Size'] = pet['size']
+        current['Gender'] = pet['gender']
         current['Coat'] = pet['coat']
         if pet['attributes']['house_trained']:
             current['Housetrained'] = "Yes! What a good doggo."
@@ -134,10 +135,6 @@ def parse_res_animals(res_animals):
         if pet['description']:
             description = pet['description'].replace("&amp;", "&")
             current['Description'] = html.unescape(description)
-        if pet['organization_id']:
-            current['Organization ID'] = pet['organization_id']
-        if pet['organization_animal_id']:
-            current['Organization Animal ID'] = pet['organization_animal_id']
         photo_links = []
         for entry in pet['photos']:
             for key, val in entry.items():
@@ -150,7 +147,11 @@ def parse_res_animals(res_animals):
         # publish_date_est = publish_date_utc.astimezone(pytz.timezone('US/Eastern'))
         publish_str = datetime.strftime(publish_date_est, "%b %d, %Y at %I:%M%p %Z")
         current['Published at'] = publish_str
-        current['Distance'] = pet['distance']
+        current['Distance'] = str(pet['distance'])+" miles"
+        if pet['organization_id']:
+            current['Organization ID'] = pet['organization_id']
+        if pet['organization_animal_id']:
+            current['Organization Animal ID'] = pet['organization_animal_id']
         contact_info = {}
         for key, val in pet['contact'].items():
             if key != 'address' and val:

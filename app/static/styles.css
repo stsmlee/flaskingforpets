@@ -1,7 +1,8 @@
 html, body {
     padding: 0;
     margin: 0;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    /* font-family: Georgia, 'Times New Roman', Times, serif; */
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-size: 1em;
 }
 
@@ -76,12 +77,12 @@ div.sticker {
 }
 
 .form_font {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 95%;
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    font-size: 100%;
 }
 
 .submit_button {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-size: 100%;
     color: #1e0246;
     background-color: #cebff5d0;
@@ -89,7 +90,7 @@ div.sticker {
 }
 
 .delete_button {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-size: 100%;
     color: #970020;
     background-color: #ffd5de;
@@ -105,13 +106,13 @@ nav.page {
     margin-bottom: 16px;
     display: flex;
     align-items: center;
-    gap: 60px;
+    gap: 20%;
     justify-content: space-around;
 }
 
 .page_button {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 99%;
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    font-size: 100%;
     color: #1e0246;
     background-color: #cebff5d0;
     box-sizing: content-box;
@@ -228,6 +229,7 @@ ul.index > li > a {
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
     line-height: 1.5em;
+    /* line-height: 2em; */
 }
 
 .mgmt_table td {
@@ -238,6 +240,21 @@ ul.index > li > a {
 input.checkbox {
     margin-left: 0;
     margin-right: .5em;
+}
+
+.button_div {
+    line-height: 1em;
+    margin-block-start: 1em;
+    margin-block-end: 1.33em;
+}
+
+.mgmt div {
+    line-height: 2em;
+}
+.mgmt input{ 
+    padding: 0px; 
+    line-height: 1em; 
+    font-size:.95em;
 }
 
 ul.alert {
@@ -333,7 +350,7 @@ div.flex_pics_container {
     display:flex; 
     align-items:center;
     gap: 2px 2px;
-    margin: 15px 0px 15px 0px;
+    margin: 1.33em 0px 1.33em 0px;
     height:fit-content;
 }
 
