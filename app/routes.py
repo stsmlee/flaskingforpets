@@ -345,17 +345,6 @@ def logout():
 def manage_account():
     change_form = forms.ChangePasswordForm()
     saved = get_savenames_params()
-    # tz_form = forms.SetTZForm()
-    # tz_form.tz.choices = pet_info.tz_tuple_list
-    # user_tz = get_user_timezone()
-    # if user_tz:
-    #     tz_choices = copy.deepcopy(pet_info.tz_tuple_list)
-    #     for entry in tz_choices:
-    #         if entry[0] == user_tz:
-    #             tz_choices.remove(entry)
-    #             tz_choices.insert(0, entry)
-    #             break
-    #     tz_form.tz.choices = tz_choices
     if request.method == 'POST' and request.form.getlist('savenames'):
         req_list = request.form.getlist('savenames')
         delete_save(req_list)
@@ -371,10 +360,6 @@ def manage_account():
         else:
             update_user_pw_db(username, new_password)
         return redirect(url_for('manage_account'))
-    # if tz_form.validate_on_submit():
-    #     set_user_timezone(tz_form.tz.data)
-    #     flash('Successfully set your timezone.', 'notice')
-    #     return redirect(url_for('manage_account'))
     else:
         flash_errors(change_form)
     return render_template('manage.html', saves=saved, change_form = change_form)
