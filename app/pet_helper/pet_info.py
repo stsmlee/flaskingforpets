@@ -139,7 +139,9 @@ def parse_res_animals(res_animals):
         current['Tags'] = ', '.join(pet['tags'])
         if pet['description']:
             description = pet['description'].replace("&amp;", "&")
-            current['Description'] = html.unescape(description)
+            description = html.unescape(description)
+            description = description.strip('.')
+            current['Description'] = description
         photo_links = []
         for entry in pet['photos']:
             for key, val in entry.items():

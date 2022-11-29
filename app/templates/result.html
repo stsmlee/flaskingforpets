@@ -15,29 +15,32 @@ p {
         {% for key, value in pet.items() %}
             {% if key == 'Petfinder Profile Link' %}
                 <p><b>{{key}}:</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a></p>
+            {% elif key == 'Description' %}
+                <p><b>{{key}}:</b> {{value}}<a href="{{pet['Petfinder Profile Link']}}" title="{{pet['Name']}}'s Petfinder Profile" class="dotdotdot">...</a></p>
             {% elif key == 'Photos' %}
-            <div class = 'flex_pics_container'>
+                <div class = 'flex_pics_container'>
                 {% for pic in value %}
-                <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
+                    <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
                 {% endfor %}
-            </div>
+                </div>
             {% elif key == 'Published at' %}
                 <p id="{{pet['ID']}}"></p>
                 <script>
-                {
-                    const options = {
+                    {
+                        const options = {
                         month:'short',
                         day:'numeric',
                         year:'numeric',
                         hour:'numeric',
                         minute:'numeric',
                         timeZoneName: 'short'
+                        }
+
+                        let pet_id = '{{ pet["ID"] }}';
+                        let old_date = '{{ pet["Published at"] }}';
+                        let new_date = new Date(Date.parse(old_date)).toLocaleString([], options);
+                        document.getElementById(pet_id).innerHTML = "<b>Published at: </b>" + new_date;
                     }
-                    let pet_id = '{{ pet["ID"] }}';
-                    let old_date = '{{ pet["Published at"] }}';
-                    let new_date = new Date(Date.parse(old_date)).toLocaleString([], options);
-                    document.getElementById(pet_id).innerHTML = "<b>Published at: </b>" + new_date;
-                }
                 </script>
             {% else %}
                 <p><b>{{key}}:</b> {{value}}</p>

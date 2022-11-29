@@ -135,7 +135,8 @@ h1 {
 
 #header a:link{
     text-decoration: underline overline dotted;
-    text-underline-offset: 3px;
+    /* text-underline-offset: 3px; */
+    text-underline-position: under;
     top: 0px;
 }
 
@@ -168,19 +169,11 @@ a {
     cursor: pointer;
 }
 
-a:link {
+a:link,a:visited {
     color:#1e0246
 }
 
-a:visited {
-    color:#1e0246
-}
-
-a:hover {
-    color:#a361ff 
-}
-
-a:visited:hover {
+a:hover,a:visited:hover  {
     color:#a361ff 
 }
 
@@ -191,6 +184,37 @@ a:visited:hover {
 a:active {
     top:1px ;
     color:#c19ff1 !important;
+}
+
+a.dotdotdot:link{
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-size: 1.5em;
+    top: 0px;
+    color:#1e0246;
+}
+
+a.dotdotdot:visited{
+    color:#863fff;
+}
+
+a.dotdotdot:hover,a.dotdotdot:visited:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    color:#cc3fff;
+}
+
+a.dotdotdot:focus{
+    top: 1px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    color:#d668fe;
+}
+
+a.dotdotdot:active{
+    top: 2px !important;
+    color:#dd82fe !important;
 }
 
 ul.index {
