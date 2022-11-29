@@ -154,7 +154,8 @@ def parse_res_animals(res_animals):
         # publish_date_tz = change_tz(publish_date_utc, tz)
         # publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
         # current['Published at'] = publish_str
-        current['Distance'] = str(pet['distance'])+" miles"
+        distance = pet['distance']
+        current['Distance'] = str(round(distance, 1)) +" miles"
         if pet['organization_id']:
             current['Organization ID'] = pet['organization_id']
         if pet['organization_animal_id']:
