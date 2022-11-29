@@ -25,9 +25,17 @@ p {
                 <p id="{{pet['ID']}}"></p>
                 <script>
                 {
+                    const options = {
+                        month:'short',
+                        day:'numeric',
+                        year:'numeric',
+                        hour:'numeric',
+                        minute:'numeric',
+                        timeZoneName: 'short'
+                    }
                     let pet_id = '{{ pet["ID"] }}';
                     let old_date = '{{ pet["Published at"] }}';
-                    let new_date = new Date(Date.parse(old_date)).toString();
+                    let new_date = new Date(Date.parse(old_date)).toLocaleString([], options);
                     document.getElementById(pet_id).innerHTML = "<b>Published at: </b>" + new_date;
                 }
                 </script>
