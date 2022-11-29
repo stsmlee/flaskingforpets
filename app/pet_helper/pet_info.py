@@ -97,7 +97,7 @@ def change_tz(dt, tz):
         tz = pytz.timezone('US/Eastern')
     return dt.astimezone(pytz.timezone(tz))
 
-def parse_res_animals(res_animals, tz):
+def parse_res_animals(res_animals):
     parsed_list = []
     for pet in res_animals:
         current = {}
@@ -147,10 +147,11 @@ def parse_res_animals(res_animals, tz):
                     photo_links.append(val)
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()
-        publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
-        publish_date_tz = change_tz(publish_date_utc, tz)
-        publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
-        current['Published at'] = publish_str
+        current['Published at'] = pet['published_at']
+        # publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
+        # publish_date_tz = change_tz(publish_date_utc, tz)
+        # publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
+        # current['Published at'] = publish_str
         current['Distance'] = str(pet['distance'])+" miles"
         if pet['organization_id']:
             current['Organization ID'] = pet['organization_id']

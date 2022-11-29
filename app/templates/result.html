@@ -21,6 +21,16 @@ p {
                 <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
                 {% endfor %}
             </div>
+            {% elif key == 'Published at' %}
+                <p id="{{pet['ID']}}"></p>
+                <script>
+                {
+                    let pet_id = '{{ pet["ID"] }}';
+                    let old_date = '{{ pet["Published at"] }}';
+                    let new_date = new Date(Date.parse(old_date)).toString();
+                    document.getElementById(pet_id).innerHTML = "<b>Published at: </b>" + new_date;
+                }
+                </script>
             {% else %}
                 <p><b>{{key}}:</b> {{value}}</p>
             {% endif %}          
