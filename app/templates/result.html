@@ -67,8 +67,6 @@ p {
 
 {% if (pag['Previous'] and not pag['Next']) or not (pag['Previous'] and pag['Next'])%}
 <p style="text-align:center;">
-    <!-- Results per page: {{pag['Results per page']}}<br/>
-    Total number of results: {{pag['Total number of results']}}<br/> -->
     Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
 </p>
 {% endif %}

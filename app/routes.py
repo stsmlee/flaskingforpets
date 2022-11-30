@@ -9,7 +9,6 @@ from app.pet_helper import pet_info
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
-import copy
 
 pet_types_dict = pet_info.types_dict
 
