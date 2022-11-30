@@ -405,10 +405,22 @@ div.flex_pics_container {
     border: 2px solid #c8b8f4;
 } */
 
-div.change_limit {
-    float:right;
+#results_topper {
+    display:flex;
+    justify-content: space-between;
+    align-items:baseline;
+    height: 4em;
 }
 
-h1.results {
-    float:left;
+div.change_limit {
+    color: midnightblue;
+    font-weight: bold;
 }
+
+.change_limit .form_font {
+    font-size:90%;
+}
+
+/* h1.results {
+    float:left;
+} */

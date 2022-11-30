@@ -10,7 +10,7 @@ p {
 }
 </style>
 
-<div>
+<div id = "results_topper">
 <h1 class="results">{{pag['Total number of results']}} Results!</h1>
 <form name="change_limit" method="POST"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class = "change_limit"> Number of results per page:
@@ -22,8 +22,6 @@ p {
     </div>
 </form>
 </div>
-
-
 
     {% for pet in res %}
         {% for key, value in pet.items() %}
@@ -67,11 +65,13 @@ p {
 
 <hr class = "pagination_hr">
 
+{% if (pag['Previous'] and not pag['Next']) or not (pag['Previous'] and pag['Next'])%}
 <p style="text-align:center;">
-    Results per page: {{pag['Results per page']}}<br/>
-    Total number of results: {{pag['Total number of results']}}<br/>
+    <!-- Results per page: {{pag['Results per page']}}<br/>
+    Total number of results: {{pag['Total number of results']}}<br/> -->
     Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
 </p>
+{% endif %}
 
 <nav class = 'page'>
     {% if pag['Previous'] %}
@@ -79,6 +79,12 @@ p {
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="submit" value="Previous" class = 'page_button'>
         </form>
+    {% endif %}
+    
+    {% if pag['Previous'] and pag['Next'] %}
+    <div>
+        Currently on page {{pag['Current page']}} of {{pag['Total pages']}}<br/>
+    </div>
     {% endif %}
 
     {% if pag['Next'] %}
