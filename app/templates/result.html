@@ -19,9 +19,9 @@ p {
                 <p><b>{{key}}:</b> {{value}}<a href="{{pet['Petfinder Profile Link']}}" title="{{pet['Name']}}'s Petfinder Profile" class="dotdotdot">...</a></p>
             {% elif key == 'Photos' %}
                 <div class = 'flex_pics_container'>
-                {% for pic in value %}
-                    <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
-                {% endfor %}
+                    {% for pic in value %}
+                        <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
+                    {% endfor %}
                 </div>
             {% elif key == 'Published at' %}
                 <p id="{{pet['ID']}}"></p>

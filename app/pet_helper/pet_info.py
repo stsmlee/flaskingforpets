@@ -88,14 +88,14 @@ def get_request(payload):
     else:
         return res.status_code
 
-null = None
-false = False
-true = True
+# null = None
+# false = False
+# true = True
 
-def change_tz(dt, tz):
-    if not tz:
-        tz = pytz.timezone('US/Eastern')
-    return dt.astimezone(pytz.timezone(tz))
+# def change_tz(dt, tz):
+#     if not tz:
+#         tz = pytz.timezone('US/Eastern')
+#     return dt.astimezone(pytz.timezone(tz))
 
 def parse_res_animals(res_animals):
     parsed_list = []
@@ -145,7 +145,7 @@ def parse_res_animals(res_animals):
         photo_links = []
         for entry in pet['photos']:
             for key, val in entry.items():
-                if key == 'large':
+                if key == 'full':
                     photo_links.append(val)
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()

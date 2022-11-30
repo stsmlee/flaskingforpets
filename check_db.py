@@ -87,16 +87,20 @@ get_info()
 # joinery()
 
 
-# utc = pytz.utc
-# print(utc.zone)
-# eastern = pytz.timezone('US/Eastern')
-# print(eastern.zone)
 # published_at ="2018-12-22T20:31:32+0000"
 # date_published_utc = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%S%z")
 # print(datetime.strftime(date_published_utc, "%b %d, %Y at %I:%M%p %Z"))
 # date_published_est = date_published_utc.astimezone(pytz.timezone('US/Eastern'))
 # publish_str = datetime.strftime(date_published_est, "%b %d, %Y at %I:%M%p %Z")
 # print(publish_str)
+
+# def change_tz(dt, tz):
+#     if not tz:
+#         tz = pytz.timezone('US/Eastern')
+#     return dt.astimezone(pytz.timezone(tz))
+# publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
+# publish_date_tz = change_tz(publish_date_utc, tz)
+# publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
 
 # print(pytz.common_timezones)
 
@@ -110,11 +114,5 @@ get_info()
 #     else:
 #         tz_tuples.append((tz,tz))
 # tz_tuples.append(('UTC','UTC'))
-# print(tz_tuples)
-
-# altered_tuples = copy.deepcopy(tz_tuples)
-# altered_tuples.remove(('UTC','UTC'))
-# altered_tuples.insert(0, ('UTC','UTC'))
-# print(altered_tuples)
 # print(tz_tuples)
 
