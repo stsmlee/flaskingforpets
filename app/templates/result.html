@@ -35,6 +35,8 @@ p {
                         <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
                     {% endfor %}
                 </div>
+            {% elif key in ['ID', 'Organization Animal ID', 'Organization ID'] %}
+                
             {% elif key == 'Published at' %}
                 <p id="{{pet['ID']}}"></p>
                 <script>

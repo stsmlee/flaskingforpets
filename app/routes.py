@@ -219,7 +219,6 @@ def check_savecount(form,field):
     count = conn.execute('SELECT COUNT (*) FROM saves WHERE user_id = ?', (get_user_id(),)).fetchone()
     conn.close()
     count = count[0]
-    # print(count)
     if count >= 20:
         raise StopValidation(Markup('You have reached the maximum number of saved searches (20), please go to <a href="/manageaccount">Manage Your Account</a> to make space for more.'))
 
@@ -328,7 +327,7 @@ def search_saved(type,payload,page,savename):
         payload['limit'] = int(request.form.get('limit'))
         update_search(savename, json.dumps(payload))
         return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=page, savename=savename))
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), limit_options=limit_options)
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), limit_options=limit_options, savename=savename)
 
 @app.route('/whatsnews')
 def check_updates():

@@ -84,8 +84,6 @@ def joinery():
     
 get_info()
 # delete_expired_sessions(30)
-# joinery()
-
 
 # published_at ="2018-12-22T20:31:32+0000"
 # date_published_utc = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%S%z")
