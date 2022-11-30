@@ -82,7 +82,7 @@ def joinery():
         for col in row:
             print(col)
     
-get_info()
+# get_info()
 # delete_expired_sessions(30)
 
 # published_at ="2018-12-22T20:31:32+0000"

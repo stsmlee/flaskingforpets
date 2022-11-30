@@ -186,6 +186,10 @@ a:active {
     color:#c19ff1 !important;
 }
 
+a.dotdotdot{
+    line-height: 0;
+}
+
 a.dotdotdot:link{
     text-decoration: underline dotted;
     text-decoration-thickness: 1px;
@@ -382,9 +386,11 @@ hr.pagination_hr {
 div.flex_pics_container {
     display:flex; 
     align-items:center;
+    /* justify-content:center; */
     gap: 1px;
-    margin: 1.33em 0px 1.33em 0px;
+    margin: 1em 0px 1em 0px;
     height:fit-content;
+    border-radius:10px;
     overflow-x: auto;
 }
 
@@ -421,6 +427,6 @@ div.change_limit {
     font-size:90%;
 }
 
-/* h1.results {
-    float:left;
-} */
+#results_wrapper {
+    padding:0px 60px;
+}

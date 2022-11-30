@@ -101,41 +101,53 @@ def parse_res_animals(res_animals):
         current['Petfinder Profile Link'] = pet['url']
         if pet['species'] not in {'Dog', 'Cat', 'Rabbit', 'Horse'}:
             current['Species'] = pet['species']        
-        breeds = []
+        breeds = set()
         for attr,br in pet['breeds'].items():
             if attr == 'mixed' and br:
-                breeds.append('Mixed Breed')
+                breeds.add('Mixed Breed')
             elif br:
-                breeds.append(br)
+                breeds.add(br)
+        breeds = [br for br in breeds]
         current['Breed(s)'] = ', '.join(breeds)
         colors = []
         for color in pet['colors'].values():
             if color:
-                colors.append(color)
-        current['Colors'] = ', '.join(colors)
-        current['Age'] = pet['age']
-        current['Size'] = pet['size']
-        current['Gender'] = pet['gender']
-        current['Coat'] = pet['coat']
-        if pet['attributes']['house_trained']:
-            current['Housetrained'] = "Yes! What a good doggo."
-        additional_attr = []
+                split_color = color.split(' / ')
+                colors += split_color
+        current['Color'] = ', '.join(colors)
+        current['Details'] = []
+        if current['Breed(s)']:
+            current['Details'].append(current['Breed(s)'])
+        if 'Species' in current:
+            current['Details'].append(current['Species'])
+        if 'Coat' in current:
+            current['Details'].append(current['Coat'])
+        if current['Color']:
+            current['Details'].append(current['Color'])
+        if pet['age']:
+            current['Details'].append(pet['age'])
+        if pet['size']:
+            current['Details'].append(pet['size'])
+        if pet['gender']:
+            current['Details'].append(pet['gender'])
+        current['Attributes'] = []
         for attr, val in pet['attributes'].items():
             if val and attr == 'spayed_neutered':
-                additional_attr.append('Spayed/Neutered')
-            elif val and attr != 'house_trained':
-                additional_attr.append(' '.join(attr.split('_')).title())
-        current['Attributes'] = ', '.join(additional_attr)
-        enviro = []
+                current['Attributes'].append('Spayed / Neutered')
+            # elif val and attr != 'house_trained':
+            elif val and attr == 'house_trained':
+                current['Attributes'].append('House Trained (What a good doggo!)')
+            elif val:
+                current['Attributes'].append(' '.join(attr.split('_')).title())
+        current['Environment'] = []
         for attr, val in pet['environment'].items():
             if val:
-                enviro.append(attr.title())
-        current['Environment, Good with'] = ', '.join(enviro)
-        current['Tags'] = ', '.join(pet['tags'])
+                current['Environment'].append(attr.title())
+        # current['Tags'] = ', '.join(pet['tags'])
         if pet['description']:
             description = pet['description'].replace("&amp;", "&")
             description = html.unescape(description)
-            description = description.strip('.')
+            description = description.strip('.,')
             current['Description'] = description
         photo_links = []
         for entry in pet['photos']:
@@ -146,7 +158,7 @@ def parse_res_animals(res_animals):
         current['Status'] = pet['status'].title()
         current['Published at'] = pet['published_at']
         distance = pet['distance']
-        current['Distance'] = str(round(distance, 1)) +" miles"
+        current['Distance'] = str(round(distance, 1)) +" miles away"
         if pet['organization_id']:
             current['Organization ID'] = pet['organization_id']
         if pet['organization_animal_id']:

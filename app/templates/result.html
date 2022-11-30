@@ -4,66 +4,97 @@
 
 {%block content%}
 
-<style>
-p {
-    line-height: 1.5em;
-}
-</style>
+<!-- <style>
+    p {
+        text-align:center;
+    }
+</style> -->
 
-<div id = "results_topper">
-<h1 class="results">{{pag['Total number of results']}} Results!</h1>
-<form name="change_limit" method="POST"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <div class = "change_limit"> Number of results per page:
-    <select name="limit" id="limit" onchange="this.form.submit()"  class = "form_font">
-        {% for num in limit_options %}
-        <option value={{num}}>{{num}}</option>
-        {% endfor %}
-    </select>
+<div id = 'results_wrapper'>
+
+    <div id = "results_topper">
+        <h1 class="results">{{pag['Total number of results']}} Results!</h1>
+        <form name="change_limit" method="POST"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class = "change_limit"> Number of results per page:
+            <select name="limit" id="limit" onchange="this.form.submit()"  class = "form_font">
+                {% for num in limit_options %}
+                <option value={{num}}>{{num}}</option>
+                {% endfor %}
+            </select>
+            </div>
+        </form>
     </div>
-</form>
-</div>
 
-    {% for pet in res %}
-        {% for key, value in pet.items() %}
-            {% if key == 'Petfinder Profile Link' %}
-                <p><b>{{key}}:</b> <a href="{{value}}">{{pet['Name']}}'s Profile</a></p>
-            {% elif key == 'Description' %}
-                <p><b>{{key}}:</b> {{value}}<a href="{{pet['Petfinder Profile Link']}}" title="{{pet['Name']}}'s Petfinder Profile" class="dotdotdot">...</a></p>
-            {% elif key == 'Photos' %}
-                <div class = 'flex_pics_container'>
-                    {% for pic in value %}
-                        <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
-                    {% endfor %}
-                </div>
-            {% elif key in ['ID', 'Organization Animal ID', 'Organization ID'] %}
-                
-            {% elif key == 'Published at' %}
-                <p id="{{pet['ID']}}"></p>
-                <script>
-                    {
-                        const options = {
-                        month:'short',
-                        day:'numeric',
-                        year:'numeric',
-                        hour:'numeric',
-                        minute:'numeric',
-                        timeZoneName: 'short'
-                        }
+{% for pet in res %}
+    <p>
+        <span style="font-size: 1.5em; "><b>Meet {{pet['Name']}}!</b></span>
+        <br>
+        <a href="{{pet['Petfinder Profile Link']}}">{{pet['Name']}}'s Full Petfinder Profile</a><br>
+            {% for value in pet['Details'] %}
+                {{value}}
+            {% if pet['Details'].index(value) != pet['Details']|length-1 %}
+                /
+            {% endif %}
+            {% endfor %}
+            <br>
+            {% if pet['Attributes'] %}
+                {% for attr in pet['Attributes'] %}
+                    {{attr}}
+                {% if pet['Attributes'].index(attr) != pet['Attributes']|length-1 %}
+                    /
+                {% endif %}
+                {% endfor %}
+                <br>
+            {% endif %}
+            {% if pet['Environment'] %}
+                Good with: 
+                {% for friend in pet['Environment'] %}
+                    {{friend}}
+                {% if pet['Environment'].index(friend) != pet['Environment']|length-1 %}
+                    /
+                {% endif %}
+                {% endfor %}
+                <br>
+            {% endif %}
+            {{pet['Description']}}<a href="{{pet['Petfinder Profile Link']}}" title="{{pet['Name']}}'s Petfinder Profile" class="dotdotdot">...</a>
+            <br>
 
-                        let pet_id = '{{ pet["ID"] }}';
-                        let old_date = '{{ pet["Published at"] }}';
-                        let new_date = new Date(Date.parse(old_date)).toLocaleString([], options);
-                        document.getElementById(pet_id).innerHTML = "<b>Published at: </b>" + new_date;
-                    }
-                </script>
-            {% else %}
-                <p><b>{{key}}:</b> {{value}}</p>
-            {% endif %}          
+    {% if pet['Photos'] %}
+    </p>
+    <div class = 'flex_pics_container'>
+        {% for pic in pet['Photos'] %}
+            <img src="{{pic}}" alt="photo of {{pet['Name']}}" class = "flex_pics">
         {% endfor %}
-        {% if res.index(pet) != res|length-1 %}
-        <hr class="results_hr">
-        {% endif %}  
-    {% endfor %}
+    </div> 
+    <p>
+    {% endif %}
+        <span id="{{pet['ID']}}"></span>
+        <script>
+            {
+                const options = {
+                month:'short',
+                day:'numeric',
+                year:'numeric',
+                hour:'numeric',
+                minute:'numeric',
+                timeZoneName: 'short'
+                }
+
+                let pet_id = '{{ pet["ID"] }}';
+                let old_date = '{{ pet["Published at"] }}';
+                let new_date = new Date(Date.parse(old_date)).toLocaleString([], options);
+                document.getElementById(pet_id).innerHTML = "Published at " + new_date;
+            }
+        </script>
+        <br>
+        {{pet['Distance']}}
+        <br>
+        {{pet['Contact Info']}}
+    </p>
+    {% if res.index(pet) != res|length-1 %}
+    <hr class="results_hr">
+    {% endif %}  
+{% endfor %}
 
 <hr class = "pagination_hr">
 
@@ -95,4 +126,5 @@ p {
     {% endif %}
 </nav>
 
+</div>
 {%endblock%}
