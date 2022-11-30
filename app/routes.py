@@ -188,7 +188,7 @@ def get_savenames_params():
             if v == 1 and k != 'distance':
                 v = 'yes'
             if k == 'limit':
-                # k = 'results per page'      
+                k = 'results per page'      
                 continue      
             param_list.append(k + ': ' + str(v))
         names_params[savename] = ' | '.join(param_list).lower()
