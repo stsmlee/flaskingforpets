@@ -10,7 +10,21 @@ p {
 }
 </style>
 
-<h1>{{pag['Total number of results']}} Results!</h1>
+<div>
+<h1 class="results">{{pag['Total number of results']}} Results!</h1>
+<form name="change_limit" method="POST"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class = "change_limit"> Number of results per page:
+    <select name="limit" id="limit" onchange="this.form.submit()"  class = "form_font">
+        {% for num in limit_options %}
+        <option value={{num}}>{{num}}</option>
+        {% endfor %}
+    </select>
+    </div>
+</form>
+</div>
+
+
+
     {% for pet in res %}
         {% for key, value in pet.items() %}
             {% if key == 'Petfinder Profile Link' %}

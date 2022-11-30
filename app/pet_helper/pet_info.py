@@ -92,11 +92,6 @@ def get_request(payload):
 # false = False
 # true = True
 
-# def change_tz(dt, tz):
-#     if not tz:
-#         tz = pytz.timezone('US/Eastern')
-#     return dt.astimezone(pytz.timezone(tz))
-
 def parse_res_animals(res_animals):
     parsed_list = []
     for pet in res_animals:
@@ -150,10 +145,6 @@ def parse_res_animals(res_animals):
         current['Photos'] = photo_links
         current['Status'] = pet['status'].title()
         current['Published at'] = pet['published_at']
-        # publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
-        # publish_date_tz = change_tz(publish_date_utc, tz)
-        # publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
-        # current['Published at'] = publish_str
         distance = pet['distance']
         current['Distance'] = str(round(distance, 1)) +" miles"
         if pet['organization_id']:

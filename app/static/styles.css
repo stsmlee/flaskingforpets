@@ -404,3 +404,11 @@ div.flex_pics_container {
     border-radius: 10px;
     border: 2px solid #c8b8f4;
 } */
+
+div.change_limit {
+    float:right;
+}
+
+h1.results {
+    float:left;
+}

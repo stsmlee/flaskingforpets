@@ -115,4 +115,3 @@ get_info()
 #         tz_tuples.append((tz,tz))
 # tz_tuples.append(('UTC','UTC'))
 # print(tz_tuples)
-

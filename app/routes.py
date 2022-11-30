@@ -148,6 +148,12 @@ def save_search(savename,params):
     conn.commit()
     conn.close()
 
+def update_search(savename,params):
+    conn = get_db_connection()
+    conn.execute('UPDATE saves SET params = ? WHERE savename = ? and user_id = ?', (params, savename, get_user_id()))
+    conn.commit()
+    conn.close()
+
 def save_results_db(results, savename):
     conn = get_db_connection()
     conn.execute('UPDATE saves SET results = ? WHERE savename = ? AND user_id = ?', (results, savename, get_user_id()))
@@ -181,7 +187,10 @@ def get_savenames_params():
             if isinstance(v, str):
                 v = v.replace(',', ', ')
             if v == 1 and k != 'distance':
-                v = 'yes'            
+                v = 'yes'
+            if k == 'limit':
+                # k = 'results per page'      
+                continue      
             param_list.append(k + ': ' + str(v))
         names_params[savename] = ' | '.join(param_list).lower()
     return names_params
@@ -220,6 +229,13 @@ def refresh_token():
     pet_info.auth = "Bearer " + pet_info.token
     pet_info.header = {"Authorization": pet_info.auth}
     flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
+
+
+def sort_limit_options(limit):
+    options = [5,10,15,20,25,30]
+    options.remove(limit)
+    options.insert(0, limit)
+    return options
         
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
@@ -275,6 +291,8 @@ def search(type,payload,page):
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
+    limit = payload['limit']
+    limit_options = sort_limit_options(limit)
     res_json = pet_info.get_request(payload)
     if isinstance(res_json, int):
         if res_json == 401:
@@ -284,13 +302,18 @@ def search(type,payload,page):
         return redirect(url_for('index'))
     if not res_json:
         return render_template('no_results.html', type=type)
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+    if request.method == 'POST' and request.form.get('limit'):
+        payload['limit'] = int(request.form.get('limit'))
+        return redirect(url_for('search', type=type, payload=json.dumps(payload), page=page))
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), limit_options=limit_options)
 
-@app.route('/animals/<type>/page<int:page>/<payload>/<savename>')
-def search_saved(type,payload,page,savename, methods=["GET", "POST"]):
+@app.route('/animals/<type>/page<int:page>/<payload>/<savename>', methods=["GET", "POST"])
+def search_saved(type,payload,page,savename):
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
+    limit = payload['limit']
+    limit_options = sort_limit_options(limit)
     res_json = pet_info.get_request(payload)
     if isinstance(res_json, int):
         if res_json == 401:
@@ -302,7 +325,11 @@ def search_saved(type,payload,page,savename, methods=["GET", "POST"]):
         return render_template('no_results.html', type=type)
     results = pet_info.save_results(res_json, saved_dict={})
     save_results_db(json.dumps(results), savename)
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']))
+    if request.method == 'POST' and request.form.get('limit'):
+        payload['limit'] = int(request.form.get('limit'))
+        update_search(savename, json.dumps(payload))
+        return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=page, savename=savename))
+    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), limit_options=limit_options)
 
 @app.route('/whatsnews')
 def check_updates():

@@ -57,9 +57,9 @@ class ChangePasswordForm(FlaskForm):
     new_password =  PasswordField('New Password', validators= [update_something, Length(min=8, max=20)], render_kw= {'class': 'form_font'})
     submit = SubmitField('Save Changes',render_kw= {'class': 'submit_button'})
 
-class SetTZForm(FlaskForm):
-    tz = SelectField('Time Zone', render_kw= {'class': 'form_font'})
-    submit = SubmitField('Save Time Zone', render_kw= {'class': 'submit_button'})
+# class SetTZForm(FlaskForm):
+#     tz = SelectField('Time Zone', render_kw= {'class': 'form_font'})
+#     submit = SubmitField('Save Time Zone', render_kw= {'class': 'submit_button'})
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
