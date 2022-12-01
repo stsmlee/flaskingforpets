@@ -411,3 +411,33 @@ div.change_limit {
 #padded_wrapper {
     padding:0px 3.75em;
 }
+
+span.puzzle_row {
+    display:inline-block; 
+    text-align: center; 
+    height: 40px; 
+    width: 40px; 
+    background-color:rgb(168, 168, 168); 
+    box-sizing: border-box;
+    font-size:2em;
+} 
+
+span.guess_row {
+    font-size:2em;
+}
+
+
+input.guess_row{
+    display:inline-block; 
+    text-align: center;
+    height: 40px; 
+    width: 40px;
+    font-size: 35px;
+    box-sizing: border-box;
+    border-width: 1px;
+}
+
+#puzzle {
+    padding:3em 3em; 
+    text-align: center;
+}

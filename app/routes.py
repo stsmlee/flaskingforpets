@@ -5,7 +5,7 @@ from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for, Markup)
 from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
-from app.pet_helper import pet_info
+from app.pet_helper import pet_info, squordle
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
@@ -402,3 +402,21 @@ def confirm_delete():
     session.clear()
     flash('Account successfully deleted.', 'notice')
     return redirect(url_for('index'))
+
+@app.route('/squordle', methods=['GET', 'POST'])
+def puzzle():
+    return render_template('squordle.html')
+
+@app.route('/squordle/random', methods=['GET', 'POST'])
+def random_puzzle():
+    puzzle_id = squordle.get_random_puzzle()
+    print(puzzle_id)
+    print(type(puzzle_id))
+    return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
+
+@app.route('/squordle/play/<int:puzzle_id>', methods=['GET', 'POST'])
+def play_puzzle(puzzle_id):
+    puzzle = squordle.choices[puzzle_id]
+    if request.method == 'POST' and request.form.getlist('letters'):
+        print(request.form.getlist('letters'))
+    return render_template('squordle_play.html', puzzle=puzzle)

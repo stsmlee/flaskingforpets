@@ -6,7 +6,7 @@ CREATE TABLE users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     nickname TEXT,
-    timezone TEXT DEFAULT 'US/Eastern',
+    -- timezone TEXT DEFAULT 'US/Eastern',
     password TEXT NOT NULL
 );
 
@@ -28,6 +28,29 @@ CREATE TABLE session_table(
         -- ON CONFLICT REPLACE,
         -- if you replace it will log out their other sessions on other devices/browsers
     FOREIGN KEY (user_id) REFERENCES users(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+CREATE TABLE puzzles(
+    id PRIMARY KEY AUTOINCREMENT,
+    creator_id INTEGER NOT NULL,
+    word TEXT NOT NULL,
+    FOREIGN KEY (creator_id) REFERENCES users(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+CREATE TABLE squordle_users(
+    user_id = INTEGER PRIMARY KEY,
+    puzzle_id = INTEGER NOT NULL,
+    guess_count = INTEGER NOT NULL DEFAULT 0,
+    guess_words = TEXT,
+    complete = INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+    FOREIGN KEY (puzzle_id) REFERENCES puzzles(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 )
