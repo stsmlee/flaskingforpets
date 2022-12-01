@@ -32,11 +32,13 @@ def get_token():
     response = requests.post(url, data=params)
     # print(response)
     # print(response.text)
+    if response != 200:
+        print('!!!something went wrong with getting a token!!!')
     return response.json()['access_token']
 
-token = get_token()
-auth = "Bearer " + token
-header = {"Authorization": auth}
+# token = get_token()
+# auth = "Bearer " + token
+# header = {"Authorization": auth}
 
 def update_types():
     type_url = 'https://api.petfinder.com/v2/types'

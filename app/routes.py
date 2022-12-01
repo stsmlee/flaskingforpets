@@ -9,6 +9,7 @@ from app.pet_helper import pet_info, squordle
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
+import copy
 
 pet_types_dict = pet_info.types_dict
 
@@ -410,13 +411,16 @@ def puzzle():
 @app.route('/squordle/random', methods=['GET', 'POST'])
 def random_puzzle():
     puzzle_id = squordle.get_random_puzzle()
-    print(puzzle_id)
-    print(type(puzzle_id))
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
 
 @app.route('/squordle/play/<int:puzzle_id>', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     puzzle = squordle.choices[puzzle_id]
+    guesses = puzzle.evals
     if request.method == 'POST' and request.form.getlist('letters'):
-        print(request.form.getlist('letters'))
-    return render_template('squordle_play.html', puzzle=puzzle)
+        guess = ''.join(request.form.getlist('letters'))
+        eval = squordle.check_guess(guess, puzzle)
+        guesses.append(eval)
+        print(guesses)
+        return redirect(url_for('play_puzzle', puzzle_id = puzzle_id))
+    return render_template('squordle_play.html', puzzle=puzzle, guesses=guesses)

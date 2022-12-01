@@ -415,29 +415,48 @@ div.change_limit {
 span.puzzle_row {
     display:inline-block; 
     text-align: center; 
-    height: 40px; 
-    width: 40px; 
+    height: 50px; 
+    width: 50px; 
     background-color:rgb(168, 168, 168); 
     box-sizing: border-box;
-    font-size:2em;
+    font-size: 35px;
 } 
 
-span.guess_row {
+/* span.guess_row {
     font-size:2em;
-}
+} */
 
 
 input.guess_row{
     display:inline-block; 
     text-align: center;
-    height: 40px; 
-    width: 40px;
+    height: 50px; 
+    width: 50px; 
     font-size: 35px;
     box-sizing: border-box;
     border-width: 1px;
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    caret-color:#88888800;
+    text-transform:uppercase;
+}
+
+input.guess_row:focus{
+    /* outline-width: 2px;
+    outline-style: solid;
+    outline-color: grey; */
+    border: none;
+    border-radius: 2pt;
+    box-shadow: 0 0 2px 1px rgb(112, 112, 112);
+    outline: none;
+    transition: .1s;
 }
 
 #puzzle {
     padding:3em 3em; 
     text-align: center;
+}
+
+#puzzle > div:not(.button_div){
+    height: 50px; 
+    margin: 5px 0 5px 0;
 }
