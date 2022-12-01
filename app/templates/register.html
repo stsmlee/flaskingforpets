@@ -3,6 +3,7 @@
 {%block title%}Register Account{%endblock%}
 
 {% block content %}
+<div id="padded_wrapper">
 <h4>Register an account and save your searches!</h4>
 <form method="POST"><div style="line-height:2.5em;">
     {{ form.hidden_tag() }}
@@ -11,6 +12,6 @@
     <div>{{form.nickname.label}}: {{form.nickname()}}</div>
     <div style="margin-block-start:1em">{{form.submit()}}</div>
 </div></form>
-
+</div>
 
 {% endblock %}

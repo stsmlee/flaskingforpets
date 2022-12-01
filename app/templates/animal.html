@@ -4,19 +4,7 @@
 
 {%block content%}
 
-<!-- {% if form.is_submitted() and form.errors|count > 0 %} -->
-<!-- <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{ form.errors|count }} error(s):
-    <ul>
-        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-        {% for error in field_errors %}
-            <li>{{ form[field_name].label }}: {{ error }}</li>
-        {% endfor %}
-    {% endfor %}
-    </ul>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" data-close></button>
-</div> -->
-<!-- {% endif %} -->
+<div id="padded_wrapper">
 
 {% if type == 'Small & Furry' %}
 <h1>So you want something small and furry!</h1>
@@ -155,5 +143,7 @@
         }
     }
 </script>
+
+</div>
 
 {%endblock%} 

@@ -3,6 +3,7 @@
 {%block title%}Flasking for Pets{%endblock%}
 
 {%block content%}
+<div id="padded_wrapper">
 
 {% if not session['user_token'] %}
 <h1>SUP DOG</h1>
@@ -58,4 +59,6 @@
         }
     }
 </script>
+
+</div>
 {%endblock%}

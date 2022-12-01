@@ -127,7 +127,8 @@ h1 {
 
 #header {
     font-size: 1em;
-    margin-top: 5px;
+/*     margin-top: 5px; */
+    padding: 10px 10px 0px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -415,7 +416,13 @@ div.flex_pics_container {
     display:flex;
     justify-content: space-between;
     align-items:baseline;
-    height: 4em;
+    flex-wrap: wrap;
+    margin-top:1.33em;
+    gap: 1em;
+}
+
+#results_topper h1 {
+    margin: 0px;
 }
 
 div.change_limit {
@@ -427,6 +434,6 @@ div.change_limit {
     font-size:90%;
 }
 
-#results_wrapper {
+#padded_wrapper {
     padding:0px 60px;
 }
