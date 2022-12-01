@@ -128,7 +128,7 @@ h1 {
 #header {
     font-size: 1em;
 /*     margin-top: 5px; */
-    padding: 10px 10px 0px 10px;
+    padding: .67em .67em 0px .67em;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -289,8 +289,7 @@ input.checkbox {
 ul.alert {
     display: inline-block;
     padding: 2px 16px;
-    /* margin: 5px 5px; */
-    margin: 0;
+    margin: .67em 60px;
     color: #970020;
     background-color: #ffd5de;
     border-radius: 10px;
@@ -368,11 +367,6 @@ hr.pagination_hr {
 }
 
 .flex_pics {
-    /* max-height:250px;
-    width: auto;
-    min-width: 0;
-    min-height: 0;
-    object-fit: contain; */
     height:250px;
     width: auto;
     min-width: 0;
@@ -387,30 +381,12 @@ hr.pagination_hr {
 div.flex_pics_container {
     display:flex; 
     align-items:center;
-    /* justify-content:center; */
     gap: 1px;
     margin: 1em 0px 1em 0px;
     height:fit-content;
     border-radius:10px;
     overflow-x: auto;
 }
-
-/* .flex_pics_container::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-.flex_pics_container::-webkit-scrollbar-track {
-    background: #c8b8f4d0;
-    border-radius: 1px;
-    background-clip: content-box; 
-}
-
-.flex_pics_container::-webkit-scrollbar-thumb {
-    background-color: #9c88d1;
-    border-radius: 10px;
-    border: 2px solid #c8b8f4;
-} */
 
 #results_topper {
     display:flex;
@@ -435,5 +411,5 @@ div.change_limit {
 }
 
 #padded_wrapper {
-    padding:0px 60px;
+    padding:0px 3.75em;
 }
