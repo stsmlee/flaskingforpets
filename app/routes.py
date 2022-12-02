@@ -229,7 +229,6 @@ def refresh_token():
     pet_info.header = {"Authorization": pet_info.auth}
     flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
 
-
 def sort_limit_options(limit):
     options = [5,10,15,20,25,30]
     options.remove(limit)
