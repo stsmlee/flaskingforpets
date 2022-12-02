@@ -413,7 +413,7 @@ def random_puzzle():
     puzzle_id = squordle.get_random_puzzle()
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
 
-@app.route('/squordle/play/<int:puzzle_id>', methods=['GET', 'POST'])
+@app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     puzzle = squordle.choices[puzzle_id]
     guesses = puzzle.evals
@@ -421,6 +421,5 @@ def play_puzzle(puzzle_id):
         guess = ''.join(request.form.getlist('letters'))
         eval = squordle.check_guess(guess, puzzle)
         guesses.append(eval)
-        print(guesses)
         return redirect(url_for('play_puzzle', puzzle_id = puzzle_id))
     return render_template('squordle_play.html', puzzle=puzzle, guesses=guesses)

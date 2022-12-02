@@ -1,0 +1,14 @@
+{%extends 'base.html'%}
+
+<title>{%block title%}Squordle{% endblock %}</title>
+
+{%block content%}
+<div id="padded_wrapper", style="text-align: center;">
+<h1>Gimme a random puzzle!</h1>
+<form method="GET" action="{{url_for('random_puzzle')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+    <div class = "button_div">
+    <input type="submit" value="Gimme!" class = 'submit_button'>
+    </div>
+</form>
+</div>
+{%endblock%} 

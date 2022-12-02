@@ -1,0 +1,88 @@
+{%extends 'base.html'%}
+
+<title>{%block title%}Let's Play!{% endblock %}</title>
+
+{%block content%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<form method="POST"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+<div id = "puzzle">
+    {% for guess in range(puzzle.max_guesses) %}
+        {% if guess != (puzzle.guess_count) %}
+            {% if guesses[guess] == 'win' %}
+                <div>
+                {% for i in range(puzzle.word|length)  %}
+                <span class = "puzzle_row" id="winner{{i}}" style="background-color:rgb(157, 156, 156)">{{puzzle.word[i]}}</span>
+                <script>
+                    {
+                        console.log('i see you')
+                        let span = document.getElementById('winner{{i}}');
+                        span.style.backgroundColor = "purple";
+                    }
+                </script>
+                {% endfor %}
+                </div>
+            {% elif guess < puzzle.guess_count %}
+                <div>
+                {% for i in range(puzzle.word|length) %}
+                    <span class = "puzzle_row" id="{{guess}}{{i}}" style="background-color:rgb(157, 156, 156)">{{guesses[guess][i][0]}}</span>
+                    <script>
+                        {
+                            let guess = parseInt('{{guesses[guess][i][1]}}');
+                            let span = document.getElementById('{{guess}}{{i}}');
+                            if ( guess === 1) {
+                              span.style.backgroundColor = "yellow";
+                            }
+                            else if (guess === 2) {
+                              span.style.backgroundColor = "green";
+                            };
+                        }
+                      </script>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div>
+                {% for i in range(puzzle.word|length)  %}
+                    <span class = "puzzle_row"> </span>
+                {% endfor %}
+                </div>
+            {% endif %}
+                
+        {% else %}
+            {% if guesses[-1] != 'win' %}
+                <div>
+                {% for i in range(puzzle.word|length) %}
+                    <span class = "guess_row"><input type="text" name="letters" required minlength="1" maxlength="1" class="guess_row" autocapitalize="characters" autofocus autocomplete="off"></span>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div>
+                {% for i in range(puzzle.word|length)  %}
+                    <span class = "puzzle_row"> </span>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% if guesses[-1] != 'win' %}
+    <div class = "button_div">
+        <input type="submit" value="Let's See!" class = 'submit_button'>
+    </div>
+    {% endif %}
+</div>
+</form>
+<script>
+    $('input').keyup(function () {
+        if (this.value.length == this.maxLength) {
+            $(this).parent().nextAll().children('input').first().focus();
+        };
+    });
+    $('input').keydown(function () {
+        if (this.value.length == 0 && event.which == 8) {
+                $(this).parent().prevAll().children('input').first().focus();
+            };         
+    });
+
+</script>
+
+{%endblock%} 

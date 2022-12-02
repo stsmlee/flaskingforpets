@@ -454,6 +454,7 @@ input.guess_row:focus{
 #puzzle {
     padding:3em 3em; 
     text-align: center;
+    line-height: 50px;
 }
 
 #puzzle > div:not(.button_div){

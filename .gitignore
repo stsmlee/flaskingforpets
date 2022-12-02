@@ -5,4 +5,5 @@ flask_session/
 # app/pet_helper/__pycache__
 app/**/__pycache__
 sneaky.html
-**/squordle*
+# **/squordle*
+squordle.sql
