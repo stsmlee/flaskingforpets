@@ -223,12 +223,16 @@ def check_savecount(form,field):
     if count >= 20:
         raise StopValidation(Markup('You have reached the maximum number of saved searches (20), please go to <a href="/manageaccount">Manage Your Account</a> to make space for more.'))
 
-def refresh_token():
-    pet_info.token = pet_info.get_token()
-    pet_info.auth = "Bearer " + pet_info.token
-    pet_info.header = {"Authorization": pet_info.auth}
-    flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
+# def refresh_token():
+#     pet_info.token = pet_info.get_token()
+#     pet_info.auth = "Bearer " + pet_info.token
+#     pet_info.header = {"Authorization": pet_info.auth}
+#     flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
 
+def get_token():
+    token = pet_info.get_token()
+    auth = "Bearer " + token
+    pet_info.header = {"Authorization": auth}
 
 def sort_limit_options(limit):
     options = [5,10,15,20,25,30]
@@ -287,6 +291,11 @@ def animals(type):
 
 @app.route('/animals/<type>/page<int:page>/<payload>', methods=["GET", "POST"])
 def search(type,payload,page):
+    try: 
+        get_token()
+    except: 
+        flash('Petfinder is currently down, please try again later.', 'response error')
+        return redirect(url_for('index'))
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
@@ -294,9 +303,6 @@ def search(type,payload,page):
     limit_options = sort_limit_options(limit)
     res_json = pet_info.get_request(payload)
     if isinstance(res_json, int):
-        if res_json == 401:
-            refresh_token()
-            return redirect(url_for('search', type=type, payload=json.dumps(payload), page=page))
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))
     if not res_json:
@@ -308,6 +314,11 @@ def search(type,payload,page):
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>', methods=["GET", "POST"])
 def search_saved(type,payload,page,savename):
+    try: 
+        get_token()
+    except: 
+        flash('Petfinder is currently down, please try again later.', 'response error')
+        return redirect(url_for('index'))
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
@@ -315,9 +326,6 @@ def search_saved(type,payload,page,savename):
     limit_options = sort_limit_options(limit)
     res_json = pet_info.get_request(payload)
     if isinstance(res_json, int):
-        if res_json == 401:
-            refresh_token()
-            return redirect(url_for('search_saved', type = type, payload = json.dumps(payload), page = page, savename = savename))
         flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
         return redirect(url_for('index'))
     if not res_json:
@@ -333,14 +341,15 @@ def search_saved(type,payload,page,savename):
 @app.route('/whatsnews')
 def check_updates():
     if get_savenames():
+        try: 
+            get_token()
+        except: 
+            flash('Petfinder is currently down, please try again later.', 'response error')
+            return redirect(url_for('index'))
         results = pet_info.check_for_new_results(get_user_id())
         if isinstance(results, int):
-            if results == 401:
-                refresh_token()
-                return redirect(url_for('check_updates'))
-            else:
-                flash(f'There was an issue with Petfinder, please try again later. Status code {str(results)}.', 'response error')
-                return redirect(url_for('index'))
+            flash(f'There was an issue with Petfinder, please try again later. Status code {str(results)}.', 'response error')
+            return redirect(url_for('index'))
         elif not results: 
             flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
         else:

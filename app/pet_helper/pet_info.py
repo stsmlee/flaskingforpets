@@ -30,16 +30,19 @@ def get_token():
         "grant_type": "client_credentials",
         "client_id": client_id
     }
-    response = requests.post(url, data=params)
+    # response = requests.post(url, data=params)
+    response = requests.post(url, data=0)
     # print(response)
     # print(response.text)
-    if response != 200:
-        print('!!!something went wrong with getting a token!!!')
+    # if response != 200:
+    #     print('!!!something went wrong with getting a token!!!')
+    #     return response
     return response.json()['access_token']
 
-token = get_token()
-auth = "Bearer " + token
-header = {"Authorization": auth}
+# token = get_token()
+# auth = "Bearer " + token
+# header = {"Authorization": auth}
+header = {}
 
 def update_types():
     type_url = 'https://api.petfinder.com/v2/types'
