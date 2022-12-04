@@ -480,7 +480,7 @@ div#winner {
 }
 
 @keyframes move {
-        to {
-            background-position: 4500vh;
-        }
+    to {
+        background-position: 4500vh;
+    }
 }

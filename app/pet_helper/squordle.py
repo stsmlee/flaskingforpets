@@ -49,14 +49,9 @@ def get_attrs(puzzle):
     return puzzle.__dict__.items()
     # return attrs
 
-# print(get_attrs(Puzzle('squirt')))
-
-
 choices = [Puzzle('Treat')]
 
 def get_random_puzzle():
     pick = random.randint(0, len(choices)-1)
     return(pick)
-
-# print(get_random_puzzle)
 

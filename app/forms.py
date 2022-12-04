@@ -61,6 +61,9 @@ class ChangePasswordForm(FlaskForm):
 #     tz = SelectField('Time Zone', render_kw= {'class': 'form_font'})
 #     submit = SubmitField('Save Time Zone', render_kw= {'class': 'submit_button'})
 
+class ResultsPerPage(FlaskForm):
+    limit = SelectField('Number of Results per Page', )
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
     password = PasswordField('Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
@@ -98,6 +101,9 @@ class FilterForm(FlaskForm):
     distance = IntegerField('Distance (Miles)', default = 30, validators = [NumberRange(min=0, max=500), InputRequired()], render_kw= {'class': 'form_font'})
     savename = StringField('Save Name', render_kw= {'class': 'form_font'})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
+
+class GuessWordForm(FlaskForm):
+    pass
 
 # class MultiCheckboxField(SelectMultipleField):
 #     widget = widgets.ListWidget(prefix_label=False)

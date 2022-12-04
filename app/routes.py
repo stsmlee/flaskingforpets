@@ -229,6 +229,7 @@ def refresh_token():
     pet_info.header = {"Authorization": pet_info.auth}
     flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
 
+
 def sort_limit_options(limit):
     options = [5,10,15,20,25,30]
     options.remove(limit)
@@ -417,6 +418,7 @@ def play_puzzle(puzzle_id):
     puzzle = squordle.choices[puzzle_id]
     guesses = puzzle.evals
     if request.method == 'POST' and request.form.getlist('letters'):
+        # return render_template('squordle_play.html', puzzle=puzzle, guesses=guesses)
         guess = ''.join(request.form.getlist('letters'))
         eval = squordle.check_guess(guess, puzzle)
         guesses.append(eval)
