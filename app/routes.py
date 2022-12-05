@@ -234,6 +234,13 @@ def get_token():
     auth = "Bearer " + token
     pet_info.header = {"Authorization": auth}
 
+def try_token():
+    try: 
+        get_token()
+    except: 
+        flash('Petfinder is currently down, please try again later.', 'response error')
+        return redirect(url_for('index'))
+
 def sort_limit_options(limit):
     options = [5,10,15,20,25,30]
     options.remove(limit)
@@ -291,11 +298,7 @@ def animals(type):
 
 @app.route('/animals/<type>/page<int:page>/<payload>', methods=["GET", "POST"])
 def search(type,payload,page):
-    try: 
-        get_token()
-    except: 
-        flash('Petfinder is currently down, please try again later.', 'response error')
-        return redirect(url_for('index'))
+    try_token()
     payload = json.loads(payload)
     payload = pet_info.return_the_slash(payload)
     payload['page'] = page
@@ -341,11 +344,7 @@ def search_saved(type,payload,page,savename):
 @app.route('/whatsnews')
 def check_updates():
     if get_savenames():
-        try: 
-            get_token()
-        except: 
-            flash('Petfinder is currently down, please try again later.', 'response error')
-            return redirect(url_for('index'))
+        try_token()
         results = pet_info.check_for_new_results(get_user_id())
         if isinstance(results, int):
             flash(f'There was an issue with Petfinder, please try again later. Status code {str(results)}.', 'response error')
