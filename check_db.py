@@ -10,42 +10,39 @@ def get_db_connection():
 
 def get_info():
     conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users').fetchall()
+    user = zip_results('users')
     if not user:
         print('No users in the database.')
     else:
         print('USERS TABLE')
-        for row in user:
-            print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}")
-    saved = conn.execute('SELECT * FROM saves').fetchall()
+        for u in user:
+            print(u)
+    saved = zip_results('saves')
     if not saved:
         print('No saved searches in the database.')
     else:
         print('SAVED TABLE')
-        for row in saved:
-            print("savename:", row['savename'], ", user_id:", row['user_id'])
-            print("params:", row['params'])
-            print("results:", row['results'])
-    session = conn.execute('SELECT * FROM session_table').fetchall()
+        for save in saved:
+            print(save)
+    session = zip_results('session_table')
     if not session:
         print('No sessions in the database.')
     else:
         print('SESSIONS TABLE')
-        for row in session:
-            print("user_token:", row['user_token'])
-            print("user_id:", row['user_id'])
-            print("timestamp:", row[2])
-    puzzlers = conn.execute('SELECT * FROM puzzlers').fetchall()
+        for s in session:
+            print(s)
+    puzzlers = zip_results('puzzlers')
     if puzzlers:
         print("PUZZLERS TABLE")
-        for row in puzzlers:
-            print("user_id:",row['user_id'], row["word"], "guess count:", row['guess_count'], "guess words:",row['guess_words'], "complete:", [row['complete']])
+        for p in puzzlers:
+            print(p)
     else:
         print('No puzzlers yet.')
-    puzzles = conn.execute('SELECT * FROM puzzles').fetchall()
-    print("PUZZLES TABLE")
-    for row in puzzles:
-        print(row['id'], row['word'], "creator id:", row['creator_id'],)
+    puzzles = zip_results('puzzles')
+    if puzzles:
+        print("PUZZLES TABLE")
+        for puzz in puzzles:
+            print(puzz)
     # print('ALL OUR TABLES:')
     # sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     # for row in sql_query:
@@ -69,6 +66,21 @@ def check_pragma_fkey():
     conn = get_db_connection()
     print(conn.execute("PRAGMA foreign_keys"))
     conn.close()
+
+def zip_results(tablename):
+    conn = get_db_connection()
+    curs = conn.execute(f'SELECT * FROM {tablename}')
+    cols = [description[0] for description in curs.description]
+    rows = curs.fetchall()
+    entries = []
+    for row in rows:
+        entry = []
+        for col, val in zip(cols, row):
+            if col != 'password':
+                entry.append(f"{col}:{val}")
+        entries.append(entry)
+    conn.close()
+    return entries
 
 def delete_expired_sessions(set_days):
     conn = get_db_connection()
@@ -100,10 +112,37 @@ def joinery():
 # get_info()
 # delete_expired_sessions(30)
 
-def add_puzzle_word(word):
+def add_puzzle_word_db(word):
     conn = get_db_connection()
     conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
     conn.commit()
     conn.close()
+
+def add_puzzle_to_puzzler():
+    conn = get_db_connection()
+    conn.execute('INSERT INTO puzzlers (user_id, puzzle_id) VALUES (1, 1)')
+    conn.commit()
+    conn.close()
+
+def played_puzzles():
+    conn = get_db_connection()
+    curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (1,))
+    cols = [description[0] for description in curs.description]
+    rows = curs.fetchall()
+    entries = []
+    for row in rows:
+        entry = []
+        for col, val in zip(cols, row):
+            entry.append((col,val))
+        entries.append(entry)
+    conn.close()
+    return entries
+
+# add_puzzle_to_puzzler()
+
+# conn = get_db_connection()
+# conn.execute("ALTER TABLE puzzlers ADD COLUMN success INTEGER NOT NULL DEFAULT 0")
+# conn.commit()
+# conn.close()
 
 get_info()

@@ -95,11 +95,17 @@
         {% endif %}
     {% endfor %}
     {% if guesses[-1] != 'win' %}
-    <div class = "button_div">
-        <input type="submit" value="Let's See!" class = 'submit_button'>
-    </div>
+        {% if puzzle.guess_count == puzzle.max_guesses %}
+        <div id="loser_text">Out of turns!<br>
+        The word was:<br>
+        {{puzzle.word}}</div>
+        {% else %}
+        <div class = "button_div">
+            <input type="submit" value="Let's See!" class = 'submit_button'>
+        </div>
+        {% endif %}
     {% else %}
-    <div class="rainbow_text">YOU WIN!</div>
+        <div class="rainbow_text">YOU WIN!</div>
     {% endif %}
 </div>
 </form>
