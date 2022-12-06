@@ -479,7 +479,8 @@ div#winner {
     background-image: url('confetti.gif');
 }
 
-.rainbow_text{
+#rainbow_text{
+    margin-top:10px !important;
     font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-weight: bold;
     font-size:50px;
@@ -492,6 +493,7 @@ div#winner {
 
 
 #loser_text{
+    margin-top:10px !important;
     font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-weight: bold;
     font-size:40px;

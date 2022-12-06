@@ -1,7 +1,7 @@
 -- DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS saves;
 -- DROP TABLE IF EXISTS session_table;
--- DROP TABLE IF EXISTS puzzlers;
+DROP TABLE IF EXISTS puzzlers;
 -- DROP TABLE IF EXISTS puzzles;
 
 CREATE TABLE IF NOT EXISTS users(
@@ -35,12 +35,13 @@ CREATE TABLE IF NOT EXISTS session_table(
 );
 
 CREATE TABLE IF NOT EXISTS puzzlers(
-    user_id INTEGER PRIMARY KEY,
-    puzzle_id TEXT NOT NULL,
+    user_id INTEGER,
+    puzzle_id INTEGER NOT NULL,
     guess_count INTEGER NOT NULL DEFAULT 0,
     guess_words TEXT,
     complete INTEGER NOT NULL DEFAULT 0,
     success INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (user_id, puzzle_id) ON CONFLICT IGNORE,
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,

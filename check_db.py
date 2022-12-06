@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime, timedelta
 import pytz
 import copy
+import random
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -74,10 +75,11 @@ def zip_results(tablename):
     rows = curs.fetchall()
     entries = []
     for row in rows:
-        entry = []
+        entry = {}
         for col, val in zip(cols, row):
             if col != 'password':
-                entry.append(f"{col}:{val}")
+                entry[col]=val
+                # entry.append(f"{col}:{val}")
         entries.append(entry)
     conn.close()
     return entries
@@ -118,31 +120,62 @@ def add_puzzle_word_db(word):
     conn.commit()
     conn.close()
 
-def add_puzzle_to_puzzler():
+def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn = get_db_connection()
-    conn.execute('INSERT INTO puzzlers (user_id, puzzle_id) VALUES (1, 1)')
+    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id) VALUES (?,?)', (user_id, puzzle_id))
     conn.commit()
     conn.close()
 
-def played_puzzles():
+def played_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (1,))
+    curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (user_id,))
     cols = [description[0] for description in curs.description]
     rows = curs.fetchall()
     entries = []
     for row in rows:
-        entry = []
+        entry = {}
         for col, val in zip(cols, row):
-            entry.append((col,val))
+            if col == 'word':
+                if row['complete'] != 1:
+                    continue
+            entry[col] = val
+            # entry.append(f'{col}:{val}')
         entries.append(entry)
     conn.close()
     return entries
 
-# add_puzzle_to_puzzler()
+def get_random_puzzle_id(user_id):
+    conn = get_db_connection()
+    curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
+    prev_puzzles = {row[0] for row in curs}
+    curs = conn.execute("SELECT id FROM puzzles").fetchall()
+    new_puzzles = [row[0] for row in curs if row[0] not in prev_puzzles]
+    pick = random.randint(0, len(new_puzzles)-1)
+    return new_puzzles[pick]
+
+def get_puzzle_word(puzzle_id):
+    conn = get_db_connection()
+    word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
+    return word[0]
+
+
 
 # conn = get_db_connection()
 # conn.execute("ALTER TABLE puzzlers ADD COLUMN success INTEGER NOT NULL DEFAULT 0")
 # conn.commit()
 # conn.close()
 
-get_info()
+# conn = get_db_connection()
+# conn.execute('UPDATE puzzlers SET complete = 1 WHERE puzzle_id = 1')
+# conn.commit()
+# conn.close()
+
+# add_puzzle_to_puzzler(1,1)
+# rand_id = get_random_puzzle_id(1)
+# add_puzzle_to_puzzler(1, rand_id)
+# print(get_puzzle_word(rand_id))
+puzzles = played_puzzles(1)
+for p in puzzles:
+    print(p)
+
+# get_info()

@@ -7,7 +7,5 @@ with open('schema.sql') as f:
 
 # cur = connection.cursor()
 
-connection.execute('INSERT INTO puzzles (word) VALUES (?)', ('TREAT',))
-
 connection.commit()
 connection.close()

@@ -108,4 +108,10 @@ def get_random_puzzle():
     pick = random.randint(0, len(choices)-1)
     return(pick)
 
+def add_puzzle_to_puzzler():
+    conn = get_db_connection()
+    conn.execute('INSERT INTO puzzlers (user_id, puzzle_id) VALUES (1, 1)')
+    conn.commit()
+    conn.close()
+
 
