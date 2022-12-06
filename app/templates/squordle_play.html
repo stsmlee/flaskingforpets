@@ -8,14 +8,14 @@
 <form method="POST"> {{form.hidden_tag()}}
 <div id = "puzzle">
     <div style="text-align: center;">
-        {% with errors = get_flashed_messages(category_filter=['invalid word']) %}
-        {% if errors %}
-          <span class="invalid_word">
-          {% for message in errors %}
-            {{ message }}
-          {% endfor %}
-          </span>
-        {% endif %}
+        {% with errs = get_flashed_messages(category_filter=['puzzle error']) %}
+          {% if errs %}
+            <ul class="puzzle_error">
+            {% for message in errs %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
         {% endwith %}
     </div>
     {% for guess in range(puzzle.max_guesses) %}

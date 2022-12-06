@@ -40,6 +40,7 @@ def check_guess(guess, puzzle):
     puzzle.guess_count += 1
     puzzle.guess_words.append(guess)
     puzzle.reset_letter_count()
+    puzzle.evals.append(eval)
     print(puzzle.__dict__.items())
     return eval
 

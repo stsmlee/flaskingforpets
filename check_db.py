@@ -16,7 +16,7 @@ def get_info():
     else:
         print('USERS TABLE')
         for row in user:
-            print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}, timezone: {row['timezone']}")
+            print(f"user_id: {row['id']}, user_name: {row['username']}, nickname: {row['nickname']}")
     saved = conn.execute('SELECT * FROM saves').fetchall()
     if not saved:
         print('No saved searches in the database.')
@@ -37,13 +37,16 @@ def get_info():
             print("timestamp:", row[2])
     puzzlers = conn.execute('SELECT * FROM puzzlers').fetchall()
     if puzzlers:
+        print("PUZZLERS TABLE")
         for row in puzzlers:
             print("user_id:",row['user_id'], row["word"], "guess count:", row['guess_count'], "guess words:",row['guess_words'], "complete:", [row['complete']])
     else:
         print('No puzzlers yet.')
     puzzles = conn.execute('SELECT * FROM puzzles').fetchall()
+    print("PUZZLES TABLE")
     for row in puzzles:
         print(row['word'], "creator id:", row['creator_id'],)
+    print('ALL OUR TABLES:')
     sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     for row in sql_query:
         print(row['name'])

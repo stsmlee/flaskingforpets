@@ -15,6 +15,9 @@ def create_table(first_char):
     conn.commit()
     conn.close()
 
+def insert_into_table(first_char, dict):
+    pass
+
 def get_words_json():
     with open('all_english_words.json', 'r') as openfile:
         json_obj = json.load(openfile)
@@ -36,8 +39,9 @@ for char in alphabets:
     smol_dict = {}
     for word in new_dict:
         if word[0] == char:
-            smol_dict[word]:0
-    json.dumps(smol_dict)
+            smol_dict[word]=0
+    json_dict = json.dumps(smol_dict)
+
 
 
 # update_words_json(new_dict)

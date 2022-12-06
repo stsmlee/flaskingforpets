@@ -346,13 +346,14 @@ ul.notice > li {
     border-radius: 30px;
 }
 
-.invalid_word {
+.puzzle_error{
     display: inline-block;
     padding: 2px 16px;
     color: #970020;
     background-color: #ffd5de;
     border-radius: 10px;
     line-height: 20px;
+    list-style: none;
 }
 
 hr.results_hr {

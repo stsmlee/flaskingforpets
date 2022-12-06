@@ -421,6 +421,26 @@ def random_puzzle():
     puzzle_id = squordle.get_random_puzzle()
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
 
+def flash_puzzle_error(form):
+    msg_set = set()
+    for field, errors in form.errors.items():
+        for error in errors:
+            msg_set.add(error)
+    for msg in msg_set:
+        flash(msg, 'puzzle error')
+
+def build_word(form_data):
+    guess = ''
+    for fieldname,value in form_data.items():
+        if 'csrf' not in fieldname:
+            guess+=value
+    guess = guess.upper()
+    return guess
+
+def check_word(word):
+    if word in ['RHYNO', 'TREAT', 'CRATE']:
+        return True
+
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     form = forms.GuessWordForm()
@@ -432,16 +452,14 @@ def play_puzzle(puzzle_id):
     if diff_len == 2:
         del form.l5
     if request.method == "POST":
-        guess = ''
-        for fieldname,value in form.data.items():
-            if 'csrf' not in fieldname:
-                guess+=value
-        guess = guess.upper()
-        if guess != "RLYTHO" and guess != "TREAT":
-            flash(f'{guess} ain\'t a word', 'invalid word')
-            return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-        eval = squordle.check_guess(guess, puzzle)
-        puzzle.evals.append(eval)
+        if form.validate():
+            guess = build_word(form.data)
+            if check_word(guess):
+                squordle.check_guess(guess, puzzle)
+            else:
+                flash('Invalid word', 'puzzle error')
+        else:
+            flash_puzzle_error(form)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     return render_template('squordle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
 
