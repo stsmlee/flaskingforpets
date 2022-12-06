@@ -22,7 +22,7 @@ class Puzzle:
 
 def check_guess(guess, puzzle):
     eval = []
-    guess = ''.join(guess)
+    # guess = ''.join(guess)
     guess = guess.upper()
     if guess == puzzle.word:
         puzzle.guess_count += 1

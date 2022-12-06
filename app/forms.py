@@ -2,12 +2,12 @@ import sqlite3
 import requests
 from argon2 import PasswordHasher
 from flask import Flask, Markup
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, Form
 from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
-                     SelectField, SelectMultipleField, StringField,
-                     SubmitField, TextAreaField, widgets)
+                     SelectField, StringField,
+                     SubmitField, TextAreaField, widgets, HiddenField, FieldList, FormField)
 from wtforms.validators import (DataRequired, InputRequired, Length, NoneOf,
-                                NumberRange, StopValidation, ValidationError, Optional)
+                                NumberRange, StopValidation, ValidationError, Optional, Regexp)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -102,8 +102,19 @@ class FilterForm(FlaskForm):
     savename = StringField('Save Name', render_kw= {'class': 'form_font'})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
+# class LetterForm(Form):
+#     letter = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autofocus':'true', 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+
 class GuessWordForm(FlaskForm):
-    pass
+    # letters = FieldList(FormField(LetterForm), min_entries=5, max_entries=7)
+    l0 = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autofocus':'true', 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l1 = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l2 = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters",  'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l3= StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l4 = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l5 = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l6 = StringField(validators=[InputRequired(), Length(max=1)], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    hidden = HiddenField()
 
 # class MultiCheckboxField(SelectMultipleField):
 #     widget = widgets.ListWidget(prefix_label=False)

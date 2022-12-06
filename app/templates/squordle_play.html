@@ -5,8 +5,19 @@
 {%block content%}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<form method="POST"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+<form method="POST"> {{form.hidden_tag()}}
 <div id = "puzzle">
+    <div style="text-align: center;">
+        {% with errors = get_flashed_messages(category_filter=['invalid word']) %}
+        {% if errors %}
+          <span class="invalid_word">
+          {% for message in errors %}
+            {{ message }}
+          {% endfor %}
+          </span>
+        {% endif %}
+        {% endwith %}
+    </div>
     {% for guess in range(puzzle.max_guesses) %}
         {% if guess != (puzzle.guess_count) %}
             {% if guesses[guess] == 'win' %}
@@ -15,7 +26,7 @@
                 <span class = "puzzle_row" id="winner{{i}}" style="background-color:rgb(157, 156, 156)">{{puzzle.word[i]}}</span>
                 <script>
                     {
-                        let i = parseInt('{{i}}');
+                        let i = '{{i}}';
                         let span = document.getElementById('winner{{i}}');
                         if (i == 0) {
                             span.style.backgroundColor = "red";
@@ -48,12 +59,12 @@
                     <span class = "puzzle_row" id="{{guess}}{{i}}" style="background-color:rgb(157, 156, 156)">{{guesses[guess][i][0]}}</span>
                     <script>
                         {
-                            let guess = parseInt('{{guesses[guess][i][1]}}');
+                            let guess = '{{guesses[guess][i][1]}}';
                             let span = document.getElementById('{{guess}}{{i}}');
-                            if ( guess === 1) {
+                            if ( guess == 1) {
                               span.style.backgroundColor = "yellow";
                             }
-                            else if (guess === 2) {
+                            else if (guess == 2) {
                               span.style.backgroundColor = "green";
                             };
                         }
@@ -70,8 +81,8 @@
         {% else %}
             {% if guesses[-1] != 'win' %}
                 <div>
-                {% for i in range(puzzle.word|length) %}
-                    <span class = "guess_row"><input type="text" name="letters" required minlength="1" maxlength="1" class="guess_row" autocapitalize="characters" autofocus autocomplete="off"></span>
+                {% for field in form %}
+                    <span class = "guess_row">{{field()}}</span>
                 {% endfor %}
                 </div>
             {% else %}
@@ -93,17 +104,16 @@
 </div>
 </form>
 <script>
-    $('input').keyup(function () {
-        if (this.value.length == this.maxLength) {
+    $('input').keydown(function () {
+        if (this.value.length == this.maxLength && event.which != 8) {
             $(this).parent().nextAll().children('input').first().focus();
         };
     });
     $('input').keydown(function () {
         if (this.value.length == 0 && event.which == 8) {
-                $(this).parent().prevAll().children('input').first().focus();
-            };         
+            $(this).parent().prevAll().children('input').first().focus();
+        };         
     });
-
 </script>
 
 {%endblock%} 

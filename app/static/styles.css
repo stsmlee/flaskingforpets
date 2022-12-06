@@ -346,6 +346,15 @@ ul.notice > li {
     border-radius: 30px;
 }
 
+.invalid_word {
+    display: inline-block;
+    padding: 2px 16px;
+    color: #970020;
+    background-color: #ffd5de;
+    border-radius: 10px;
+    line-height: 20px;
+}
+
 hr.results_hr {
     height:3px;
     margin:25px;

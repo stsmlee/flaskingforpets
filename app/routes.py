@@ -423,12 +423,27 @@ def random_puzzle():
 
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
+    form = forms.GuessWordForm()
     puzzle = squordle.choices[puzzle_id]
-    guesses = puzzle.evals
-    if request.method == 'POST' and request.form.getlist('letters'):
-        # return render_template('squordle_play.html', puzzle=puzzle, guesses=guesses)
-        guess = ''.join(request.form.getlist('letters'))
+    # trim form to word length
+    diff_len = 7 - len(puzzle.word)
+    if diff_len > 0:
+        del form.l6
+    if diff_len == 2:
+        del form.l5
+    if request.method == "POST":
+        guess = ''
+        for fieldname,value in form.data.items():
+            if 'csrf' not in fieldname:
+                guess+=value
+        guess = guess.upper()
+        if guess != "RLYTHO" or guess != "TREAT":
+            flash(f'{guess} ain\'t a word', 'invalid word')
+            return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
         eval = squordle.check_guess(guess, puzzle)
-        guesses.append(eval)
-        return redirect(url_for('play_puzzle', puzzle_id = puzzle_id))
-    return render_template('squordle_play.html', puzzle=puzzle, guesses=guesses)
+        puzzle.evals.append(eval)
+        return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
+    return render_template('squordle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
+
+if __name__ == "__main__":
+  app.run(debug=True)
