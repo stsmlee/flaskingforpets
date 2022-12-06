@@ -46,10 +46,10 @@ def get_info():
     print("PUZZLES TABLE")
     for row in puzzles:
         print(row['word'], "creator id:", row['creator_id'],)
-    print('ALL OUR TABLES:')
-    sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    for row in sql_query:
-        print(row['name'])
+    # print('ALL OUR TABLES:')
+    # sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    # for row in sql_query:
+    #     print(row['name'])
     conn.close()
 
 def get_savenames():

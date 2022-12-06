@@ -223,12 +223,6 @@ def check_savecount(form,field):
     if count >= 20:
         raise StopValidation(Markup('You have reached the maximum number of saved searches (20), please go to <a href="/manageaccount">Manage Your Account</a> to make space for more.'))
 
-# def refresh_token():
-#     pet_info.token = pet_info.get_token()
-#     pet_info.auth = "Bearer " + pet_info.token
-#     pet_info.header = {"Authorization": pet_info.auth}
-#     flash('Sorry for the delay, we had to refresh your session with Petfinder!', 'notice')
-
 def get_token():
     token = pet_info.get_token()
     auth = "Bearer " + token
@@ -437,8 +431,11 @@ def build_word(form_data):
     guess = guess.upper()
     return guess
 
-def check_word(word):
-    if word in ['RHYNO', 'TREAT', 'CRATE']:
+def valid_word(word):
+    conn = get_db_connection()
+    first_char = word[0]
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
+    if res:
         return True
 
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
@@ -447,14 +444,14 @@ def play_puzzle(puzzle_id):
     puzzle = squordle.choices[puzzle_id]
     # trim form to word length
     diff_len = 7 - len(puzzle.word)
-    if diff_len == 1:
+    if diff_len > 0:
         del form.l6
-    elif diff_len == 2:
+    if diff_len == 2:
         del form.l5
     if request.method == "POST":
         if form.validate():
             guess = build_word(form.data)
-            if check_word(guess):
+            if valid_word(guess):
                 squordle.check_guess(guess, puzzle)
             else:
                 flash('Invalid word', 'puzzle error')

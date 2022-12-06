@@ -27,20 +27,21 @@ def check_guess(guess, puzzle):
     if guess == puzzle.word:
         puzzle.guess_count += 1
         puzzle.guess_words.append(guess)
-        return 'win'
-    for i in range(len(guess)):
-        if guess[i] == puzzle.word[i]:
-            puzzle.guess_letter_count[guess[i]] -= 1
-            eval.append((guess[i], 2))
-        elif guess[i] != puzzle.word[i] and guess[i] in puzzle.word and puzzle.guess_letter_count[guess[i]] > 0:
-            puzzle.guess_letter_count[guess[i]] -= 1
-            eval.append((guess[i], 1))
-        else:
-            eval.append((guess[i], 0))
-    puzzle.guess_count += 1
-    puzzle.guess_words.append(guess)
-    puzzle.reset_letter_count()
-    puzzle.evals.append(eval)
+        puzzle.evals.append('win')
+    else:
+        for i in range(len(guess)):
+            if guess[i] == puzzle.word[i]:
+                puzzle.guess_letter_count[guess[i]] -= 1
+                eval.append((guess[i], 2))
+            elif guess[i] != puzzle.word[i] and guess[i] in puzzle.word and puzzle.guess_letter_count[guess[i]] > 0:
+                puzzle.guess_letter_count[guess[i]] -= 1
+                eval.append((guess[i], 1))
+            else:
+                eval.append((guess[i], 0))
+        puzzle.guess_count += 1
+        puzzle.guess_words.append(guess)
+        puzzle.reset_letter_count()
+        puzzle.evals.append(eval)
     print(puzzle.__dict__.items())
     return eval
 
