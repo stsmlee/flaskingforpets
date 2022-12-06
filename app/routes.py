@@ -241,6 +241,28 @@ def sort_limit_options(limit):
     options.insert(0, limit)
     return options
         
+def build_word(form_data):
+    guess = ''
+    for fieldname,value in form_data.items():
+        if 'csrf' not in fieldname:
+            guess+=value
+    guess = guess.upper()
+    return guess
+
+def valid_word(word):
+    conn = get_db_connection()
+    first_char = word[0]
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
+    if res:
+        return True
+
+def trim_form(form, word):
+    excess = 7-len(word)
+    if excess > 0:
+        del form.l6
+    if excess > 1:
+        del form.l5
+        
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
@@ -423,31 +445,11 @@ def flash_puzzle_error(form):
     for msg in msg_set:
         flash(msg, 'puzzle error')
 
-def build_word(form_data):
-    guess = ''
-    for fieldname,value in form_data.items():
-        if 'csrf' not in fieldname:
-            guess+=value
-    guess = guess.upper()
-    return guess
-
-def valid_word(word):
-    conn = get_db_connection()
-    first_char = word[0]
-    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
-    if res:
-        return True
-
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     form = forms.GuessWordForm()
     puzzle = squordle.choices[puzzle_id]
-    # trim form to word length
-    diff_len = 7 - len(puzzle.word)
-    if diff_len > 0:
-        del form.l6
-    if diff_len == 2:
-        del form.l5
+    trim_form(form, puzzle.word)
     if request.method == "POST":
         if form.validate():
             guess = build_word(form.data)
