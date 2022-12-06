@@ -447,9 +447,9 @@ def play_puzzle(puzzle_id):
     puzzle = squordle.choices[puzzle_id]
     # trim form to word length
     diff_len = 7 - len(puzzle.word)
-    if diff_len > 0:
+    if diff_len == 1:
         del form.l6
-    if diff_len == 2:
+    elif diff_len == 2:
         del form.l5
     if request.method == "POST":
         if form.validate():
@@ -462,6 +462,3 @@ def play_puzzle(puzzle_id):
             flash_puzzle_error(form)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     return render_template('squordle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
-
-if __name__ == "__main__":
-  app.run(debug=True)

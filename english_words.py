@@ -11,7 +11,7 @@ def get_db_connection():
 def create_table(first_char):
     conn = get_db_connection()
     conn.execute(f"""CREATE TABLE IF NOT EXISTS {first_char} (
-        words TEXT)""")
+        word TEXT PRIMARY KEY)""")
     conn.commit()
     conn.close()
 
@@ -25,7 +25,7 @@ def get_words_json():
 
 def update_words_json(dict):
     json_obj = json.dumps(dict, indent = 4)
-    with open('app/english_words_updated.json', 'w') as outfile:
+    with open('english_words_trimmed.json', 'w') as outfile:
         outfile.write(json_obj)
 
 english_words_dict = get_words_json()
@@ -34,16 +34,16 @@ new_dict = {word : 0 for word in english_words_dict if len(word) < 8 and len(wor
 
 alphabets=list(string.ascii_lowercase)
 
-for char in alphabets:
-    create_table(char)
-    smol_dict = {}
-    for word in new_dict:
-        if word[0] == char:
-            smol_dict[word]=0
-    json_dict = json.dumps(smol_dict)
+# for char in alphabets:
+#     create_table(char)
+#     words = []
+#     # for word in new_dict:
+#         if word[0] == char:
+#             words.append(word)
+#     json_dict = json.dumps(smol_dict)
 
 
 
-# update_words_json(new_dict)
+update_words_json(new_dict)
 
 # print(len(new_dict))

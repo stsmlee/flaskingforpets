@@ -3,3 +3,4 @@ database.db
 flask_session/
 app/**/__pycache__
 sneaky.html
+all_english_words.json
