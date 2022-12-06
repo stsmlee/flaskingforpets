@@ -35,6 +35,18 @@ def get_info():
             print("user_token:", row['user_token'])
             print("user_id:", row['user_id'])
             print("timestamp:", row[2])
+    puzzlers = conn.execute('SELECT * FROM puzzlers').fetchall()
+    if puzzlers:
+        for row in puzzlers:
+            print("user_id:",row['user_id'], row["word"], "guess count:", row['guess_count'], "guess words:",row['guess_words'], "complete:", [row['complete']])
+    else:
+        print('No puzzlers yet.')
+    puzzles = conn.execute('SELECT * FROM puzzles').fetchall()
+    for row in puzzles:
+        print(row['word'], "creator id:", row['creator_id'],)
+    sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    for row in sql_query:
+        print(row['name'])
     conn.close()
 
 def get_savenames():
@@ -80,9 +92,9 @@ def joinery():
     res = conn.execute('SELECT username, savename FROM users JOIN saves ON id = user_id').fetchall()
     for row in res:
         for col in row:
-            print(col)
+            print(col)    
     
-# get_info()
+get_info()
 # delete_expired_sessions(30)
 
 # published_at ="2018-12-22T20:31:32+0000"

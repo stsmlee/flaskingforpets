@@ -1,7 +1,8 @@
--- DROP TABLE IF EXISTS users;
--- DROP TABLE IF EXISTS saves;
--- DROP TABLE IF EXISTS session_table;
--- DROP TABLE IF EXISTS puzzles;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS saves;
+DROP TABLE IF EXISTS session_table;
+DROP TABLE IF EXISTS puzzle_users;
+DROP TABLE IF EXISTS puzzles;
 
 CREATE TABLE IF NOT EXISTS users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,26 +32,28 @@ CREATE TABLE IF NOT EXISTS session_table(
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-)
+);
 
-CREATE TABLE IF NOT EXISTS puzzle_users(
-    user_id = INTEGER PRIMARY KEY,
-    word = TEXT NOT NULL,
-    guess_count = INTEGER NOT NULL DEFAULT 0,
-    guess_words = TEXT,
-    complete = INTEGER NOT NULL DEFAULT 0,
+CREATE TABLE IF NOT EXISTS puzzlers(
+    user_id INTEGER PRIMARY KEY,
+    puzzle_id TEXT NOT NULL,
+    guess_count INTEGER NOT NULL DEFAULT 0,
+    guess_words TEXT,
+    complete INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (word) REFERENCES puzzles(word)
+    FOREIGN KEY (puzzle_id) REFERENCES puzzles(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-)
+);
 
 CREATE TABLE IF NOT EXISTS puzzles(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     creator_id INTEGER,
-    word TEXT PRIMARY KEY ON CONFLICT IGNORE,
+    word TEXT UNIQUE
+        ON CONFLICT IGNORE,
     FOREIGN KEY (creator_id) REFERENCES users(id)
         ON UPDATE CASCADE
         ON DELETE SET NULL
-)
+);

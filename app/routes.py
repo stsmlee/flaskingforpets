@@ -437,7 +437,7 @@ def play_puzzle(puzzle_id):
             if 'csrf' not in fieldname:
                 guess+=value
         guess = guess.upper()
-        if guess != "RLYTHO" or guess != "TREAT":
+        if guess != "RLYTHO" and guess != "TREAT":
             flash(f'{guess} ain\'t a word', 'invalid word')
             return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
         eval = squordle.check_guess(guess, puzzle)
