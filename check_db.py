@@ -45,7 +45,7 @@ def get_info():
     puzzles = conn.execute('SELECT * FROM puzzles').fetchall()
     print("PUZZLES TABLE")
     for row in puzzles:
-        print(row['word'], "creator id:", row['creator_id'],)
+        print(row['id'], row['word'], "creator id:", row['creator_id'],)
     # print('ALL OUR TABLES:')
     # sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     # for row in sql_query:
@@ -97,34 +97,13 @@ def joinery():
         for col in row:
             print(col)    
     
-get_info()
+# get_info()
 # delete_expired_sessions(30)
 
-# published_at ="2018-12-22T20:31:32+0000"
-# date_published_utc = datetime.strptime(published_at, "%Y-%m-%dT%H:%M:%S%z")
-# print(datetime.strftime(date_published_utc, "%b %d, %Y at %I:%M%p %Z"))
-# date_published_est = date_published_utc.astimezone(pytz.timezone('US/Eastern'))
-# publish_str = datetime.strftime(date_published_est, "%b %d, %Y at %I:%M%p %Z")
-# print(publish_str)
+def add_puzzle_word(word):
+    conn = get_db_connection()
+    conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
+    conn.commit()
+    conn.close()
 
-# def change_tz(dt, tz):
-#     if not tz:
-#         tz = pytz.timezone('US/Eastern')
-#     return dt.astimezone(pytz.timezone(tz))
-# publish_date_utc = datetime.strptime(pet['published_at'], "%Y-%m-%dT%H:%M:%S%z")
-# publish_date_tz = change_tz(publish_date_utc, tz)
-# publish_str = datetime.strftime(publish_date_tz, "%b %d, %Y at %I:%M%p %Z")
-
-# print(pytz.common_timezones)
-
-# tz_list = ['America/Cancun', 'America/Hermosillo', 'America/Mexico_City', 'America/Tijuana', 'Canada/Atlantic', 'Canada/Central', 'Canada/Eastern', 'Canada/Mountain', 'Canada/Newfoundland', 'Canada/Pacific', 'US/Alaska', 'US/Arizona', 'US/Central', 'US/Eastern', 'US/Hawaii', 'US/Mountain', 'US/Pacific']
-# tz_tuples = []
-# for tz in tz_list:
-#     tz_split = tz.split('/')
-#     if tz_split[0] == 'America':
-#         label = 'Mexico/'+tz_split[1]
-#         tz_tuples.append((tz, label))
-#     else:
-#         tz_tuples.append((tz,tz))
-# tz_tuples.append(('UTC','UTC'))
-# print(tz_tuples)
+get_info()

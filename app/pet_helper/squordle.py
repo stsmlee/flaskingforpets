@@ -1,5 +1,12 @@
 import copy
 import random
+import sqlite3
+
+def get_db_connection():
+    conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    conn.execute("PRAGMA foreign_keys = ON")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 class Puzzle:
     def __init__(self, word):
@@ -51,9 +58,54 @@ def get_attrs(puzzle):
     return puzzle.__dict__.items()
     # return attrs
 
+def add_placeholders(puzzle_form):
+    puzzle_form.l0.render_kw['placeholder'] = puzzle_form.l0.data
+    puzzle_form.l1.render_kw['placeholder'] = puzzle_form.l1.data
+    puzzle_form.l2.render_kw['placeholder'] = puzzle_form.l2.data
+    puzzle_form.l3.render_kw['placeholder'] = puzzle_form.l3.data
+    puzzle_form.l4.render_kw['placeholder'] = puzzle_form.l4.data
+    if puzzle_form.l5:
+        puzzle_form.l5.render_kw['placeholder'] = puzzle_form.l5.data
+    if puzzle_form.l6:
+        puzzle_form.l6.render_kw['placeholder'] = puzzle_form.l6.data
+
+def clear_placeholders(puzzle_form):
+    puzzle_form.l0.render_kw['placeholder'] = ''
+    puzzle_form.l1.render_kw['placeholder'] = ''
+    puzzle_form.l2.render_kw['placeholder'] = ''
+    puzzle_form.l3.render_kw['placeholder'] = ''
+    puzzle_form.l4.render_kw['placeholder'] = ''
+    if puzzle_form.l5:
+        puzzle_form.l5.render_kw['placeholder'] = ''
+    if puzzle_form.l6:
+        puzzle_form.l6.render_kw['placeholder'] = ''
+
+def build_word(form_data):
+    guess = ''
+    for fieldname,value in form_data.items():
+        if 'csrf' not in fieldname:
+            guess+=value
+    guess = guess.upper()
+    return guess
+
+def valid_word(word):
+    conn = get_db_connection()
+    first_char = word[0]
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
+    if res:
+        return True
+
+def trim_form(form, word):
+    excess = 7-len(word)
+    if excess > 0:
+        del form.l6
+    if excess > 1:
+        del form.l5
+
 choices = [Puzzle('Treat')]
 
 def get_random_puzzle():
     pick = random.randint(0, len(choices)-1)
     return(pick)
+
 

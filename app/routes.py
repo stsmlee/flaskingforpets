@@ -240,29 +240,7 @@ def sort_limit_options(limit):
     options.remove(limit)
     options.insert(0, limit)
     return options
-        
-def build_word(form_data):
-    guess = ''
-    for fieldname,value in form_data.items():
-        if 'csrf' not in fieldname:
-            guess+=value
-    guess = guess.upper()
-    return guess
 
-def valid_word(word):
-    conn = get_db_connection()
-    first_char = word[0]
-    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
-    if res:
-        return True
-
-def trim_form(form, word):
-    excess = 7-len(word)
-    if excess > 0:
-        del form.l6
-    if excess > 1:
-        del form.l5
-        
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
@@ -447,17 +425,20 @@ def flash_puzzle_error(form):
 
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
-    form = forms.GuessWordForm()
+    form = forms.PuzzleForm()
     puzzle = squordle.choices[puzzle_id]
-    trim_form(form, puzzle.word)
+    squordle.trim_form(form, puzzle.word)
     if request.method == "POST":
         if form.validate():
-            guess = build_word(form.data)
-            if valid_word(guess):
+            guess = squordle.build_word(form.data)
+            if squordle.valid_word(guess):
                 squordle.check_guess(guess, puzzle)
+                squordle.clear_placeholders(form)
             else:
+                squordle.add_placeholders(form)
                 flash('Invalid word', 'puzzle error')
         else:
+            squordle.add_placeholders(form)
             flash_puzzle_error(form)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     return render_template('squordle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
