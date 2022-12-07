@@ -79,7 +79,6 @@ def zip_results(tablename):
         for col, val in zip(cols, row):
             if col != 'password':
                 entry[col]=val
-                # entry.append(f"{col}:{val}")
         entries.append(entry)
     conn.close()
     return entries
@@ -135,11 +134,12 @@ def played_puzzles(user_id):
     for row in rows:
         entry = {}
         for col, val in zip(cols, row):
+            if col == 'creator_id':
+                continue
             if col == 'word':
                 if row['complete'] != 1:
                     continue
             entry[col] = val
-            # entry.append(f'{col}:{val}')
         entries.append(entry)
     conn.close()
     return entries
@@ -148,8 +148,8 @@ def get_random_puzzle_id(user_id):
     conn = get_db_connection()
     curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
     prev_puzzles = {row[0] for row in curs}
-    curs = conn.execute("SELECT id FROM puzzles").fetchall()
-    new_puzzles = [row[0] for row in curs if row[0] not in prev_puzzles]
+    curs = conn.execute("SELECT creator_id, id as puzzle_id FROM puzzles").fetchall()
+    new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
     pick = random.randint(0, len(new_puzzles)-1)
     return new_puzzles[pick]
 
@@ -158,15 +158,34 @@ def get_puzzle_word(puzzle_id):
     word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
     return word[0]
 
-
+def get_created_puzzles(user_id):
+    conn = get_db_connection()
+    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ?", (user_id,))
+    if curs:
+        cols = [description[0] for description in curs.description]
+        rows = curs.fetchall()
+        entries = []
+        for row in rows:
+            entry = {}
+            for col, val in zip(cols, row):
+                entry[col] = val
+            entries.append(entry)
+        conn.close()
+        return entries
 
 # conn = get_db_connection()
-# conn.execute("ALTER TABLE puzzlers ADD COLUMN success INTEGER NOT NULL DEFAULT 0")
+# conn.execute("ALTER TABLE puzzles RENAME COLUMN play TO plays")
 # conn.commit()
 # conn.close()
 
 # conn = get_db_connection()
 # conn.execute('UPDATE puzzlers SET complete = 1 WHERE puzzle_id = 1')
+# conn.commit()
+# conn.close()
+
+# conn = get_db_connection()
+# # conn.execute("ALTER TABLE puzzles ADD COLUMN wins INTEGER NOT NULL DEFAULT 0")
+# # conn.execute('UPDATE puzzles SET creator_id = 1 WHERE id = 1')
 # conn.commit()
 # conn.close()
 
@@ -177,5 +196,6 @@ def get_puzzle_word(puzzle_id):
 puzzles = played_puzzles(1)
 for p in puzzles:
     print(p)
+print(get_created_puzzles(1))
 
 # get_info()

@@ -4,11 +4,15 @@
 
 {%block content%}
 <div id="padded_wrapper", style="text-align: center;">
-<h1>Gimme a random puzzle!</h1>
+<h2>Gimme a random puzzle!</h2>
 <form method="GET" action="{{url_for('random_puzzle')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
     <div class = "button_div">
     <input type="submit" value="Gimme!" class = 'submit_button'>
     </div>
 </form>
+<h2>Puzzles You've Yet to Complete:</h2>
+<h2>Puzzles You've Completed... But Lost:</h2>
+<h2>Puzzles Successfully Completed:</h2>
+<h2>Puzzles You've Created:</h2>
 </div>
 {%endblock%} 

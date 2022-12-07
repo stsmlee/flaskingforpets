@@ -108,10 +108,64 @@ def get_random_puzzle():
     pick = random.randint(0, len(choices)-1)
     return(pick)
 
-def add_puzzle_to_puzzler():
+def add_puzzle_word_db(word):
     conn = get_db_connection()
-    conn.execute('INSERT INTO puzzlers (user_id, puzzle_id) VALUES (1, 1)')
+    conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
     conn.commit()
     conn.close()
+
+def add_puzzle_to_puzzler(user_id, puzzle_id):
+    conn = get_db_connection()
+    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id) VALUES (?,?)', (user_id, puzzle_id))
+    conn.commit()
+    conn.close()
+
+def played_puzzles(user_id):
+    conn = get_db_connection()
+    curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (user_id,))
+    cols = [description[0] for description in curs.description]
+    rows = curs.fetchall()
+    entries = []
+    for row in rows:
+        entry = {}
+        for col, val in zip(cols, row):
+            if col == 'creator_id':
+                continue
+            if col == 'word':
+                if row['complete'] != 1:
+                    continue
+            entry[col] = val
+        entries.append(entry)
+    conn.close()
+    return entries
+
+def get_random_puzzle_id(user_id):
+    conn = get_db_connection()
+    curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
+    prev_puzzles = {row[0] for row in curs}
+    curs = conn.execute("SELECT id FROM puzzles").fetchall()
+    new_puzzles = [row[0] for row in curs if row[0] not in prev_puzzles]
+    pick = random.randint(0, len(new_puzzles)-1)
+    return new_puzzles[pick]
+
+def get_puzzle_word(puzzle_id):
+    conn = get_db_connection()
+    word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
+    return word[0]
+
+def get_created_puzzles(user_id):
+    conn = get_db_connection()
+    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ?", (user_id,))
+    if curs:
+        cols = [description[0] for description in curs.description]
+        rows = curs.fetchall()
+        entries = []
+        for row in rows:
+            entry = {}
+            for col, val in zip(cols, row):
+                entry[col] = val
+            entries.append(entry)
+        conn.close()
+        return entries
 
 
