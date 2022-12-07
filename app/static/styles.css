@@ -422,6 +422,12 @@ div.change_limit {
     padding:0px 3.75em;
 }
 
+#abort_403 {
+    padding:3.75em 3.75em;
+    text-align: center; 
+}
+
+
 span.puzzle_row {
     display:inline-block; 
     text-align: center; 

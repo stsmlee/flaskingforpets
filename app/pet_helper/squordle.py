@@ -1,6 +1,7 @@
 import copy
 import random
 import sqlite3
+import json
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -9,7 +10,7 @@ def get_db_connection():
     return conn
 
 class Puzzle:
-    def __init__(self, word):
+    def __init__(self, word, guess_words = [], guess_count = 0, evals = []):
         word = word.upper()
         self.word = word
         self.max_guesses = len(word)+1
@@ -20,9 +21,9 @@ class Puzzle:
             else:
                 self.expected_letter_count[letter] += 1
         self.guess_letter_count = copy.deepcopy(self.expected_letter_count)
-        self.guess_count = 0
-        self.guess_words = []
-        self.evals = []
+        self.guess_count = guess_count
+        self.guess_words = guess_words
+        self.evals = evals
 
     def reset_letter_count(self):
         self.guess_letter_count = copy.deepcopy(self.expected_letter_count)
@@ -102,12 +103,6 @@ def trim_form(form, word):
     if excess > 1:
         del form.l5
 
-choices = [Puzzle('Treat')]
-
-def get_random_puzzle():
-    pick = random.randint(0, len(choices)-1)
-    return(pick)
-
 def add_puzzle_word_db(word):
     conn = get_db_connection()
     conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
@@ -120,34 +115,12 @@ def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn.commit()
     conn.close()
 
-def get_played_puzzles(user_id):
-    conn = get_db_connection()
-    curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (user_id,))
-    cols = [description[0] for description in curs.description]
-    rows = curs.fetchall()
-    entries = []
-    for row in rows:
-        entry = {}
-        for col, val in zip(cols, row):
-            if col == 'creator_id':
-                continue
-            if col == 'word':
-                if row['complete'] != 1:
-                    continue
-            if col == 'guess_words' and val:
-                entry[col] = json.loads(val)
-                continue
-            entry[col] = val
-        entries.append(entry)
-    conn.close()
-    return entries
-
 def get_random_puzzle_id(user_id):
     conn = get_db_connection()
     curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
     prev_puzzles = {row[0] for row in curs}
-    curs = conn.execute("SELECT id FROM puzzles").fetchall()
-    new_puzzles = [row[0] for row in curs if row[0] not in prev_puzzles]
+    curs = conn.execute("SELECT creator_id, id as puzzle_id FROM puzzles").fetchall()
+    new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
     pick = random.randint(0, len(new_puzzles)-1)
     return new_puzzles[pick]
 
@@ -159,9 +132,9 @@ def get_puzzle_word(puzzle_id):
 def get_created_puzzles(user_id):
     conn = get_db_connection()
     curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ?", (user_id,))
-    if curs:
+    rows = curs.fetchall()
+    if rows:
         cols = [description[0] for description in curs.description]
-        rows = curs.fetchall()
         entries = []
         for row in rows:
             entry = {}
@@ -171,4 +144,35 @@ def get_created_puzzles(user_id):
         conn.close()
         return entries
 
+def puzzle_instance(details):
+    puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'] )
+    return puzzle
+
+def get_puzzle_db(user_id=1, puzzle_id=1):   
+    conn = get_db_connection()
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ? ORDER BY word', (user_id,puzzle_id))
+    row = curs.fetchone()
+    if row:
+        cols = [description[0] for description in curs.description]
+        details = {}
+        for col, val in zip(cols, row):
+            if col == 'guess_words' and val:
+                details[col] = json.loads(val)
+                continue
+            details[col] = val
+            conn.close()
+        return details
+    conn.close()
+
+def puzzle_loader(puzzle_id):
+    puzzle_info = get_puzzle_db(puzzle_id=puzzle_id)
+    if puzzle_info:
+        print('puzzle_info', puzzle_info)
+        puzzle = puzzle_instance(puzzle_info)
+        # print(get_attrs(puzzle))
+        # print(puzzle)
+
+
+# choices = ['TREAT']
+choices = [Puzzle('TREAT')]
 

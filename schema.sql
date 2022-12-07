@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS puzzlers(
     guess_words TEXT,
     complete INTEGER NOT NULL DEFAULT 0,
     success INTEGER NOT NULL DEFAULT 0,
+    evals TEXT,
     PRIMARY KEY (user_id, puzzle_id) ON CONFLICT IGNORE,
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON UPDATE CASCADE

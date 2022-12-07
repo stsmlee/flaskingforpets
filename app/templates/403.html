@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{%block title%}Flasking for Pets{%endblock%}
+
+{%block content%}
+
+<div id="abort_403">
+    <h2>You've got to be logged in to access this page.</h2>
+    <p>
+        <a href="{{url_for('index')}}">Click here</a> to return home, where you can also log in.
+        <br>
+        Or you can register a new account with that link in the top right corner.
+    </p>
+</div>
+
+{%endblock%}

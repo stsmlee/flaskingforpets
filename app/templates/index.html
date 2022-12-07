@@ -44,8 +44,10 @@
 </form>
 {% endif %}
 
+{% if  session['user_token'] %}
 <h4>You can try the little side game of Squordle, it's like budget Wordle, but you can create words and send to friends.</h4>
 <a href="{{url_for('puzzle')}}">Click here to play!</a>
+{% endif %}
 
 <div class = 'sticker'>
     <img src = "{{ url_for('static', filename = 'kimchibun.png') }}" alt = "the cutest pitbull ever, Kimchi Bun" style = "width:auto;height:218px;">

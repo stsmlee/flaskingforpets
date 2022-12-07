@@ -2,7 +2,7 @@ import json
 import sqlite3
 from argon2 import PasswordHasher
 from flask import (Flask, flash, redirect, render_template, request, session,
-                   url_for, Markup)
+                   url_for, Markup, abort)
 from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
 from app.pet_helper import pet_info, squordle
@@ -103,21 +103,6 @@ def get_user_nickname():
     else:
         name = names['username']
     return name
-
-def set_user_timezone(tz):
-    conn = get_db_connection()
-    conn.execute('UPDATE users SET timezone = ? WHERE id =?', (tz, get_user_id()))
-    conn.commit()
-    conn.close()
-
-def get_user_timezone():
-    conn = get_db_connection()
-    res = conn.execute('SELECT timezone FROM users WHERE id = ?', (get_user_id(),)).fetchone()
-    conn.close()
-    if res:
-        return res[0]
-    else:
-        return res
 
 def login_session_db(username):
     session['user_token'] = get_session_str()
@@ -241,6 +226,14 @@ def sort_limit_options(limit):
     options.insert(0, limit)
     return options
 
+def flash_puzzle_error(form):
+    msg_set = set()
+    for field, errors in form.errors.items():
+        for error in errors:
+            msg_set.add(error)
+    for msg in msg_set:
+        flash(msg, 'puzzle error')
+
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
@@ -311,46 +304,52 @@ def search(type,payload,page):
 
 @app.route('/animals/<type>/page<int:page>/<payload>/<savename>', methods=["GET", "POST"])
 def search_saved(type,payload,page,savename):
-    try: 
-        get_token()
-    except: 
-        flash('Petfinder is currently down, please try again later.', 'response error')
-        return redirect(url_for('index'))
-    payload = json.loads(payload)
-    payload = pet_info.return_the_slash(payload)
-    payload['page'] = page
-    limit = payload['limit']
-    limit_options = sort_limit_options(limit)
-    res_json = pet_info.get_request(payload)
-    if isinstance(res_json, int):
-        flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
-        return redirect(url_for('index'))
-    if not res_json:
-        return render_template('no_results.html', type=type)
-    results = pet_info.save_results(res_json, saved_dict={})
-    save_results_db(json.dumps(results), savename)
-    if request.method == 'POST' and request.form.get('limit'):
-        payload['limit'] = int(request.form.get('limit'))
-        update_search(savename, json.dumps(payload))
-        return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=page, savename=savename))
-    return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), limit_options=limit_options, savename=savename)
+    if logged_in():
+        try: 
+            get_token()
+        except: 
+            flash('Petfinder is currently down, please try again later.', 'response error')
+            return redirect(url_for('index'))
+        payload = json.loads(payload)
+        payload = pet_info.return_the_slash(payload)
+        payload['page'] = page
+        limit = payload['limit']
+        limit_options = sort_limit_options(limit)
+        res_json = pet_info.get_request(payload)
+        if isinstance(res_json, int):
+            flash(f'There was an issue with Petfinder, please try again later. Status code {str(res_json)}.', 'response error')
+            return redirect(url_for('index'))
+        if not res_json:
+            return render_template('no_results.html', type=type)
+        results = pet_info.save_results(res_json, saved_dict={})
+        save_results_db(json.dumps(results), savename)
+        if request.method == 'POST' and request.form.get('limit'):
+            payload['limit'] = int(request.form.get('limit'))
+            update_search(savename, json.dumps(payload))
+            return redirect(url_for('search_saved', type=type, payload=json.dumps(payload), page=page, savename=savename))
+        return render_template('result.html', payload=json.dumps(payload),res= pet_info.parse_res_animals(res_json['animals']), type=type, pag = pet_info.parse_res_pag(res_json['pagination']), limit_options=limit_options, savename=savename)
+    else:
+        return redirect(url_for('search', type=type, payload=json.dumps(payload), page=page))
 
 @app.route('/whatsnews')
 def check_updates():
-    if get_savenames():
-        try_token()
-        results = pet_info.check_for_new_results(get_user_id())
-        if isinstance(results, int):
-            flash(f'There was an issue with Petfinder, please try again later. Status code {str(results)}.', 'response error')
-            return redirect(url_for('index'))
-        elif not results: 
-            flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
+    if logged_in():
+        if get_savenames():
+            try_token()
+            results = pet_info.check_for_new_results(get_user_id())
+            if isinstance(results, int):
+                flash(f'There was an issue with Petfinder, please try again later. Status code {str(results)}.', 'response error')
+                return redirect(url_for('index'))
+            elif not results: 
+                flash("Nothing new for you, I'm afraid. Maybe try a new search!", 'notice')
+            else:
+                for savename in results:
+                    flash(f'{savename} has new results!', 'notice')
         else:
-            for savename in results:
-                flash(f'{savename} has new results!', 'notice')
+            flash('You actually don\'t have any saved searches right now.', 'notice')
+        return redirect(request.referrer)   
     else:
-        flash('You actually don\'t have any saved searches right now.', 'notice')
-    return redirect(request.referrer)   
+        abort(403)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -365,63 +364,76 @@ def register():
 
 @app.route('/logout')
 def logout():
-    logout_db()
-    flash('Successfully logged out.', 'notice')
-    return redirect(url_for('index'))
+    if logged_in():
+        logout_db()
+        flash('Successfully logged out.', 'notice')
+        return redirect(url_for('index'))
+    else:
+        abort(403)
 
 @app.route('/manageaccount', methods=["GET", "POST"])
 def manage_account():
-    change_form = forms.ChangePasswordForm()
-    saved = get_savenames_params()
-    if request.method == 'POST' and request.form.getlist('savenames'):
-        req_list = request.form.getlist('savenames')
-        delete_save(req_list)
-        return redirect(url_for('manage_account'))
-    if change_form.validate_on_submit():
-        username = change_form.username.data
-        nickname = change_form.nickname.data
-        new_password = change_form.new_password.data
-        if nickname and new_password:
-            update_user_pw_nickname_db(username, new_password, nickname)
-        elif nickname:
-            update_user_nickname_db(username, nickname)
+    if logged_in():
+        change_form = forms.ChangePasswordForm()
+        saved = get_savenames_params()
+        if request.method == 'POST' and request.form.getlist('savenames'):
+            req_list = request.form.getlist('savenames')
+            delete_save(req_list)
+            return redirect(url_for('manage_account'))
+        if change_form.validate_on_submit():
+            username = change_form.username.data
+            nickname = change_form.nickname.data
+            new_password = change_form.new_password.data
+            if nickname and new_password:
+                update_user_pw_nickname_db(username, new_password, nickname)
+            elif nickname:
+                update_user_nickname_db(username, nickname)
+            else:
+                update_user_pw_db(username, new_password)
+            return redirect(url_for('manage_account'))
         else:
-            update_user_pw_db(username, new_password)
-        return redirect(url_for('manage_account'))
+            flash_errors(change_form)
+        return render_template('manage.html', saves=saved, change_form = change_form)
     else:
-        flash_errors(change_form)
-    return render_template('manage.html', saves=saved, change_form = change_form)
+        abort(403)
 
 @app.route('/deleteaccount')
 def delete_account():
-    return render_template('delete.html')
+    if logged_in():
+        return render_template('delete.html')
+    else:
+        abort(403)
 
 @app.route('/deleteaccount/confirm')
 def confirm_delete():
-    conn = get_db_connection()
-    conn.execute('DELETE FROM users WHERE id = ?', (get_user_id(),))
-    conn.commit()
-    conn.close()
-    session.clear()
-    flash('Account successfully deleted.', 'notice')
-    return redirect(url_for('index'))
+    if logged_in():
+        conn = get_db_connection()
+        conn.execute('DELETE FROM users WHERE id = ?', (get_user_id(),))
+        conn.commit()
+        conn.close()
+        session.clear()
+        flash('Account successfully deleted.', 'notice')
+        return redirect(url_for('index'))
+    else:
+        abort(403)
+
+@app.errorhandler(403)
+def forbidden_page(error):
+    return render_template('403.html'), 403
 
 @app.route('/squordle', methods=['GET', 'POST'])
 def puzzle():
+    incomplete_puzzles = squordle.get_incomplete_puzzles()
+    for puzzle in incomplete_puzzles:
+        pass
     return render_template('squordle.html')
 
 @app.route('/squordle/random', methods=['GET', 'POST'])
 def random_puzzle():
-    puzzle_id = squordle.get_random_puzzle()
+    puzzle_id = squordle.get_random_puzzle_id()
+    squordle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
+    # puzzle_id = squordle.get_random_puzzle()
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-
-def flash_puzzle_error(form):
-    msg_set = set()
-    for field, errors in form.errors.items():
-        for error in errors:
-            msg_set.add(error)
-    for msg in msg_set:
-        flash(msg, 'puzzle error')
 
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
