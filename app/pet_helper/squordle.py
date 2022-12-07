@@ -120,7 +120,7 @@ def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn.commit()
     conn.close()
 
-def played_puzzles(user_id):
+def get_played_puzzles(user_id):
     conn = get_db_connection()
     curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (user_id,))
     cols = [description[0] for description in curs.description]
@@ -134,6 +134,9 @@ def played_puzzles(user_id):
             if col == 'word':
                 if row['complete'] != 1:
                     continue
+            if col == 'guess_words' and val:
+                entry[col] = json.loads(val)
+                continue
             entry[col] = val
         entries.append(entry)
     conn.close()

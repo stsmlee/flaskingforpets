@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import pytz
 import copy
 import random
+import json
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -125,7 +126,7 @@ def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn.commit()
     conn.close()
 
-def played_puzzles(user_id):
+def get_played_puzzles(user_id):
     conn = get_db_connection()
     curs = conn.execute('SELECT * FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ?', (user_id,))
     cols = [description[0] for description in curs.description]
@@ -139,6 +140,9 @@ def played_puzzles(user_id):
             if col == 'word':
                 if row['complete'] != 1:
                     continue
+            if col == 'guess_words' and val:
+                entry[col] = json.loads(val)
+                continue
             entry[col] = val
         entries.append(entry)
     conn.close()
@@ -183,19 +187,21 @@ def get_created_puzzles(user_id):
 # conn.commit()
 # conn.close()
 
-# conn = get_db_connection()
-# # conn.execute("ALTER TABLE puzzles ADD COLUMN wins INTEGER NOT NULL DEFAULT 0")
-# # conn.execute('UPDATE puzzles SET creator_id = 1 WHERE id = 1')
-# conn.commit()
-# conn.close()
+conn = get_db_connection()
+# conn.execute("ALTER TABLE puzzles ADD COLUMN wins INTEGER NOT NULL DEFAULT 0")
+# conn.execute('UPDATE puzzlers SET guess_count = 2 WHERE user_id = 1 AND puzzle_id = 1')
+# words = json.dumps(['TRASH', 'TREAT'])
+# conn.execute('UPDATE puzzlers SET guess_words = ? WHERE user_id = 1 AND puzzle_id = 1', (words,))
+conn.commit()
+conn.close()
 
 # add_puzzle_to_puzzler(1,1)
 # rand_id = get_random_puzzle_id(1)
 # add_puzzle_to_puzzler(1, rand_id)
 # print(get_puzzle_word(rand_id))
-puzzles = played_puzzles(1)
+puzzles = get_played_puzzles(1)
 for p in puzzles:
     print(p)
-print(get_created_puzzles(1))
+# print(get_created_puzzles(1))
 
 # get_info()
