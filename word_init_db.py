@@ -33,8 +33,9 @@ def update_words_json(dict):
     with open('english_words_trimmed.json', 'w') as outfile:
         outfile.write(json_obj)
 
-english_words_dict = get_words_json('all_english_words.json')
-new_dict = {word : 0 for word in english_words_dict if len(word) < 8 and len(word) > 4}
+# english_words_dict = get_words_json('all_english_words.json')
+english_words_dict = get_words_json('english_words_trimmed.json')
+new_dict = {word : 0 for word in english_words_dict if len(word) < 7 and len(word) > 4}
 update_words_json(new_dict)
 
 alphabets=list(string.ascii_lowercase)

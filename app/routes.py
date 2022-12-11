@@ -423,16 +423,12 @@ def forbidden_page(error):
 
 @app.route('/squordle', methods=['GET', 'POST'])
 def puzzle():
-    incomplete_puzzles = squordle.get_incomplete_puzzles()
-    for puzzle in incomplete_puzzles:
-        pass
     return render_template('squordle.html')
 
 @app.route('/squordle/random', methods=['GET', 'POST'])
 def random_puzzle():
-    puzzle_id = squordle.get_random_puzzle_id()
-    squordle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
-    # puzzle_id = squordle.get_random_puzzle()
+    # puzzle_id = squordle.get_random_puzzle_id()
+    # squordle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
 
 @app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])

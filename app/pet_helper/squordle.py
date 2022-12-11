@@ -97,10 +97,10 @@ def valid_word(word):
         return True
 
 def trim_form(form, word):
-    excess = 7-len(word)
+    excess = 6-len(word)
+    # if excess > 0:
+    #     del form.l6
     if excess > 0:
-        del form.l6
-    if excess > 1:
         del form.l5
 
 def add_puzzle_word_db(word):
