@@ -5,7 +5,7 @@ from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for, Markup, abort)
 from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
-from app.pet_helper import pet_info, squordle
+from app.pet_helper import pet_info, squeerdle
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
@@ -421,33 +421,35 @@ def confirm_delete():
 def forbidden_page(error):
     return render_template('403.html'), 403
 
-@app.route('/squordle', methods=['GET', 'POST'])
+@app.route('/squeerdle', methods=['GET', 'POST'])
 def puzzle():
-    return render_template('squordle.html')
+    return render_template('squeerdle.html')
 
-@app.route('/squordle/random', methods=['GET', 'POST'])
+@app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
-    puzzle_id = squordle.get_random_puzzle_id()
-    squordle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
+    puzzle_id = squeerdle.get_random_puzzle_id(get_user_id())
+    squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-    # pass
 
-@app.route('/squordle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
+
+@app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     form = forms.PuzzleForm()
-    puzzle = squordle.choices[puzzle_id]
-    squordle.trim_form(form, puzzle.word)
+    # puzzle = squeerdle.choices[puzzle_id]
+    puzzle = squeerdle.puzzle_loader(puzzle_id)
+    print(puzzle)
+    squeerdle.trim_form(form, puzzle.word)
     if request.method == "POST":
         if form.validate():
-            guess = squordle.build_word(form.data)
-            if squordle.valid_word(guess):
-                squordle.check_guess(guess, puzzle)
-                squordle.clear_placeholders(form)
+            guess = squeerdle.build_word(form.data)
+            if squeerdle.valid_word(guess):
+                squeerdle.check_guess(guess, puzzle, get_user_id(), puzzle_id)
+                squeerdle.clear_placeholders(form)
             else:
-                squordle.add_placeholders(form)
+                squeerdle.add_placeholders(form)
                 flash('Invalid word', 'puzzle error')
         else:
-            squordle.add_placeholders(form)
+            squeerdle.add_placeholders(form)
             flash_puzzle_error(form)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-    return render_template('squordle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
+    return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)

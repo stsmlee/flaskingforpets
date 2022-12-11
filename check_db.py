@@ -4,7 +4,7 @@ import pytz
 import copy
 import random
 import json
-from app.pet_helper.squordle import Puzzle
+from app.pet_helper.squeerdle import Puzzle
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -58,6 +58,23 @@ def print_tables():
     sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     for row in sql_query:
         print(row['name'])
+    conn.close()
+
+
+def print_puzzlers_puzzles():
+    conn = get_db_connection()
+    puzzlers = zip_results('puzzlers')
+    if puzzlers:
+        print("PUZZLERS TABLE")
+        for p in puzzlers:
+            print(p)
+    else:
+        print('No puzzlers yet.')
+    puzzles = zip_results('puzzles')
+    if puzzles:
+        print("PUZZLES TABLE")
+        for puzz in puzzles:
+            print(puzz)
     conn.close()
 
 def get_savenames():
@@ -123,11 +140,22 @@ def joinery():
 # get_info()
 # delete_expired_sessions(30)
 
-def add_puzzle_word_db(word):
+def valid_word(word):
     conn = get_db_connection()
-    conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
-    conn.commit()
+    first_char = word[0]
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
     conn.close()
+    if res:
+        return True
+
+def add_puzzle_word_db(word):
+    if valid_word(word):
+        conn = get_db_connection()
+        conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
+        conn.commit()
+        conn.close()
+    else:
+        print("Invalid word")
 
 def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn = get_db_connection()
@@ -246,8 +274,9 @@ def puzzle_loader(puzzle_id):
 
 # get_info()
 
-
-
-# puzzle_loader(14)
-
 # print_tables()
+
+starter_pack = ['treat', 'chart', 'death', 'blast', 'shout', 'doubt', 'verge', 'dealt', 'beast', 'snatch']
+for word in starter_pack:
+    add_puzzle_word_db(word)
+print_puzzlers_puzzles()

@@ -10,7 +10,7 @@ def get_db_connection():
     return conn
 
 class Puzzle:
-    def __init__(self, word, guess_words = [], guess_count = 0, evals = []):
+    def __init__(self, word, guess_words = [], guess_count = 0, evals = [], complete=0, success=0):
         word = word.upper()
         self.word = word
         self.max_guesses = len(word)+1
@@ -24,18 +24,21 @@ class Puzzle:
         self.guess_count = guess_count
         self.guess_words = guess_words
         self.evals = evals
+        self.complete = complete
+        self.success = success
 
     def reset_letter_count(self):
         self.guess_letter_count = copy.deepcopy(self.expected_letter_count)
 
-def check_guess(guess, puzzle):
+def check_guess(guess, puzzle, user_id, puzzle_id):
     eval = []
-    # guess = ''.join(guess)
     guess = guess.upper()
     if guess == puzzle.word:
         puzzle.guess_count += 1
         puzzle.guess_words.append(guess)
         puzzle.evals.append('win')
+        puzzle.complete = 1
+        puzzle.success = 1
     else:
         for i in range(len(guess)):
             if guess[i] == puzzle.word[i]:
@@ -47,11 +50,47 @@ def check_guess(guess, puzzle):
             else:
                 eval.append((guess[i], 0))
         puzzle.guess_count += 1
+        if puzzle.guess_count == puzzle.max_guesses:
+            puzzle.complete = 1
         puzzle.guess_words.append(guess)
         puzzle.reset_letter_count()
         puzzle.evals.append(eval)
+    update_puzzler_db(puzzle, user_id, puzzle_id)
+    if puzzle.complete == 1:
+        update_puzzle_stats_db(puzzle_id, puzzle.success)
     print(puzzle.__dict__.items())
     return eval
+
+def update_puzzler_db(puzzle, user_id, puzzle_id):
+    conn = get_db_connection()
+    conn.execute('UPDATE puzzlers SET guess_count = ?, guess_words = ?, evals = ?, complete = ?, success = ? WHERE user_id = ? AND puzzle_id = ?', (puzzle.guess_count, json.dumps(puzzle.guess_words), json.dumps(puzzle.evals), puzzle.complete, puzzle.success, user_id, puzzle_id))
+    conn.commit()
+    conn.close()
+
+def update_puzzle_stats_db(puzzle_id, success):
+    conn = get_db_connection()
+    stats = conn.execute('SELECT plays, wins WHERE puzzle_id = ?', (puzzle_id,)).fetchone()
+    plays = stats['plays'] + 1
+    wins = stats['wins'] + success
+    conn.execute('UPDATE puzzles SET plays = ?, wins = ? WHERE id = ?', (plays, wins, puzzle_id))
+    conn.commit()
+    conn.close()
+
+
+    # user_id INTEGER,
+    # puzzle_id INTEGER NOT NULL,
+    # guess_count INTEGER NOT NULL DEFAULT 0,
+    # guess_words TEXT,
+    # complete INTEGER NOT NULL DEFAULT 0,
+    # success INTEGER NOT NULL DEFAULT 0,
+    # evals TEXT,'
+
+
+    # id INTEGER PRIMARY KEY AUTOINCREMENT,
+    # creator_id INTEGER,
+    # word TEXT UNIQUE
+    # plays INTEGER NOT NULL DEFAULT 0,
+    # wins INTEGER NOT NULL DEFAULT 0,
 
 def get_attrs(puzzle):
     # ['expected_letter_count', 'guess_count', 'guess_letter_count', 'guess_words', 'max_guesses', 'reset_letter_count', 'word']
@@ -97,10 +136,10 @@ def valid_word(word):
         return True
 
 def trim_form(form, word):
-    excess = 6-len(word)
-    # if excess > 0:
-    #     del form.l6
+    excess = 7-len(word)
     if excess > 0:
+        del form.l6
+    if excess > 1:
         del form.l5
 
 def add_puzzle_word_db(word):
@@ -119,7 +158,7 @@ def get_random_puzzle_id(user_id):
     conn = get_db_connection()
     curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
     prev_puzzles = {row[0] for row in curs}
-    curs = conn.execute("SELECT creator_id, id as puzzle_id FROM puzzles").fetchall()
+    curs = conn.execute("SELECT id as puzzle_id FROM puzzles").fetchall()
     new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
     pick = random.randint(0, len(new_puzzles)-1)
     return new_puzzles[pick]
@@ -145,18 +184,30 @@ def get_created_puzzles(user_id):
         return entries
 
 def puzzle_instance(details):
-    puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'] )
+    # if not details['guess-words']:
+    #     guess_words = []
+    # else:
+    #     guess_words = details['guess-words']
+    # if not details['evals']:
+    #     evals = []
+    # else:
+    #     evals = details['evals']
+    puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'])
+    # do i need to include complete and success?
     return puzzle
 
 def get_puzzle_db(user_id=1, puzzle_id=1):   
     conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ? ORDER BY word', (user_id,puzzle_id))
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
     row = curs.fetchone()
     if row:
         cols = [description[0] for description in curs.description]
         details = {}
         for col, val in zip(cols, row):
             if col == 'guess_words' and val:
+                details[col] = json.loads(val)
+                continue
+            if col == 'evals' and val:
                 details[col] = json.loads(val)
                 continue
             details[col] = val
@@ -171,6 +222,7 @@ def puzzle_loader(puzzle_id):
         puzzle = puzzle_instance(puzzle_info)
         # print(get_attrs(puzzle))
         # print(puzzle)
+        return(puzzle)
 
 
 # choices = ['TREAT']

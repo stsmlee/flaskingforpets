@@ -3,4 +3,4 @@ database.db
 flask_session/
 app/**/__pycache__
 sneaky.html
-word_dictionary.json
+scrabble_words.txt
