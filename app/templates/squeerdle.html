@@ -1,18 +1,62 @@
 {%extends 'base.html'%}
 
-<title>{%block title%}Squordle{% endblock %}</title>
+<title>{%block title%}Squeerdle{% endblock %}</title>
 
 {%block content%}
-<div id="padded_wrapper", style="text-align: center;">
-<h2>Gimme a random puzzle!</h2>
+<div id="squeerdle_wrapper", style="text-align: center;">
+
+<h1>Welcome to Squeerdle!</h1>
+
+<!-- <h2>Gimme a random puzzle!</h2> -->
 <form method="GET" action="{{url_for('random_puzzle')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
-    <div class = "button_div">
-    <input type="submit" value="Gimme!" class = 'submit_button'>
-    </div>
+    <!-- <div class = "button_div"> -->
+    <h2><input type="submit" value="Gimme a random puzzle!" class = 'gimme_button'></h2>
+    <!-- </div> -->
 </form>
+
 <h2>Puzzles You've Yet to Complete:</h2>
-<h2>Puzzles You've Completed... But Lost:</h2>
-<h2>Puzzles Successfully Completed:</h2>
-<h2>Puzzles You've Created:</h2>
+{% if incomplete %}
+    <table class = 'puzzler_table'>
+    <tr><th class="smolcol">ID#</th><th class="smolcol">Guess Count</th><th>Words You've Already Guessed</th></tr>
+    {% for row in incomplete %}
+    <tr>
+        {% with puzzle_id= row['puzzle_id']  %}
+        <td><a href="{{ url_for( 'play_puzzle', puzzle_id=puzzle_id ) }}" title = "Play this puzzle">{{puzzle_id}}</a></td><td>{{row['remaining_guesses']}}</td><td>{{row['guess_words']}}</td>
+        {% endwith %}
+    </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>Whoa, nice! You've finished everything you've started!</p>
+{% endif %}
+
+<h2>Puzzles You've Completed:</h2>
+{% if complete %}
+    <table class = 'puzzler_table'>
+    <tr><th class="smolcol">ID#</th><th class="smolcol">Guess Count</th><th>Word</th><th>Words You Guessed</th></tr>
+    {% for row in complete %}
+    <tr>
+        {% with puzzle_id= row['puzzle_id']  %}
+        <td><a href="{{ url_for( 'play_puzzle', puzzle_id=puzzle_id ) }}" title = "View this puzzle">{{puzzle_id}}</a></td><td>{{row['remaining_guesses']}}</td><td class = "word" id = "{{row['puzzle_id']}}" style = "color:red;">{{row['word']}}</td><td>{{row['guess_words']}}</td>
+        <script>
+            {
+                let success = "{{row['success']}}"
+                let puzz_id = "{{row['puzzle_id']}}"
+                let word = "{{row['word']}}"
+                let td = document.getElementById(puzz_id);
+                if ( success == 1) {
+                  td.style.color = "black";
+                  document.getElementById(puzz_id).innerHTML = "&#x1F3C6; &nbsp; &nbsp; &nbsp;" + word + "&nbsp; &nbsp; &nbsp; &#x1F3C6;";
+                }
+            }
+          </script>
+        {% endwith %}
+    </tr>
+    {% endfor %}
+    </table>
+{% endif %}
+
+<!-- <h2>Puzzles You've Created:</h2> -->
+
 </div>
 {%endblock%} 

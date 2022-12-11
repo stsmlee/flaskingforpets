@@ -69,34 +69,17 @@ def update_puzzler_db(puzzle, user_id, puzzle_id):
 
 def update_puzzle_stats_db(puzzle_id, success):
     conn = get_db_connection()
-    stats = conn.execute('SELECT plays, wins WHERE puzzle_id = ?', (puzzle_id,)).fetchone()
+    stats = conn.execute('SELECT plays, wins FROM puzzles WHERE id = ?', (puzzle_id,)).fetchone()
     plays = stats['plays'] + 1
     wins = stats['wins'] + success
     conn.execute('UPDATE puzzles SET plays = ?, wins = ? WHERE id = ?', (plays, wins, puzzle_id))
     conn.commit()
     conn.close()
 
-
-    # user_id INTEGER,
-    # puzzle_id INTEGER NOT NULL,
-    # guess_count INTEGER NOT NULL DEFAULT 0,
-    # guess_words TEXT,
-    # complete INTEGER NOT NULL DEFAULT 0,
-    # success INTEGER NOT NULL DEFAULT 0,
-    # evals TEXT,'
-
-
-    # id INTEGER PRIMARY KEY AUTOINCREMENT,
-    # creator_id INTEGER,
-    # word TEXT UNIQUE
-    # plays INTEGER NOT NULL DEFAULT 0,
-    # wins INTEGER NOT NULL DEFAULT 0,
-
 def get_attrs(puzzle):
-    # ['expected_letter_count', 'guess_count', 'guess_letter_count', 'guess_words', 'max_guesses', 'reset_letter_count', 'word']
     # attrs = [a for a in dir(puzzle) if not a.startswith('__')]
-    return puzzle.__dict__.items()
     # return attrs
+    return puzzle.__dict__.items()
 
 def add_placeholders(puzzle_form):
     puzzle_form.l0.render_kw['placeholder'] = puzzle_form.l0.data
@@ -190,6 +173,52 @@ def get_created_puzzles(user_id):
         conn.close()
         return entries
 
+def get_complete_puzzles(user_id):
+    conn = get_db_connection()
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY success DESC, word', (user_id,))
+    rows = curs.fetchall()
+    entries = []
+    if rows:    
+        cols = [description[0] for description in curs.description]
+        for row in rows:
+            entry = {}
+            for col, val in zip(cols, row):
+                if col == 'guess_words':
+                    words = json.loads(val)
+                    entry[col] = ', '.join(words)
+                    continue
+                if col == "guess_count":
+                    entry['remaining_guesses'] = f"{str(row['guess_count'])} out of {str((len(row['word'])+1))}"
+                entry[col] = val
+            entries.append(entry)
+        conn.close()
+    return entries
+
+def get_incomplete_puzzles(user_id):
+    conn = get_db_connection()
+    curs = conn.execute('SELECT puzzle_id, guess_count, guess_words, word FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=0 ORDER BY word', (user_id,))
+    rows = curs.fetchall()
+    entries = []
+    if rows:    
+        cols = [description[0] for description in curs.description]
+        for row in rows:
+            entry = {}
+            for col, val in zip(cols, row):
+                if col == 'guess_words' and json.loads(val):
+                    words = json.loads(val)
+                    entry['guess_words'] = ', '.join(words)
+                    continue
+                elif col == 'guess_words' and not json.loads(val):
+                    entry['guess_words'] = 'Nothing yet!'
+                    continue
+                if col == 'word':
+                    entry['remaining_guesses'] = f"{str(row['guess_count'])} out of {str((len(val)+1))}"
+                    continue
+                entry[col] = val
+            entries.append(entry)
+        conn.close()
+    return entries
+
 def puzzle_instance(details):
     puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'])
     # do i need to include complete and success?
@@ -219,7 +248,5 @@ def puzzle_loader(puzzle_id):
     if puzzle_info:
         print('puzzle_info', puzzle_info)
         puzzle = puzzle_instance(puzzle_info)
-        # print(get_attrs(puzzle))
-        # print(puzzle)
         return(puzzle)
 

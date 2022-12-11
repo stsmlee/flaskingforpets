@@ -88,6 +88,41 @@ div.sticker {
     cursor: pointer;
 }
 
+.gimme_button {
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    font-size: 100%;
+    color: #1e0246;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 10px;
+    background: linear-gradient(124deg, #fa6c55, #fa4444, #e8b71d, #e3e81d, #1de840, #1ddde8, #6d64e3, #e566f1, #b851c2);
+    background-size: 1800% 1800%;
+    -webkit-animation: rainbow 10s ease infinite;
+    -z-animation: rainbow 10s ease infinite;
+    -o-animation: rainbow 10s ease infinite;
+    animation: rainbow 10s ease infinite;}
+
+@-webkit-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-moz-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-o-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@keyframes rainbow { 
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+
 .delete_button {
     font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-size: 100%;
@@ -252,6 +287,43 @@ ul.index > li {
 ul.index > li > a {
     vertical-align: middle;
 }
+
+table.puzzler_table {
+    line-height: 1.5em;
+    border-collapse: collapse;
+    margin-left:auto;
+    margin-right:auto;
+    border: black 1px solid;
+    width: 80%;
+}
+
+.puzzler_table td {
+    border: black 1px solid;
+    /* border-left: black 1px solid;
+    border-right: black 1px solid; */
+    padding: 5px 10px;
+}
+
+.puzzler_table th{
+    border: black 1px solid;
+    /* border-left: black 1px solid;
+    border-right: black 1px solid; */
+    padding: 5px 10px;
+}
+
+.puzzler_table a {
+    text-underline-offset: 2px;
+}
+
+td.word {
+    white-space: nowrap;
+}
+
+th.smolcol {
+    width: 1%;
+    white-space:nowrap;
+}
+
 .mgmt_table {
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
@@ -422,6 +494,10 @@ div.change_limit {
     padding:0px 3.75em;
 }
 
+#squeerdle_wrapper {
+    padding:3.5em 3.75em;
+}
+
 #abort_403 {
     padding:3.75em 3.75em;
     text-align: center; 
@@ -496,6 +572,15 @@ div#winner {
     -webkit-text-fill-color: transparent;  
     animation: move 35s linear infinite;
 }
+
+/* #squeerdle_rainbow{
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    background-image:linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;  
+    animation: move 35s linear infinite;
+} */
 
 
 #loser_text{

@@ -424,14 +424,16 @@ def forbidden_page(error):
 
 @app.route('/squeerdle', methods=['GET', 'POST'])
 def puzzle():
-    return render_template('squeerdle.html')
+    incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
+    complete = squeerdle.get_complete_puzzles(get_user_id())
+    created = squeerdle.get_created_puzzles(get_user_id())
+    return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created)
 
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
     puzzle_id = squeerdle.get_random_puzzle_id(get_user_id())
     squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
     return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-
 
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):

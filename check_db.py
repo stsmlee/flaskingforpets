@@ -143,7 +143,6 @@ def joinery():
 def valid_word(word):
     conn = get_db_connection()
     first_char = word[0]
-    # res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
     res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word}"''').fetchone()
     conn.close()
     if res:
@@ -204,68 +203,11 @@ def get_puzzlers_puzzles(user_id):
         conn.close()
         return entries
 
-def get_random_puzzle_id(user_id):
-    conn = get_db_connection()
-    curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
-    prev_puzzles = {row[0] for row in curs}
-    curs = conn.execute("SELECT creator_id, id as puzzle_id FROM puzzles").fetchall()
-    new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
-    pick = random.randint(0, len(new_puzzles)-1)
-    return new_puzzles[pick]
-
-def get_puzzle_word(puzzle_id):
-    conn = get_db_connection()
-    word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
-    return word[0]
-
-def get_created_puzzles(user_id):
-    conn = get_db_connection()
-    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ?", (user_id,))
-    rows = curs.fetchall()
-    if rows:
-        cols = [description[0] for description in curs.description]
-        entries = []
-        for row in rows:
-            entry = {}
-            for col, val in zip(cols, row):
-                entry[col] = val
-            entries.append(entry)
-        conn.close()
-        return entries
-
 def get_attrs(puzzle):
     # ['expected_letter_count', 'guess_count', 'guess_letter_count', 'guess_words', 'max_guesses', 'reset_letter_count', 'word']
     # attrs = [a for a in dir(puzzle) if not a.startswith('__')]
     return puzzle.__dict__.items()
     # return attrs
-
-def puzzle_instance(details):
-    puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'] )
-    return puzzle
-
-def get_puzzle_db(user_id=1, puzzle_id=1):   
-    conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ? ORDER BY word', (user_id,puzzle_id))
-    row = curs.fetchone()
-    if row:
-        cols = [description[0] for description in curs.description]
-        details = {}
-        for col, val in zip(cols, row):
-            if col == 'guess_words' and val:
-                details[col] = json.loads(val)
-                continue
-            details[col] = val
-            conn.close()
-        return details
-    conn.close()
-
-def puzzle_loader(puzzle_id):
-    puzzle_info = get_puzzle_db(puzzle_id=puzzle_id)
-    if puzzle_info:
-        print('puzzle_info', puzzle_info)
-        puzzle = puzzle_instance(puzzle_info)
-        # print(get_attrs(puzzle))
-        # print(puzzle)
 
 def puzzle_starter_pack():
     starter_pack = ['archer', 'bandit', 'earth', 'front', 'ghost', 'treat', 'chart', 'death', 'blast', 'shout', 'doubt', 'verge', 'dealt', 'beast', 'healer', 'idiot', 'jockey', 'knife', 'lemon', 'minion', 'never', 'option', 'prime', 'quick', 'risky', 'under', 'wicked', 'young','snatch', 'zesty']

@@ -27,6 +27,9 @@
               &#x25B9; <li><a href="{{url_for('search', type=type, payload=payload, page=1)}}">Start of Results</a></li>
               {% endif %}
             {% endif %}
+            {% if puzzle %}
+              &#x25B9; <li><a href="{{url_for('puzzle')}}">Squeerdle Basecamp</a></li>
+            {% endif %}
           </ul>
         </nav>
         <nav>
