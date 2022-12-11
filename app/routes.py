@@ -10,6 +10,7 @@ from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
 import copy
+import sys
 
 pet_types_dict = pet_info.types_dict
 
@@ -436,7 +437,7 @@ def random_puzzle():
 def play_puzzle(puzzle_id):
     form = forms.PuzzleForm()
     puzzle = squeerdle.puzzle_loader(puzzle_id)
-    print(puzzle)
+    print("instantiated:", puzzle)
     squeerdle.trim_form(form, puzzle.word)
     if request.method == "POST":
         if form.validate():
@@ -450,7 +451,6 @@ def play_puzzle(puzzle_id):
         else:
             squeerdle.add_placeholders(form)
             flash_puzzle_error(form)
-        # delete prev puzzle instance
         del(puzzle)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)

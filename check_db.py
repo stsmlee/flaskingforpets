@@ -267,23 +267,13 @@ def puzzle_loader(puzzle_id):
         # print(get_attrs(puzzle))
         # print(puzzle)
 
-# conn = get_db_connection()
-# conn.execute("ALTER TABLE puzzles RENAME COLUMN play TO plays")
-# conn.execute("ALTER TABLE puzzles ADD COLUMN evals TEXT")
-# conn.execute('UPDATE puzzlers SET guess_count = 2 WHERE user_id = 1 AND puzzle_id = 1')
-# conn.execute('UPDATE puzzlers SET complete = 1, guess_count=1, success=1 WHERE puzzle_id = 2')
-# words = json.dumps(['TRASH', 'CHART'])
-# conn.execute('UPDATE puzzlers SET guess_words = ? WHERE user_id = 1 AND puzzle_id = 2', (words,))
-# conn.commit()
-# conn.close()
+def puzzle_starter_pack():
+    starter_pack = ['archer', 'bandit', 'earth', 'front', 'ghost', 'treat', 'chart', 'death', 'blast', 'shout', 'doubt', 'verge', 'dealt', 'beast', 'healer', 'idiot', 'jockey', 'knife', 'lemon', 'minion', 'never', 'option', 'prime', 'quick', 'risky', 'under', 'wicked', 'young','snatch', 'zesty']
+    for word in starter_pack:
+        add_puzzle_word_db(word)
 
 # get_info()
 
 # print_tables()
-
-starter_pack = ['archer', 'bandit', 'earth', 'front', 'ghost', 'treat', 'chart', 'death', 'blast', 'shout', 'doubt', 'verge', 'dealt', 'beast', 'healer', 'idiot', 'jockey', 'knife', 'lemon', 'minion', 'never', 'option', 'prime', 'quick', 'risky', 'under', 'wicked', 'young','snatch', 'zesty']
-
-for word in starter_pack:
-    add_puzzle_word_db(word)
 
 print_puzzlers_puzzles()
