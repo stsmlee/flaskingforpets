@@ -435,7 +435,6 @@ def random_puzzle():
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     form = forms.PuzzleForm()
-    # puzzle = squeerdle.choices[puzzle_id]
     puzzle = squeerdle.puzzle_loader(puzzle_id)
     print(puzzle)
     squeerdle.trim_form(form, puzzle.word)
@@ -451,5 +450,7 @@ def play_puzzle(puzzle_id):
         else:
             squeerdle.add_placeholders(form)
             flash_puzzle_error(form)
+        # delete prev puzzle instance
+        del(puzzle)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)

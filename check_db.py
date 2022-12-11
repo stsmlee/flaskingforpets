@@ -143,19 +143,24 @@ def joinery():
 def valid_word(word):
     conn = get_db_connection()
     first_char = word[0]
-    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
+    # res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word}"''').fetchone()
     conn.close()
     if res:
         return True
 
-def add_puzzle_word_db(word):
-    if valid_word(word):
+def add_puzzle_word_db(word, user_id = None):
+    if valid_word(word.upper()):
         conn = get_db_connection()
-        conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
-        conn.commit()
+        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (word,)).fetchone()
+        if res:
+            print(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
+        else:
+            conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word.upper(), user_id))
+            conn.commit()
         conn.close()
     else:
-        print("Invalid word")
+        print(f"{word} is an invalid word")
 
 def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn = get_db_connection()
@@ -276,7 +281,9 @@ def puzzle_loader(puzzle_id):
 
 # print_tables()
 
-starter_pack = ['treat', 'chart', 'death', 'blast', 'shout', 'doubt', 'verge', 'dealt', 'beast', 'snatch']
+starter_pack = ['archer', 'bandit', 'earth', 'front', 'ghost', 'treat', 'chart', 'death', 'blast', 'shout', 'doubt', 'verge', 'dealt', 'beast', 'healer', 'idiot', 'jockey', 'knife', 'lemon', 'minion', 'never', 'option', 'prime', 'quick', 'risky', 'under', 'wicked', 'young','snatch', 'zesty']
+
 for word in starter_pack:
     add_puzzle_word_db(word)
+
 print_puzzlers_puzzles()

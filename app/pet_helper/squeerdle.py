@@ -131,7 +131,7 @@ def build_word(form_data):
 def valid_word(word):
     conn = get_db_connection()
     first_char = word[0]
-    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word.lower()}"''').fetchone()
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word}"''').fetchone()
     if res:
         return True
 
@@ -142,11 +142,18 @@ def trim_form(form, word):
     if excess > 1:
         del form.l5
 
-def add_puzzle_word_db(word):
-    conn = get_db_connection()
-    conn.execute('INSERT INTO puzzles (word) VALUES (?)', (word.upper(),))
-    conn.commit()
-    conn.close()
+def add_puzzle_word_db(word, user_id = None):
+    if valid_word(word.upper()):
+        conn = get_db_connection()
+        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (word,)).fetchone()
+        if res:
+            print(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
+        else:
+            conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word.upper(), user_id))
+            conn.commit()
+        conn.close()
+    else:
+        print(f"{word} is an invalid word")
 
 def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn = get_db_connection()
@@ -163,10 +170,10 @@ def get_random_puzzle_id(user_id):
     pick = random.randint(0, len(new_puzzles)-1)
     return new_puzzles[pick]
 
-def get_puzzle_word(puzzle_id):
-    conn = get_db_connection()
-    word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
-    return word[0]
+# def get_puzzle_word(puzzle_id):
+#     conn = get_db_connection()
+#     word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
+#     return word[0]
 
 def get_created_puzzles(user_id):
     conn = get_db_connection()
@@ -184,14 +191,6 @@ def get_created_puzzles(user_id):
         return entries
 
 def puzzle_instance(details):
-    # if not details['guess-words']:
-    #     guess_words = []
-    # else:
-    #     guess_words = details['guess-words']
-    # if not details['evals']:
-    #     evals = []
-    # else:
-    #     evals = details['evals']
     puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'])
     # do i need to include complete and success?
     return puzzle
@@ -223,8 +222,4 @@ def puzzle_loader(puzzle_id):
         # print(get_attrs(puzzle))
         # print(puzzle)
         return(puzzle)
-
-
-# choices = ['TREAT']
-choices = [Puzzle('TREAT')]
 
