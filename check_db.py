@@ -52,6 +52,14 @@ def get_info():
     #     print(row['name'])
     conn.close()
 
+def print_tables():
+    conn=get_db_connection()
+    print('ALL OUR TABLES:')
+    sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    for row in sql_query:
+        print(row['name'])
+    conn.close()
+
 def get_savenames():
     conn = get_db_connection()
     res = conn.execute('SELECT savename FROM saves WHERE user_id = ?', (1,)).fetchall()
@@ -240,4 +248,6 @@ def puzzle_loader(puzzle_id):
 
 
 
-puzzle_loader(14)
+# puzzle_loader(14)
+
+# print_tables()
