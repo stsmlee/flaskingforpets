@@ -47,10 +47,6 @@ def create_alphabet_tables():
 
 
 # create_and_write_dict('scrabble_words.txt')
-# create_alphabet_tables()
+create_alphabet_tables()
 
 
-# conn = get_db_connection()
-# res = conn.execute("SELECT * FROM A LIMIT 10").fetchall()
-# for row in res:
-#     print(row[0])

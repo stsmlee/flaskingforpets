@@ -148,7 +148,10 @@ def get_random_puzzle_id(user_id):
     conn = get_db_connection()
     curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
     prev_puzzles = {row[0] for row in curs}
-    curs = conn.execute("SELECT id as puzzle_id FROM puzzles").fetchall()
+    curs = conn.execute("SELECT * FROM puzzles").fetchall()
+    print(len(curs))
+    curs = conn.execute("SELECT id as puzzle_id FROM puzzles WHERE creator_id IS NOT ?", (user_id,)).fetchall()
+    print(len(curs))
     new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
     pick = random.randint(0, len(new_puzzles)-1)
     return new_puzzles[pick]
@@ -175,7 +178,7 @@ def get_created_puzzles(user_id):
 
 def get_complete_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY success DESC, word', (user_id,))
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY success DESC, puzzle_id', (user_id,))
     rows = curs.fetchall()
     entries = []
     if rows:    
@@ -196,7 +199,7 @@ def get_complete_puzzles(user_id):
 
 def get_incomplete_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT puzzle_id, guess_count, guess_words, word FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=0 ORDER BY word', (user_id,))
+    curs = conn.execute('SELECT puzzle_id, guess_count, guess_words, word FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=0 ORDER BY puzzle_id', (user_id,))
     rows = curs.fetchall()
     entries = []
     if rows:    
@@ -224,7 +227,7 @@ def puzzle_instance(details):
     # do i need to include complete and success?
     return puzzle
 
-def get_puzzle_db(user_id=1, puzzle_id=1):   
+def get_puzzle_db(user_id, puzzle_id):   
     conn = get_db_connection()
     curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
     row = curs.fetchone()
@@ -243,8 +246,8 @@ def get_puzzle_db(user_id=1, puzzle_id=1):
         return details
     conn.close()
 
-def puzzle_loader(puzzle_id):
-    puzzle_info = get_puzzle_db(puzzle_id=puzzle_id)
+def puzzle_loader(user_id, puzzle_id):
+    puzzle_info = get_puzzle_db(user_id= user_id, puzzle_id=puzzle_id)
     if puzzle_info:
         print('puzzle_info', puzzle_info)
         puzzle = puzzle_instance(puzzle_info)

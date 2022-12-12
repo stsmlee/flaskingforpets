@@ -161,47 +161,23 @@ def add_puzzle_word_db(word, user_id = None):
     else:
         print(f"{word} is an invalid word")
 
-def add_puzzle_to_puzzler(user_id, puzzle_id):
-    conn = get_db_connection()
-    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id) VALUES (?,?)', (user_id, puzzle_id))
-    conn.commit()
-    conn.close()
-
-def get_completed_puzzles(user_id):
-    conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY word', (user_id,))
-    rows = curs.fetchall()
-    if rows:    
-        cols = [description[0] for description in curs.description]
-        entries = []
-        for row in rows:
-            entry = {}
-            for col, val in zip(cols, row):
-                if col == 'guess_words' and val:
-                    entry[col] = json.loads(val)
-                    continue
-                entry[col] = val
-            entries.append(entry)
-        conn.close()
-        return entries
-
-def get_puzzlers_puzzles(user_id):
-    conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? ORDER BY word', (user_id,))
-    rows = curs.fetchall()
-    if rows:
-        cols = [description[0] for description in curs.description]
-        entries = []
-        for row in rows:
-            entry = {}
-            for col, val in zip(cols, row):
-                if col == 'guess_words' and val:
-                    entry[col] = json.loads(val)
-                    continue
-                entry[col] = val
-            entries.append(entry)
-        conn.close()
-        return entries
+# def get_puzzlers_puzzles(user_id):
+#     conn = get_db_connection()
+#     curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? ORDER BY word', (user_id,))
+#     rows = curs.fetchall()
+#     if rows:
+#         cols = [description[0] for description in curs.description]
+#         entries = []
+#         for row in rows:
+#             entry = {}
+#             for col, val in zip(cols, row):
+#                 if col == 'guess_words' and val:
+#                     entry[col] = json.loads(val)
+#                     continue
+#                 entry[col] = val
+#             entries.append(entry)
+#         conn.close()
+#         return entries
 
 def get_attrs(puzzle):
     # ['expected_letter_count', 'guess_count', 'guess_letter_count', 'guess_words', 'max_guesses', 'reset_letter_count', 'word']
@@ -218,4 +194,5 @@ def puzzle_starter_pack():
 
 # print_tables()
 
+puzzle_starter_pack()
 print_puzzlers_puzzles()

@@ -438,7 +438,7 @@ def random_puzzle():
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
     form = forms.PuzzleForm()
-    puzzle = squeerdle.puzzle_loader(puzzle_id)
+    puzzle = squeerdle.puzzle_loader(get_user_id(), puzzle_id)
     print("instantiated:", puzzle)
     squeerdle.trim_form(form, puzzle.word)
     if request.method == "POST":
