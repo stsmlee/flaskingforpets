@@ -2,6 +2,7 @@ import copy
 import random
 import sqlite3
 import json
+from flask import flash
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -130,13 +131,13 @@ def add_puzzle_word_db(word, user_id = None):
         conn = get_db_connection()
         res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (word,)).fetchone()
         if res:
-            print(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
+            flash(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
         else:
             conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word.upper(), user_id))
             conn.commit()
         conn.close()
     else:
-        print(f"{word} is an invalid word")
+        flash(f"{word} is an invalid word")
 
 def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn = get_db_connection()

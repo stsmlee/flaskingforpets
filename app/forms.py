@@ -50,6 +50,35 @@ def update_something(form,field):
     else:
         raise StopValidation('You have not changed anything.')
 
+def check_valid_word(form,field):
+    conn = get_db_connection()
+    first_char = field[0]
+    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{field}"''').fetchone()
+    conn.close()
+    if not res:
+        raise StopValidation('Invalid word.')
+
+def check_puzzle_exists(form, field):
+        conn = get_db_connection()
+        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (field,)).fetchone()
+        conn.close()
+        if res:
+            raise StopValidation(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
+        
+
+def add_puzzle_word_db(word, user_id = None):
+    if valid_word(word.upper()):
+        conn = get_db_connection()
+        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (word,)).fetchone()
+        if res:
+            flash(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
+        else:
+            conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word.upper(), user_id))
+            conn.commit()
+        conn.close()
+    else:
+        flash(f"{word} is an invalid word")
+
 class ChangePasswordForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
     nickname = StringField('New Nickname', validators= [update_something, Length(min=3, max=20)], render_kw= {'class': 'form_font'})
@@ -103,14 +132,17 @@ class FilterForm(FlaskForm):
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 class PuzzleForm(FlaskForm):
-    l0 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autofocus':'true', 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    l1 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    l2 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters",  'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    l3= StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    l4 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    l5 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    l6 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocapitalize':"characters", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
-    hidden = HiddenField()
+    l0 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autofocus':'true', 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l1 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l2 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row",  'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l3= StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l4 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l5 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+    l6 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
+
+class CreatePuzzle(FlaskForm):
+    word = StringField('Word', validators = [InputRequired(), Length(min=5, max=7), check_valid_word, check_puzzle_exists, Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw= {'class': 'form_font', 'autocomplete':"off",})
+    submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 # class MultiCheckboxField(SelectMultipleField):
 #     widget = widgets.ListWidget(prefix_label=False)
