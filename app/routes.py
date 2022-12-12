@@ -9,8 +9,10 @@ from app.pet_helper import pet_info, squeerdle
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
-import copy
-import sys
+# import copy
+# import sys
+# import gc
+
 
 pet_types_dict = pet_info.types_dict
 
@@ -427,7 +429,11 @@ def puzzle():
     incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
     complete = squeerdle.get_complete_puzzles(get_user_id())
     created = squeerdle.get_created_puzzles(get_user_id())
-    return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created)
+    create_form = forms.CreatePuzzleForm()
+    # if create_form.validate_on_submit():
+    #     pass
+    # else: pass
+    return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created, create_form=create_form)
 
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
@@ -439,20 +445,15 @@ def random_puzzle():
 def play_puzzle(puzzle_id):
     form = forms.PuzzleForm()
     puzzle = squeerdle.puzzle_loader(get_user_id(), puzzle_id)
-    print("instantiated:", puzzle)
     squeerdle.trim_form(form, puzzle.word)
     if request.method == "POST":
-        if form.validate():
+        if form.validate_on_submit():
             guess = squeerdle.build_word(form.data)
-            if squeerdle.valid_word(guess):
-                squeerdle.check_guess(guess, puzzle, get_user_id(), puzzle_id)
-                squeerdle.clear_placeholders(form)
-            else:
-                squeerdle.add_placeholders(form)
-                flash('Invalid word', 'puzzle error')
+            squeerdle.check_guess(guess, puzzle, get_user_id(), puzzle_id)
+            squeerdle.clear_placeholders(form)
         else:
             squeerdle.add_placeholders(form)
             flash_puzzle_error(form)
-        del(puzzle)
+        # del(puzzle)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)

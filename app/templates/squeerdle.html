@@ -58,6 +58,12 @@
     <p>You haven't completed anything yet!</p>
 {% endif %}
 
+<h2>Create a Puzzle (for others to enjoy, not you, that's cheating)</h2>
+<form method="POST"><div style="line-height:2em;">
+    {{ create_form.hidden_tag() }}
+    <div>{{create_form.word.label}}: {{create_form.word()}} {{create_form.submit()}}</div>
+</div></form>
+
 <!-- <h2>Puzzles You've Created:</h2> -->
 
 </div>

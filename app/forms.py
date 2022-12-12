@@ -8,6 +8,8 @@ from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
                      SubmitField, TextAreaField, widgets, HiddenField, FieldList, FormField)
 from wtforms.validators import (DataRequired, InputRequired, Length, NoneOf,
                                 NumberRange, StopValidation, ValidationError, Optional, Regexp)
+from app.pet_helper.squeerdle import valid_word, build_word
+
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -64,20 +66,6 @@ def check_puzzle_exists(form, field):
         conn.close()
         if res:
             raise StopValidation(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
-        
-
-def add_puzzle_word_db(word, user_id = None):
-    if valid_word(word.upper()):
-        conn = get_db_connection()
-        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (word,)).fetchone()
-        if res:
-            flash(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
-        else:
-            conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word.upper(), user_id))
-            conn.commit()
-        conn.close()
-    else:
-        flash(f"{word} is an invalid word")
 
 class ChangePasswordForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
@@ -140,7 +128,17 @@ class PuzzleForm(FlaskForm):
     l5 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
     l6 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
 
-class CreatePuzzle(FlaskForm):
+    def validate(self):
+        r = FlaskForm.validate(self)
+        if not r:
+            return False
+        guess = build_word(self.data)
+        if not valid_word(guess):
+            self.l0.errors.append('Invalid word.')
+            return False
+        return True
+
+class CreatePuzzleForm(FlaskForm):
     word = StringField('Word', validators = [InputRequired(), Length(min=5, max=7), check_valid_word, check_puzzle_exists, Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw= {'class': 'form_font', 'autocomplete':"off",})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 

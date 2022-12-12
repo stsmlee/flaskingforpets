@@ -3,12 +3,20 @@ import random
 import sqlite3
 import json
 from flask import flash
+import gc
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     conn.execute("PRAGMA foreign_keys = ON")
     conn.row_factory = sqlite3.Row
     return conn
+
+def count_instances(class_name):
+    counter = 0
+    for obj in gc.get_objects():
+        if isinstance(obj, class_name):
+            counter += 1
+    print(counter, f"instances of {class_name} class")
 
 class Puzzle:
     def __init__(self, word, guess_words = [], guess_count = 0, evals = [], complete=0, success=0):
@@ -118,14 +126,7 @@ def valid_word(word):
     res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{word}"''').fetchone()
     if res:
         return True
-
-def trim_form(form, word):
-    excess = 7-len(word)
-    if excess > 0:
-        del form.l6
-    if excess > 1:
-        del form.l5
-
+    
 def add_puzzle_word_db(word, user_id = None):
     if valid_word(word.upper()):
         conn = get_db_connection()
@@ -138,6 +139,13 @@ def add_puzzle_word_db(word, user_id = None):
         conn.close()
     else:
         flash(f"{word} is an invalid word")
+
+def trim_form(form, word):
+    excess = 7-len(word)
+    if excess > 0:
+        del form.l6
+    if excess > 1:
+        del form.l5
 
 def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn = get_db_connection()
