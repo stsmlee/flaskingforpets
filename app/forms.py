@@ -129,8 +129,8 @@ class PuzzleForm(FlaskForm):
     l6 = StringField(validators=[InputRequired(), Length(max=1), Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw = {'class':"guess_row", 'autocomplete':"off", 'onkeydown': "return /[a-z]/i.test(event.key)", 'oninvalid':"this.setCustomValidity('Must fill out every letter.')", 'onchange':"this.setCustomValidity('')"})
 
     def validate(self):
-        r = FlaskForm.validate(self)
-        if not r:
+        good = FlaskForm.validate(self)
+        if not good:
             return False
         guess = build_word(self.data)
         if not valid_word(guess):
