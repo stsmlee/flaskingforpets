@@ -430,9 +430,10 @@ def puzzle():
     complete = squeerdle.get_complete_puzzles(get_user_id())
     created = squeerdle.get_created_puzzles(get_user_id())
     create_form = forms.CreatePuzzleForm()
-    # if create_form.validate_on_submit():
-    #     pass
-    # else: pass
+    if create_form.validate_on_submit():
+        pass
+    else: 
+        flash_puzzle_error(create_form)
     return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created, create_form=create_form)
 
 @app.route('/squeerdle/random', methods=['GET', 'POST'])

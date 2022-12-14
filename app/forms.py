@@ -32,6 +32,13 @@ def verify_user(form,field):
     if res is None:
         raise StopValidation(Markup('Username does not exist, please double check your entry or <a href="/register">register a new account</a>.'))
 
+def verify_friend(form,field):
+    username = form.username.data.lower()
+    conn = get_db_connection()
+    res = conn.execute('SELECT username FROM users WHERE username = ?', (username,)).fetchone()
+    if res is None:
+        raise StopValidation(Markup('Username does not exist, please double check your entry or ask your buddy to <a href="/register">register a new account</a>.'))
+
 def verify_password(form,field):
     ph = PasswordHasher()
     username = form.username.data.lower()
@@ -53,30 +60,28 @@ def update_something(form,field):
         raise StopValidation('You have not changed anything.')
 
 def check_valid_word(form,field):
-    conn = get_db_connection()
-    first_char = field[0]
-    res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{field}"''').fetchone()
-    conn.close()
-    if not res:
+    word = field.data.upper()
+    valid = valid_word(word)
+    # conn = get_db_connection()
+    # first_char = field[0]
+    # res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{field}"''').fetchone()
+    # conn.close()
+    if not valid:
         raise StopValidation('Invalid word.')
 
 def check_puzzle_exists(form, field):
         conn = get_db_connection()
-        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (field,)).fetchone()
+        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (field.data.upper(),)).fetchone()
         conn.close()
         if res:
-            raise StopValidation(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
+            raise StopValidation(f'{res["word"]}, puzzle id #{res["id"]}, already exists in our puzzle database.')
 
 class ChangePasswordForm(FlaskForm):
-    username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
+    username = StringField('Username', validators= [InputRequired(), verify_user, ], render_kw= {'class': 'form_font'})
     nickname = StringField('New Nickname', validators= [update_something, Length(min=3, max=20)], render_kw= {'class': 'form_font'})
     password = PasswordField('Current Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
     new_password =  PasswordField('New Password', validators= [update_something, Length(min=8, max=20)], render_kw= {'class': 'form_font'})
     submit = SubmitField('Save Changes',render_kw= {'class': 'submit_button'})
-
-# class SetTZForm(FlaskForm):
-#     tz = SelectField('Time Zone', render_kw= {'class': 'form_font'})
-#     submit = SubmitField('Save Time Zone', render_kw= {'class': 'submit_button'})
 
 class ResultsPerPage(FlaskForm):
     limit = SelectField('Number of Results per Page', )
@@ -139,7 +144,8 @@ class PuzzleForm(FlaskForm):
         return True
 
 class CreatePuzzleForm(FlaskForm):
-    word = StringField('Word', validators = [InputRequired(), Length(min=5, max=7), check_valid_word, check_puzzle_exists, Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw= {'class': 'form_font', 'autocomplete':"off",})
+    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), check_valid_word, check_puzzle_exists, Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw= {'class': 'form_font', 'autocomplete':"off"})
+    send = StringField('Their Username', validators = [Optional(), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 # class MultiCheckboxField(SelectMultipleField):

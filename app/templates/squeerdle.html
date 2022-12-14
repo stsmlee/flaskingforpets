@@ -61,10 +61,24 @@
 <h2>Create a Puzzle (for others to enjoy, not you, that's cheating)</h2>
 <form method="POST"><div style="line-height:2em;">
     {{ create_form.hidden_tag() }}
-    <div>{{create_form.word.label}}: {{create_form.word()}} {{create_form.submit()}}</div>
+    <div>{{create_form.word.label}}: {{create_form.word()}} </div>
+    Send to a friend?
+    <div>{{create_form.send.label}} {{create_form.send()}} {{create_form.submit()}}</div>
 </div></form>
 
 <!-- <h2>Puzzles You've Created:</h2> -->
+
+<div style="text-align: center;">
+    {% with errs = get_flashed_messages(category_filter=['puzzle error']) %}
+      {% if errs %}
+        <ul class="puzzle_error">
+        {% for message in errs %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</div>
 
 </div>
 {%endblock%} 
