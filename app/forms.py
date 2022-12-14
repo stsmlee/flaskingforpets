@@ -9,7 +9,7 @@ from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
 from wtforms.validators import (DataRequired, InputRequired, Length, NoneOf,
                                 NumberRange, StopValidation, ValidationError, Optional, Regexp)
 from app.pet_helper.squeerdle import valid_word, build_word
-
+import re
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -62,10 +62,6 @@ def update_something(form,field):
 def check_valid_word(form,field):
     word = field.data.upper()
     valid = valid_word(word)
-    # conn = get_db_connection()
-    # first_char = field[0]
-    # res = conn.execute(f'''SELECT * FROM {first_char} WHERE word = "{field}"''').fetchone()
-    # conn.close()
     if not valid:
         raise StopValidation('Invalid word.')
 
@@ -75,6 +71,12 @@ def check_puzzle_exists(form, field):
         conn.close()
         if res:
             raise StopValidation(f'{res["word"]}, puzzle id #{res["id"]}, already exists in our puzzle database.')
+
+def custom_regexp(form, field):
+    pattern = re.compile(r"^[A-Za-z]+$")
+    good = pattern.match(field.data)
+    if not good:
+        raise StopValidation("No numbers, special characters, or accents allowed.")
 
 class ChangePasswordForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), verify_user, ], render_kw= {'class': 'form_font'})
@@ -144,9 +146,14 @@ class PuzzleForm(FlaskForm):
         return True
 
 class CreatePuzzleForm(FlaskForm):
-    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), check_valid_word, check_puzzle_exists, Regexp("[A-Za-z]", message="No special characters or accents allowed!")], render_kw= {'class': 'form_font', 'autocomplete':"off"})
+    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), custom_regexp, check_valid_word, check_puzzle_exists], render_kw= {'class': 'form_font', 'autocomplete':"off"})
     send = StringField('Their Username', validators = [Optional(), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
+
+
+
+
+
 
 # class MultiCheckboxField(SelectMultipleField):
 #     widget = widgets.ListWidget(prefix_label=False)

@@ -4,3 +4,4 @@ flask_session/
 app/**/__pycache__
 sneaky.html
 scrabble_words.txt
+test.py

@@ -80,5 +80,17 @@
     {% endwith %}
 </div>
 
+<div style="text-align: center;">
+    {% with notices = get_flashed_messages(category_filter=['puzzle base notice']) %}
+      {% if notices %}
+        <ul class="puzzle_notice">
+        {% for message in notices %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</div>
+
 </div>
 {%endblock%} 

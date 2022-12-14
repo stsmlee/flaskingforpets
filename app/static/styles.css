@@ -428,6 +428,16 @@ ul.notice > li {
     list-style: none;
 }
 
+.puzzle_notice{
+    display: inline-block;
+    padding: 2px 16px;
+    color: #1e0246;
+    background-color: #c8b8f4d0;
+    border-radius: 10px;
+    line-height: 20px;
+    list-style: none;
+}
+
 hr.results_hr {
     height:3px;
     margin:25px;

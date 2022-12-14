@@ -237,6 +237,14 @@ def flash_puzzle_error(form):
     for msg in msg_set:
         flash(msg, 'puzzle error')
 
+# def flash_puzzle_base_errors(form):
+#     msg_set = set()
+#     for field, errors in form.errors.items():
+#         for error in errors:
+#             msg_set.add(error)
+#     for msg in msg_set:
+#         flash(msg, 'puzzle base error')
+
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
@@ -431,7 +439,7 @@ def puzzle():
     created = squeerdle.get_created_puzzles(get_user_id())
     create_form = forms.CreatePuzzleForm()
     if create_form.validate_on_submit():
-        pass
+        flash("YOU DID IT", 'puzzle base notice')
     else: 
         flash_puzzle_error(create_form)
     return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created, create_form=create_form)

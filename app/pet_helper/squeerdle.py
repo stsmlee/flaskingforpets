@@ -128,16 +128,13 @@ def valid_word(word):
         return True
     
 def add_puzzle_word_db(word, user_id = None):
+    word = word.upper()
     conn = get_db_connection()
-    # res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (word,)).fetchone()
-    #     if res:
-    #         flash(f'{res["word"]}, id #{res["id"]}, already exists in our puzzle database.')
-    #     else:
-    conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word.upper(), user_id))
+    conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word, user_id))
     conn.commit()
     conn.close()
-    # else:
-    #     flash(f"{word} is an invalid word")
+    flash(f"Successfully added {word} to our database of puzzles! Thx u!", 'notice')
+
 
 def trim_form(form, word):
     excess = 7-len(word)

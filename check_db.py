@@ -194,5 +194,5 @@ def puzzle_starter_pack():
 
 # print_tables()
 
-puzzle_starter_pack()
+# puzzle_starter_pack()
 print_puzzlers_puzzles()
