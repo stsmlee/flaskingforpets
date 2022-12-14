@@ -432,17 +432,30 @@ def confirm_delete():
 def forbidden_page(error):
     return render_template('403.html'), 403
 
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'), 404
+
 @app.route('/squeerdle', methods=['GET', 'POST'])
 def puzzle():
     incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
     complete = squeerdle.get_complete_puzzles(get_user_id())
     created = squeerdle.get_created_puzzles(get_user_id())
     create_form = forms.CreatePuzzleForm()
-    if create_form.validate_on_submit():
-        flash("YOU DID IT", 'puzzle base notice')
-    else: 
-        flash_puzzle_error(create_form)
-    return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created, create_form=create_form)
+    send_form = forms.SendPuzzleForm()
+    if request.method == "POST":
+        if create_form.submit.data:
+            print(create_form.data)
+            if create_form.validate():
+                squeerdle.add_puzzle_word_db(create_form.word.data, get_user_id())
+            else:
+                flash_puzzle_error(create_form)
+        if send_form.send.data:
+            if send_form.validate():
+                flash('good job', 'puzzle base notice')
+            else:
+                flash_puzzle_error(send_form)
+    return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created, create_form=create_form, send_form = send_form)
 
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
@@ -452,17 +465,19 @@ def random_puzzle():
 
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
-    form = forms.PuzzleForm()
-    puzzle = squeerdle.puzzle_loader(get_user_id(), puzzle_id)
-    squeerdle.trim_form(form, puzzle.word)
-    if request.method == "POST":
-        if form.validate_on_submit():
-            guess = squeerdle.build_word(form.data)
-            squeerdle.check_guess(guess, puzzle, get_user_id(), puzzle_id)
-            squeerdle.clear_placeholders(form)
-        else:
-            squeerdle.add_placeholders(form)
-            flash_puzzle_error(form)
-        # del(puzzle)
-        return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-    return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
+    try:
+        form = forms.PuzzleForm()
+        puzzle = squeerdle.puzzle_loader(get_user_id(), puzzle_id)
+        squeerdle.trim_form(form, puzzle.word)
+        if request.method == "POST":
+            if form.validate_on_submit():
+                guess = squeerdle.build_word(form.data)
+                squeerdle.check_guess(guess, puzzle, get_user_id(), puzzle_id)
+                squeerdle.clear_placeholders(form)
+            else:
+                squeerdle.add_placeholders(form)
+                flash_puzzle_error(form)
+            return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
+        return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
+    except:
+        return render_template('squeerdle_error.html')

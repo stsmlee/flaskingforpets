@@ -133,8 +133,7 @@ def add_puzzle_word_db(word, user_id = None):
     conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word, user_id))
     conn.commit()
     conn.close()
-    flash(f"Successfully added {word} to our database of puzzles! Thx u!", 'notice')
-
+    flash(f"Successfully added {word} to our database of puzzles! Thx u!", 'puzzle base notice')
 
 def trim_form(form, word):
     excess = 7-len(word)
@@ -148,6 +147,13 @@ def add_puzzle_to_puzzler(user_id, puzzle_id):
     conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id) VALUES (?,?)', (user_id, puzzle_id))
     conn.commit()
     conn.close()
+
+def send_puzzle_to_friend(username, puzzle_id):
+    username = username.lower()
+    conn = get_db_connection()
+    res = conn.execute('SELECT id as user_id, username FROM users WHERE username = ?', (username,)).fetchone()
+    conn.close()
+    add_puzzle_to_puzzler(res['user_id'], puzzle_id)
 
 def get_random_puzzle_id(user_id):
     conn = get_db_connection()
@@ -168,7 +174,7 @@ def get_random_puzzle_id(user_id):
 
 def get_created_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ?", (user_id,))
+    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ? ORDER BY puzzle_id", (user_id,))
     rows = curs.fetchall()
     if rows:
         cols = [description[0] for description in curs.description]

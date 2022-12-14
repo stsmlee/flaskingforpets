@@ -147,13 +147,13 @@ class PuzzleForm(FlaskForm):
 
 class CreatePuzzleForm(FlaskForm):
     word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), custom_regexp, check_valid_word, check_puzzle_exists], render_kw= {'class': 'form_font', 'autocomplete':"off"})
-    send = StringField('Their Username', validators = [Optional(), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
-
-
-
-
+class SendPuzzleForm(FlaskForm):
+    username = StringField('Username', validators = [InputRequired(), Length(min=3, max=20), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
+    # play_id = SelectField('Puzzles You\'ve Played', render_kw= {'class': 'form_font'})
+    # created_id = SelectField('Puzzles You\'ve Created', render_kw= {'class': 'form_font'})
+    send = SubmitField('Send', render_kw= {'class': 'submit_button'})
 
 # class MultiCheckboxField(SelectMultipleField):
 #     widget = widgets.ListWidget(prefix_label=False)

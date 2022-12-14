@@ -324,6 +324,11 @@ th.smolcol {
     white-space:nowrap;
 }
 
+td.smolcol {
+    width: 1%;
+    white-space:nowrap;
+}
+
 .mgmt_table {
     margin-block-start: 1.33em;
     margin-block-end: 1.33em;
@@ -508,7 +513,7 @@ div.change_limit {
     padding:3.5em 3.75em;
 }
 
-#abort_403 {
+#abort {
     padding:3.75em 3.75em;
     text-align: center; 
 }
