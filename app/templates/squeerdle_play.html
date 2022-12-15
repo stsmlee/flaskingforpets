@@ -33,7 +33,7 @@
             {% if evals[guess] == 'win' %}
                 <div id = 'winner'>
                 {% for i in range(puzzle.word|length)  %}
-                <span class = "puzzle_row" id="winner{{i}}" style="background-color:rgb(157, 156, 156)">{{puzzle.word[i]}}</span>
+                <span class = "puzzle_row" id="winner{{i}}" style="background-color:rgb(157, 156, 156);opacity:0;">{{puzzle.word[i]}}</span>
                 <script>
                     {
                         let i = '{{i}}';
@@ -58,13 +58,17 @@
                         }        
                         else if (i == 6) {
                             span.style.backgroundColor = "#c159c1";
-                        };                                          
+                        };   
+                        let effect = 'fadeEffect .1s';
+                            setTimeout( () => {
+                                span.style.animation = effect;
+                                span.style.webkitAnimation = effect;
+                                span.style.opacity = 1;
+                                }, '{{i*100}}');                                       
                     }
                 </script>
                 {% endfor %}
                 </div>
-
-
 
             {% elif guess == puzzle.guess_count-1 %}
             <div>
@@ -81,7 +85,6 @@
                               span.style.backgroundColor = "#41b841";
                             };
                             let effect = 'fadeEffect .5s';
-                            console.log(effect)
                             setTimeout( () => {
                                 span.style.animation = effect;
                                 span.style.webkitAnimation = effect;
