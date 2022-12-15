@@ -4,6 +4,16 @@
 
 {%block content%}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+    @keyframes fadeEffect {
+        from {opacity: 0;}
+        to {opacity: 1;}
+        }
+    @-webkit-keyframes fadeEffect {
+        from {opacity: 0;}
+        to {opacity: 1;}
+        }
+</style>
 
 <form method="POST"> {{form.hidden_tag()}}
 <div id = "puzzle">
@@ -20,7 +30,7 @@
     </div>
     {% for guess in range(puzzle.max_guesses) %}
         {% if guess != (puzzle.guess_count) %}
-            {% if guesses[guess] == 'win' %}
+            {% if evals[guess] == 'win' %}
                 <div id = 'winner'>
                 {% for i in range(puzzle.word|length)  %}
                 <span class = "puzzle_row" id="winner{{i}}" style="background-color:rgb(157, 156, 156)">{{puzzle.word[i]}}</span>
@@ -53,13 +63,46 @@
                 </script>
                 {% endfor %}
                 </div>
-            {% elif guess < puzzle.guess_count %}
-                <div>
+
+
+
+            {% elif guess == puzzle.guess_count-1 %}
+            <div>
                 {% for i in range(puzzle.word|length) %}
-                    <span class = "puzzle_row" id="{{guess}}{{i}}" style="background-color:rgb(157, 156, 156)">{{guesses[guess][i][0]}}</span>
+                    <span class = "puzzle_row" id="{{guess}}{{i}}" style="background-color:rgb(157, 156, 156); opacity:0;">{{evals[guess][i][0]}}</span>
                     <script>
                         {
-                            let guess = '{{guesses[guess][i][1]}}';
+                            let guess = '{{evals[guess][i][1]}}';
+                            let span = document.getElementById('{{guess}}{{i}}');
+                            if ( guess == 1) {
+                              span.style.backgroundColor = "yellow";
+                            }
+                            else if (guess == 2) {
+                              span.style.backgroundColor = "green";
+                            };
+                            let effect = 'fadeEffect 1s';
+                            console.log(effect)
+                            setTimeout( () => {
+                                span.style.animation = effect;
+                                span.style.webkitAnimation = effect;
+                                span.style.opacity = 1;
+                                console.log('{{i*1000}}')
+                                }, '{{i*1000}}');
+
+                        }
+                      </script>
+                {% endfor %}
+            </div>
+
+
+
+            {% elif guess < puzzle.guess_count-1 %}
+                <div>
+                {% for i in range(puzzle.word|length) %}
+                    <span class = "puzzle_row" id="{{guess}}{{i}}" style="background-color:rgb(157, 156, 156)">{{evals[guess][i][0]}}</span>
+                    <script>
+                        {
+                            let guess = '{{evals[guess][i][1]}}';
                             let span = document.getElementById('{{guess}}{{i}}');
                             if ( guess == 1) {
                               span.style.backgroundColor = "yellow";
@@ -79,7 +122,7 @@
                 </div>
             {% endif %}
         {% else %}
-            {% if guesses[-1] != 'win' %}
+            {% if evals[-1] != 'win' %}
                 <div>
                 {% for field in form %}
                     <span class = "guess_row">{{field()}}</span>
@@ -94,7 +137,7 @@
             {% endif %}
         {% endif %}
     {% endfor %}
-    {% if guesses[-1] != 'win' %}
+    {% if evals[-1] != 'win' %}
         {% if puzzle.guess_count == puzzle.max_guesses %}
         <div id="loser_text">Out of turns!<br>
         The word was:<br>

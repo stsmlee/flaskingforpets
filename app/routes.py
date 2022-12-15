@@ -460,8 +460,11 @@ def puzzle():
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
     puzzle_id = squeerdle.get_random_puzzle_id(get_user_id())
-    squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
-    return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
+    if puzzle_id:
+        squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
+        return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
+    else:
+        return "NO MORE"
 
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
@@ -478,6 +481,6 @@ def play_puzzle(puzzle_id):
                 squeerdle.add_placeholders(form)
                 flash_puzzle_error(form)
             return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-        return render_template('squeerdle_play.html', puzzle=puzzle, guesses=puzzle.evals, form=form)
+        return render_template('squeerdle_play.html', puzzle=puzzle, evals=puzzle.evals, form=form)
     except:
         return render_template('squeerdle_error.html')

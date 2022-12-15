@@ -164,13 +164,11 @@ def get_random_puzzle_id(user_id):
     curs = conn.execute("SELECT id as puzzle_id FROM puzzles WHERE creator_id IS NOT ?", (user_id,)).fetchall()
     print(len(curs))
     new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
-    pick = random.randint(0, len(new_puzzles)-1)
-    return new_puzzles[pick]
-
-# def get_puzzle_word(puzzle_id):
-#     conn = get_db_connection()
-#     word = conn.execute("SELECT word FROM puzzles WHERE id = ?", (puzzle_id,)).fetchone()
-#     return word[0]
+    try:
+        pick = random.randint(0, len(new_puzzles)-1)
+        return new_puzzles[pick]
+    except:
+        return
 
 def get_created_puzzles(user_id):
     conn = get_db_connection()

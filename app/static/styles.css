@@ -527,12 +527,13 @@ span.puzzle_row {
     background-color:rgb(168, 168, 168); 
     box-sizing: border-box;
     font-size: 35px;
+    /* animation: fadeEffect 2s; */
 } 
 
-/* span.guess_row {
-    font-size:2em;
-} */
-
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
 
 input.guess_row{
     display:inline-block; 
@@ -548,9 +549,6 @@ input.guess_row{
 }
 
 input.guess_row:focus{
-    /* outline-width: 2px;
-    outline-style: solid;
-    outline-color: grey; */
     border: none;
     border-radius: 2pt;
     box-shadow: 0 0 2px 1px rgb(112, 112, 112);
