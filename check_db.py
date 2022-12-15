@@ -1,9 +1,9 @@
 import sqlite3
 from datetime import datetime, timedelta
-import pytz
-import copy
-import random
-import json
+# import pytz
+# import copy
+# import random
+# import json
 from app.pet_helper.squeerdle import Puzzle
 
 def get_db_connection():
@@ -46,10 +46,6 @@ def get_info():
         print("PUZZLES TABLE")
         for puzz in puzzles:
             print(puzz)
-    # print('ALL OUR TABLES:')
-    # sql_query = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    # for row in sql_query:
-    #     print(row['name'])
     conn.close()
 
 def print_tables():
@@ -161,6 +157,12 @@ def add_puzzle_word_db(word, user_id = None):
     else:
         print(f"{word} is an invalid word")
 
+def add_puzzle_to_puzzler(user_id, puzzle_id):
+    conn = get_db_connection()
+    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id) VALUES (?,?)', (user_id, puzzle_id))
+    conn.commit()
+    conn.close()
+
 # def get_puzzlers_puzzles(user_id):
 #     conn = get_db_connection()
 #     curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? ORDER BY word', (user_id,))
@@ -190,9 +192,12 @@ def puzzle_starter_pack():
     for word in starter_pack:
         add_puzzle_word_db(word)
 
+
+
 # get_info()
 
 # print_tables()
 
 # puzzle_starter_pack()
+
 print_puzzlers_puzzles()
