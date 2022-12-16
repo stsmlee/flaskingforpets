@@ -293,19 +293,22 @@ table.puzzler_table {
     border-collapse: collapse;
     margin-left:auto;
     margin-right:auto;
+    margin-bottom: 1.5em;
     border: black 1px solid;
     width: 80%;
 }
 
 .puzzler_table td {
-    border: black 1px solid;
+    /* border: black 1px solid; */
+    border: 1px solid #ccc;
     /* border-left: black 1px solid;
     border-right: black 1px solid; */
     padding: 5px 10px;
 }
 
 .puzzler_table th{
-    border: black 1px solid;
+    /* border: black 1px solid; */
+    border: 1px solid #ccc;
     /* border-left: black 1px solid;
     border-right: black 1px solid; */
     padding: 5px 10px;
@@ -527,13 +530,7 @@ span.puzzle_row {
     background-color:rgb(168, 168, 168); 
     box-sizing: border-box;
     font-size: 35px;
-    /* animation: fadeEffect 2s; */
 } 
-
-@keyframes fadeEffect {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
 
 input.guess_row{
     display:inline-block; 
@@ -611,6 +608,12 @@ div#winner {
         background-position: 4500vh;
     }
 }
+
+.whatever {
+    color: rgb(44, 162, 44);
+    color: rgb(230, 230, 8);
+}
+
 
 @keyframes popout {
     0% {
@@ -694,3 +697,53 @@ div#winner {
         color: pink;
       }
     }
+
+    /* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    margin-top: 1.5em;
+  }
+  
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    font-size:1em;
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    animation: fadeEffect 1s;
+  }
+
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}

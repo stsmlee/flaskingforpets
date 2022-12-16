@@ -4,16 +4,6 @@
 
 {%block content%}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<style>
-    @keyframes fadeEffect {
-        from {opacity: 0;}
-        to {opacity: 1;}
-        }
-    @-webkit-keyframes fadeEffect {
-        from {opacity: 0;}
-        to {opacity: 1;}
-        }
-</style>
 
 <form method="POST"> {{form.hidden_tag()}}
 <div id = "puzzle">
@@ -69,7 +59,6 @@
                 </script>
                 {% endfor %}
                 </div>
-
             {% elif guess == puzzle.guess_count-1 %}
             <div>
                 {% for i in range(puzzle.word|length) %}
@@ -84,17 +73,16 @@
                             else if (guess == 2) {
                               span.style.backgroundColor = "#41b841";
                             };
-                            let effect = 'fadeEffect .5s';
+                            let effect = 'fadeEffect .3s';
                             setTimeout( () => {
                                 span.style.animation = effect;
                                 span.style.webkitAnimation = effect;
                                 span.style.opacity = 1;
-                                }, '{{i*500}}');
+                                }, '{{i*300}}');
                         }
-                      </script>
+                    </script>
                 {% endfor %}
             </div>
-
             {% elif guess < puzzle.guess_count-1 %}
                 <div>
                 {% for i in range(puzzle.word|length) %}
@@ -110,7 +98,7 @@
                               span.style.backgroundColor = "#41b841";
                             };
                         }
-                      </script>
+                    </script>
                 {% endfor %}
                 </div>
             {% else %}

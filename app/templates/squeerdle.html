@@ -7,79 +7,114 @@
 
 <h1>Welcome to Squeerdle!</h1>
 
-<!-- <h2>Gimme a random puzzle!</h2> -->
 <form method="GET" action="{{url_for('random_puzzle')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
-    <!-- <div class = "button_div"> -->
     <h2><input type="submit" value="Gimme a random puzzle!" class = 'gimme_button'></h2>
-    <!-- </div> -->
 </form>
 
-<h2>Puzzles You've Yet to Complete:</h2>
-{% if incomplete %}
-    <table class = 'puzzler_table'>
-    <tr><th class="smolcol">ID#</th><th class="smolcol">Guess Count</th><th>Words You've Already Guessed</th></tr>
-    {% for row in incomplete %}
-    <tr>
-        {% with puzzle_id= row['puzzle_id']  %}
-        <td class="smolcol"><a href="{{ url_for( 'play_puzzle', puzzle_id=puzzle_id ) }}" title = "Play this puzzle">{{puzzle_id}}</a></td><td class="smolcol">{{row['remaining_guesses']}}</td><td class="smolcol">{{row['guess_words']}}</td>
-        {% endwith %}
-    </tr>
-    {% endfor %}
-    </table>
-{% else %}
-    <p>Whoa, nice! You've finished everything you've started!</p>
-{% endif %}
 
-<h2>Puzzles You've Completed:</h2>
-{% if complete %}
-    <table class = 'puzzler_table'>
-    <tr><th class="smolcol">ID#</th><th class="smolcol">Guess Count</th><th>Word</th><th>Words You Guessed</th></tr>
-    {% for row in complete %}
-    <tr>
-        {% with puzzle_id= row['puzzle_id']  %}
-        <td class="smolcol"><a href="{{ url_for( 'play_puzzle', puzzle_id=puzzle_id ) }}" title = "View this puzzle">{{puzzle_id}}</a></td><td class="smolcol">{{row['remaining_guesses']}}</td><td class = "word" id = "{{row['puzzle_id']}}" style = "color:red;">{{row['word']}}</td><td>{{row['guess_words']}}</td>
-        <script>
-            {
-                let success = "{{row['success']}}"
-                let puzz_id = "{{row['puzzle_id']}}"
-                let word = "{{row['word']}}"
-                let td = document.getElementById(puzz_id);
-                if ( success == 1) {
-                  td.style.color = "black";
-                  document.getElementById(puzz_id).innerHTML = "&#x1F3C6; &nbsp; &nbsp; &nbsp;" + word + "&nbsp; &nbsp; &nbsp; &#x1F3C6;";
+<div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'Incomplete')" id="defaultOpen">Incomplete</button>
+    <button class="tablinks" onclick="openCity(event, 'Complete')">Complete</button>
+    <button class="tablinks" onclick="openCity(event, 'Creations')">Creations</button>
+    <button class="tablinks" onclick="openCity(event, 'Create')">Create New</button>
+</div>
+  
+  <!-- Tab content -->
+<div id="Incomplete" class="tabcontent">
+    <h3>Puzzles You've Yet to Complete:</h3>
+    {% if incomplete %}
+        <table class = 'puzzler_table'>
+        <tr><th class="smolcol">ID#</th><th class="smolcol">Guess Count</th><th>Words You've Already Guessed</th></tr>
+        {% for row in incomplete %}
+        <tr>
+            {% with puzzle_id= row['puzzle_id']  %}
+            <td class="smolcol"><a href="{{ url_for( 'play_puzzle', puzzle_id=puzzle_id ) }}" title = "Play this puzzle">{{puzzle_id}}</a></td><td class="smolcol">{{row['remaining_guesses']}}</td><td class="smolcol">{{row['guess_words']}}</td>
+            {% endwith %}
+        </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p>Whoa, nice! You've finished everything you've started!</p>
+    {% endif %}
+</div>
+
+<div id="Complete" class="tabcontent">
+    <h3>Puzzles You've Completed:</h3>
+    {% if complete %}
+        <table class = 'puzzler_table'>
+        <tr><th class="smolcol">ID#</th><th class="smolcol">Guess Count</th><th>Word</th><th>Words You Guessed</th></tr>
+        {% for row in complete %}
+        <tr>
+            {% with puzzle_id= row['puzzle_id']  %}
+            <td class="smolcol"><a href="{{ url_for( 'play_puzzle', puzzle_id=puzzle_id ) }}" title = "View this puzzle">{{puzzle_id}}</a></td><td class="smolcol">{{row['remaining_guesses']}}</td><td class = "word" id = "{{row['puzzle_id']}}" style = "color:red;">{{row['word']}}</td><td>{{row['guess_words']}}</td>
+            <script>
+                {
+                    let success = "{{row['success']}}"
+                    let puzz_id = "{{row['puzzle_id']}}"
+                    let word = "{{row['word']}}"
+                    let td = document.getElementById(puzz_id);
+                    if ( success == 1) {
+                      td.style.color = "black";
+                      document.getElementById(puzz_id).innerHTML = "&#x1F3C6; &nbsp; &nbsp; &nbsp;" + word + "&nbsp; &nbsp; &nbsp; &#x1F3C6;";
+                    }
                 }
-            }
-          </script>
-        {% endwith %}
-    </tr>
-    {% endfor %}
-    </table>
-{% else %}
-    <p>You haven't completed anything yet!</p>
-{% endif %}
+              </script>
+            {% endwith %}
+        </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p>You haven't completed anything yet!</p>
+    {% endif %}
+</div>
 
-<h2>Puzzles You've Created:</h2>
-{% if created %}
-    <table class = 'puzzler_table'>
-    <tr><th class="smolcol">ID#</th><th>Word</th><th class="smolcol">Send to a Friend?</th><th class="smolcol">Plays</th><th class="smolcol">Wins</th></tr>
-    {% for row in created %}
-    <tr>
-    <form method="POST"> {{send_form.hidden_tag()}}
-        <td class="smolcol">{{row['puzzle_id']}}</td><td>{{row['word']}}</td><td class="smolcol">{{send_form.username.label()}}: {{send_form.username()}} {{send_form.send()}}</td><td class="smolcol">{{row['plays']}}</td><td class="smolcol">{{row['wins']}}</td>
-    </form>
-    </tr>
-    {% endfor %}
-    </table>
-{% else %}
-    <p>You've not created anything yet!</p>
-{% endif %}
+<div id="Creations" class="tabcontent">
+    <h3>Puzzles You've Created:</h3>
+    {% if created %}
+        <table class = 'puzzler_table'>
+        <tr><th class="smolcol">ID#</th><th>Word</th><th class="smolcol">Send to a Friend?</th><th class="smolcol">Plays</th><th class="smolcol">Wins</th></tr>
+        {% for row in created %}
+        <tr>
+        <form method="POST"> {{send_form.hidden_tag()}}
+            <td class="smolcol">{{row['puzzle_id']}}</td><td>{{row['word']}}</td><td class="smolcol">{{send_form.username.label()}}: {{send_form.username()}} {{send_form.send()}}</td><td class="smolcol">{{row['plays']}}</td><td class="smolcol">{{row['wins']}}</td>
+        </form>
+        </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p>You've not created anything yet!</p>
+    {% endif %}
+</div>
 
-<h2>Create a Puzzle (for others to enjoy, not you, that's cheating)</h2>
-<form method="POST"><div style="line-height:2em;">
-    {{ create_form.hidden_tag() }}
-    <div>{{create_form.word.label}}: {{create_form.word()}} </div>
-    <div class="button_div">{{create_form.submit()}}</div>
-</div></form>
+<div id="Create" class="tabcontent">
+    <h3>Create a Puzzle (for others to enjoy, not you, that's cheating)</h3>
+    <form method="POST"><div style="line-height:2em;">
+        {{ create_form.hidden_tag() }}
+        <div>{{create_form.word.label}}: {{create_form.word()}} </div>
+        <div class="button_div">{{create_form.submit()}}</div>
+    </div></form>
+</div>
+
+<script>
+function openCity(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  document.getElementById("defaultOpen").click();
+</script>
 
 <div style="text-align: center;">
     {% with errs = get_flashed_messages(category_filter=['puzzle error']) %}
