@@ -88,7 +88,7 @@
           {% if errs %}
             <ul class="alert">
             {% for message in errs %}
-              <li>{{ message }}</li>
+              <li>{{ message | safe }}</li>
             {% endfor %}
             </ul>
           {% endif %}

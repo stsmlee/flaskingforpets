@@ -736,16 +736,16 @@ div#winner {
     animation: fadeEffect 1s;
 }
 
-/* maybe i don't need it to flex... */
-
 #flex_tab_container {
     display:flex;
     box-sizing: border-box;
     justify-content: center;
+    padding: 0 10% 0 10%;
 }
 
 #flex_tab_content {
     display: block;
+    width: 100%;
 }
 
 .vert_tab {
@@ -753,7 +753,7 @@ div#winner {
     display:block;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-    width: 20%;
+    width: max-content;
     height: 300px;
   }
 
@@ -783,10 +783,11 @@ div#winner {
 .vert_tabcontent {
     /* float: left; */
     display:inline-block;
+    box-sizing:border-box;
     text-align:left;
     padding: 0px 12px;
     border: 1px solid #ccc;
-    width: inherit;
+    width: 100%;
     border-left: none;
     height: 300px;
     animation: fadeEffect 1s;
