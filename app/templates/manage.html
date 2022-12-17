@@ -4,50 +4,90 @@
 
 {%block content%}
 
-<div id="padded_wrapper">
+<div id="padded_wrapper" style ='text-align: center;'>
 
 <h1>Manage your account here!</h1>
-{%if saves%}
-<h4>Select which saved search(es) you would like to delete.</h4>
-<form method="POST" name="req_deletes"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <table class="mgmt_table">
-      {% for savename, params in saves.items() %}
-      <tr>
-        <td>
-            <input type="checkbox" name="savenames" value="{{ savename }}" class = 'checkbox'>
-        </td><td>
-            <label for name = 'savenames'><b>{{ savename }}</b>: {{ params }}</label>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    <div class = "button_div"><input type="submit" value="Delete Saved Search(es)" class = 'submit_button'></div>
-</form>
 
-{%else%}
-<h4>No saved searches at the moment.</h4>
-{%endif%}
+<div id="flex_tab_container">
 
-<h4>Update your nickname or change your password?</h4>
-<form method="POST">
-    {{ change_form.hidden_tag() }}
-    <div class = "mgmt">
-    <div>{{change_form.username.label}}: {{change_form.username()}} </div>
-    <div>{{change_form.nickname.label}}: {{change_form.nickname()}} </div>
-    <div>{{change_form.password.label}}: {{change_form.password()}}</div>
-    <div>{{change_form.new_password.label}}: {{change_form.new_password()}}</div>
-    </div>
-    <div class = "button_div">{{change_form.submit()}}</div>
-</form>
-
-
-<h4>Delete your account completely?</h4>
-
-<form method="GET" action="{{url_for('delete_account')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
-    <div class = "button_div">
-    <input type="submit" value="Delete!" class = 'submit_button'>
-    </div>
-</form>
+<div class="vert_tab">
+    <button class="tablinks" onclick="openSection(event, 'Saves')" id="defaultOpen">Saved Searches</button>
+    <button class="tablinks" onclick="openSection(event, 'Account')">Change Nickname or Password</button>
+    <button class="tablinks" onclick="openSection(event, 'Delete')">Delete Account</button>
+</div>
+   
+<div id = "flex_tab_content">
+<div id="Saves" class="vert_tabcontent">
+    {%if saves%}
+    <h4>Select which saved search(es) you would like to delete.</h4>
+    <form method="POST" name="req_deletes"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <table class="mgmt_table">
+          {% for savename, params in saves.items() %}
+          <tr>
+            <td>
+                <input type="checkbox" name="savenames" value="{{ savename }}" class = 'checkbox'>
+            </td><td>
+                <label for name = 'savenames'><b>{{ savename }}</b>: {{ params }}</label>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        <div class = "button_div"><input type="submit" value="Delete Saved Search(es)" class = 'submit_button'></div>
+    </form>
+    {%else%}
+    <h4>No saved searches at the moment.</h4>
+    {%endif%}
+</div>
+    
+<div id="Account" class="vert_tabcontent">
+    <h4>Update your nickname or change your password?</h4>
+    <form method="POST">
+        {{ change_form.hidden_tag() }}
+        <div class = "mgmt">
+        <div>{{change_form.username.label}}: {{change_form.username()}} </div>
+        <div>{{change_form.nickname.label}}: {{change_form.nickname()}} </div>
+        <div>{{change_form.password.label}}: {{change_form.password()}}</div>
+        <div>{{change_form.new_password.label}}: {{change_form.new_password()}}</div>
+        </div>
+        <div class = "button_div">{{change_form.submit()}}</div>
+    </form>
+</div>
+    
+<div id="Delete" class="vert_tabcontent">
+    <h4>Delete your account completely?</h4>
+    <form method="GET" action="{{url_for('delete_account')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <div class = "button_div">
+        <input type="submit" value="Delete!" class = 'submit_button'>
+        </div>
+    </form>
+</div>
+</div>
 
 </div>
+
+<script>
+function openSection(evt, sectionName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("vert_tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("vert_tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }  
+    // Show the current tab, and add an "active" class to the link that opened the tab
+    document.getElementById(sectionName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  document.getElementById("defaultOpen").click();
+</script>
+
+
+</div>
+
+
 {%endblock%}
