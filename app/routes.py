@@ -3,7 +3,7 @@ import sqlite3
 from argon2 import PasswordHasher
 from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for, Markup, abort)
-from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
+from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional, Regexp
 from app import app, forms
 from app.pet_helper import pet_info, squeerdle
 from flask_session import Session
@@ -178,6 +178,7 @@ def get_savenames_params():
         param_list = []
         savename = row['savename']
         params = json.loads(row['params'])
+        params = pet_info.return_the_slash(params)
         for k, v in params.items():
             k = k.replace('_', ' ')
             if isinstance(v, str):
@@ -209,7 +210,7 @@ def delete_save(req_list):
         conn.execute('DELETE FROM saves WHERE user_id = ? AND savename = ?', (get_user_id(), savename))
     conn.commit()
     conn.close()
-    flash('Selected saved searches successfully cleared.', 'notice')
+    flash('Selected saved searches successfully cleared.', 'mgmt notice')
 
 def check_savecount(form,field):
     conn = get_db_connection()
@@ -283,7 +284,7 @@ def animals(type):
         savenames = get_savenames()
         savestring = ', '.join(savenames)
         err_msg = 'Please make sure to use a unique savename, not any of these: ' + savestring
-        my_form.savename.validators = [check_savecount, NoneOf(savenames, message=err_msg), Length(min=3,max=20), Optional()]
+        my_form.savename.validators = [forms.custom_savename_regexp, check_savecount, NoneOf(savenames, message=err_msg), Length(min=3,max=20), Optional()]
     if my_form.validate_on_submit():
         payload = pet_info.build_params(my_form.data, type)
         if my_form.savename.data:

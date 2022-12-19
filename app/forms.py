@@ -72,14 +72,20 @@ def check_puzzle_exists(form, field):
     if res:
         raise StopValidation(f'{res["word"]}, puzzle id #{res["id"]}, already exists in our puzzle database.')
 
-def custom_regexp(form, field):
+def custom_az_regexp(form, field):
     pattern = re.compile(r"^[A-Za-z]+$")
     good = pattern.match(field.data)
     if not good:
         raise StopValidation("No numbers, special characters, or accents allowed.")
 
+def custom_savename_regexp(form, field):
+    pattern = re.compile(r"^[A-Za-z0-9-_]*$")
+    good = pattern.match(field.data)
+    if not good:
+        raise StopValidation("Only basic alphabet, numbers, hyphen, and underscore allowed.")
+
 class ChangePasswordForm(FlaskForm):
-    username = StringField('Username', validators= [InputRequired(), verify_user, ], render_kw= {'class': 'form_font'})
+    username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font'})
     nickname = StringField('New Nickname', validators= [update_something, Length(min=3, max=20)], render_kw= {'class': 'form_font'})
     password = PasswordField('Current Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font'})
     new_password =  PasswordField('New Password', validators= [update_something, Length(min=8, max=20)], render_kw= {'class': 'form_font'})
@@ -94,7 +100,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login',render_kw= {'class': 'submit_button'})
 
 class RegisterForm(FlaskForm):
-    username = StringField('Username', validators= [InputRequired(), Length(min=3, max=20), username_check], render_kw= {'class': 'form_font'})
+    username = StringField('Username', validators= [InputRequired(), Length(min=3, max=20), custom_savename_regexp, username_check], render_kw= {'class': 'form_font'})
     password = PasswordField('Password', validators= [InputRequired(), Length(min=8, max=20)], render_kw= {'class': 'form_font'})
     nickname = StringField('Nickname (Optional)', validators= [Length(min=3, max=20), Optional()], render_kw= {'class': 'form_font'})
     submit = SubmitField('Register', render_kw= {'class': 'submit_button'})
@@ -146,7 +152,7 @@ class PuzzleForm(FlaskForm):
         return True
 
 class CreatePuzzleForm(FlaskForm):
-    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), custom_regexp, check_valid_word, check_puzzle_exists], render_kw= {'class': 'form_font', 'autocomplete':"off"})
+    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), custom_az_regexp, check_valid_word, check_puzzle_exists], render_kw= {'class': 'form_font', 'autocomplete':"off"})
     submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 class SendPuzzleForm(FlaskForm):

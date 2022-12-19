@@ -64,6 +64,18 @@
 </div>
 </div>
 
+<div style="text-align: center; margin-top:1em; display:inline-block">
+  {% with notices = get_flashed_messages(category_filter=['mgmt notice']) %}
+    {% if notices %}
+      <ul class="notice">
+      {% for message in notices %}
+        <li style="text-align:left">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+</div>
+
 <div style="text-align: center; margin-top:1em;">
   {% with errs = get_flashed_messages(category_filter=['mgmt error']) %}
     {% if errs %}
@@ -78,19 +90,15 @@
 
 <script>
 function openSection(evt, sectionName) {
-
     var i, tabcontent, tablinks;
-
     tabcontent = document.getElementsByClassName("vert_tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }  
-
     document.getElementById(sectionName).style.display = "block";
     evt.currentTarget.className += " active";
   }

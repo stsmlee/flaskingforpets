@@ -579,16 +579,6 @@ div#winner {
     animation: move 35s linear infinite;
 }
 
-/* #squeerdle_rainbow{
-    font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
-    background-image:linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet); 
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;  
-    animation: move 35s linear infinite;
-} */
-
-
 #loser_text{
     margin-top:10px !important;
     font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
@@ -694,7 +684,6 @@ div#winner {
       }
     }
 
-    /* Style the tab */
 .tab {
     overflow: hidden;
     border: 1px solid #ccc;
@@ -703,7 +692,6 @@ div#winner {
     margin-top: 1.5em;
   }
   
-  /* Style the buttons that are used to open the tab content */
 .tab button {
     font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-size:1em;
@@ -716,17 +704,14 @@ div#winner {
     transition: 0.3s;
     }
   
-  /* Change background color of buttons on hover */
 .tab button:hover {
     background-color: #ddd;
 }
   
-  /* Create an active/current tablink class */
 .tab button.active {
     background-color: #ccc;
 }
   
-  /* Style the tab content */
 .tabcontent {
     display: none;
     padding: 6px 12px;

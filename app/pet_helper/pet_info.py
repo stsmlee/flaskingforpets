@@ -33,7 +33,7 @@ def get_token():
     response = requests.post(url, data=params)
     print(response)
     print(response.text)
-    if response != 200:
+    if response.status_code != 200:
         print('!!!something went wrong with getting a token!!!')
     return response.json()['access_token']
 
@@ -253,7 +253,8 @@ def build_params(my_data, type):
         breeds.append(my_data['breed1'])
     if my_data['breed2'] != 'N/A':
         breeds.append(my_data['breed2'])
-    payload['breed'] = ','.join(breeds)
+    if breeds:
+        payload['breed'] = ','.join(breeds)
     if my_data['color'] != 'N/A':
         payload['color'] = my_data['color']
     if my_data['coat'] != 'N/A':
