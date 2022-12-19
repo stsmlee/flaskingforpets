@@ -734,6 +734,7 @@ div#winner {
     border-top: none;
     border-radius: 0px 0px 5px 5px;
     animation: fadeEffect 1s;
+    min-height: 200px;
 }
 
 #flex_tab_container {

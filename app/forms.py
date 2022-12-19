@@ -57,7 +57,7 @@ def update_something(form,field):
         form.nickname.validators.append(Optional())
         form.new_password.validators.append(Optional())
     else:
-        raise StopValidation('You have not changed anything.')
+        raise StopValidation('You have changed neither password nor nickname.')
 
 def check_valid_word(form,field):
     word = field.data.upper()
@@ -66,11 +66,11 @@ def check_valid_word(form,field):
         raise StopValidation('Invalid word.')
 
 def check_puzzle_exists(form, field):
-        conn = get_db_connection()
-        res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (field.data.upper(),)).fetchone()
-        conn.close()
-        if res:
-            raise StopValidation(f'{res["word"]}, puzzle id #{res["id"]}, already exists in our puzzle database.')
+    conn = get_db_connection()
+    res = conn.execute("SELECT word, id FROM puzzles WHERE word = ?", (field.data.upper(),)).fetchone()
+    conn.close()
+    if res:
+        raise StopValidation(f'{res["word"]}, puzzle id #{res["id"]}, already exists in our puzzle database.')
 
 def custom_regexp(form, field):
     pattern = re.compile(r"^[A-Za-z]+$")

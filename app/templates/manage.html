@@ -62,7 +62,18 @@
     </form>
 </div>
 </div>
+</div>
 
+<div style="text-align: center; margin-top:1em;">
+  {% with errs = get_flashed_messages(category_filter=['mgmt error']) %}
+    {% if errs %}
+      <ul class="alert">
+      {% for message in errs %}
+        <li style="text-align:left">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 </div>
 
 <script>
