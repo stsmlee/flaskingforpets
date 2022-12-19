@@ -5,8 +5,8 @@ from flask import Flask, Markup
 from flask_wtf import FlaskForm, Form
 from wtforms import (BooleanField, IntegerField, PasswordField, RadioField,
                      SelectField, StringField,
-                     SubmitField, TextAreaField, widgets, HiddenField, FieldList, FormField)
-from wtforms.validators import (DataRequired, InputRequired, Length, NoneOf,
+                     SubmitField, HiddenField)
+from wtforms.validators import (InputRequired, Length, NoneOf,
                                 NumberRange, StopValidation, ValidationError, Optional, Regexp)
 from app.pet_helper.squeerdle import valid_word, build_word
 import re
@@ -157,14 +157,5 @@ class CreatePuzzleForm(FlaskForm):
 
 class SendPuzzleForm(FlaskForm):
     username = StringField('Username', validators = [InputRequired(), Length(min=3, max=20), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
-    # play_id = SelectField('Puzzles You\'ve Played', render_kw= {'class': 'form_font'})
-    # created_id = SelectField('Puzzles You\'ve Created', render_kw= {'class': 'form_font'})
     send = SubmitField('Send', render_kw= {'class': 'submit_button'})
 
-# class MultiCheckboxField(SelectMultipleField):
-#     widget = widgets.ListWidget(prefix_label=False)
-#     option_widget = widgets.CheckboxInput()
-
-# class DeleteSavesForm(FlaskForm):
-#     saves = MultiCheckboxField('Saved Searches')
-#     submit = SubmitField('Delete Saved Search(es)', render_kw= {'class': 'submit_button'})

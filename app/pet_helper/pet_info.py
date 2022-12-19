@@ -3,12 +3,6 @@ import requests
 import json
 import html
 import sqlite3
-# import pytz
-from datetime import datetime, timezone
-
-
-
-tz_tuple_list = [('UTC', 'UTC'), ('America/Cancun', 'Mexico/Cancun'), ('America/Hermosillo', 'Mexico/Hermosillo'), ('America/Mexico_City', 'Mexico/Mexico_City'), ('America/Tijuana', 'Mexico/Tijuana'), ('Canada/Atlantic', 'Canada/Atlantic'), ('Canada/Central', 'Canada/Central'), ('Canada/Eastern', 'Canada/Eastern'), ('Canada/Mountain', 'Canada/Mountain'), ('Canada/Newfoundland', 'Canada/Newfoundland'), ('Canada/Pacific', 'Canada/Pacific'), ('US/Alaska', 'US/Alaska'), ('US/Arizona', 'US/Arizona'), ('US/Central', 'US/Central'), ('US/Eastern', 'US/Eastern'), ('US/Hawaii', 'US/Hawaii'), ('US/Mountain', 'US/Mountain'), ('US/Pacific', 'US/Pacific')]
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')

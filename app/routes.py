@@ -3,15 +3,12 @@ import sqlite3
 from argon2 import PasswordHasher
 from flask import (Flask, flash, redirect, render_template, request, session,
                    url_for, Markup, abort)
-from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional, Regexp
+from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
 from app.pet_helper import pet_info, squeerdle
 from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
-# import copy
-# import sys
-# import gc
 
 
 pet_types_dict = pet_info.types_dict
@@ -237,14 +234,6 @@ def sort_limit_options(limit):
     options.remove(limit)
     options.insert(0, limit)
     return options
-
-# def flash_puzzle_base_errors(form):
-#     msg_set = set()
-#     for field, errors in form.errors.items():
-#         for error in errors:
-#             msg_set.add(error)
-#     for msg in msg_set:
-#         flash(msg, 'puzzle base error')
 
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
