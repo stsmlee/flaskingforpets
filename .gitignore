@@ -5,3 +5,4 @@ app/**/__pycache__
 sneaky.html
 scrabble_words.txt
 test.py
+check_db.py

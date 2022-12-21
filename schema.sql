@@ -1,7 +1,7 @@
 -- DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS saves;
 -- DROP TABLE IF EXISTS session_table;
-DROP TABLE IF EXISTS puzzlers;
+-- DROP TABLE IF EXISTS puzzlers;
 -- DROP TABLE IF EXISTS puzzles;
 
 CREATE TABLE IF NOT EXISTS users(
@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS puzzlers(
     guess_words TEXT NOT NULL DEFAULT '[]',
     complete INTEGER NOT NULL DEFAULT 0,
     success INTEGER NOT NULL DEFAULT 0,
+    inbox INTEGER NOT NULL DEFAULT 0,
     evals TEXT NOT NULL DEFAULT '[]',
     PRIMARY KEY (user_id, puzzle_id) ON CONFLICT IGNORE,
     FOREIGN KEY (user_id) REFERENCES users(id)

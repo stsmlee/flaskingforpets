@@ -152,17 +152,30 @@ def send_puzzle_to_friend(username, puzzle_id):
     username = username.lower()
     conn = get_db_connection()
     res = conn.execute('SELECT id as user_id, username FROM users WHERE username = ?', (username,)).fetchone()
+    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id, inbox) VALUES (?,?,?)', (res['user_id'], puzzle_id, 1))
+    conn.commit()
     conn.close()
-    add_puzzle_to_puzzler(res['user_id'], puzzle_id)
+
+def get_inbox(user_id):
+    conn = get_db_connection()
+    curs = conn.execute('SELECT puzzle_id, username, nickname FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id LEFT JOIN users ON puzzles.creator_id = users.id WHERE inbox = 1 AND puzzlers.user_id = ? ORDER BY puzzle_id', (user_id,))
+    rows = curs.fetchall()
+    entries = []
+    if rows:    
+        cols = [description[0] for description in curs.description]
+        for row in rows:
+            entry = {}
+            for col, val in zip(cols, row):
+                entry[col] = val
+            entries.append(entry)
+    conn.close()
+    return entries
 
 def get_random_puzzle_id(user_id):
     conn = get_db_connection()
     curs = conn.execute("SELECT puzzle_id FROM puzzlers WHERE user_id = ?", (user_id,)).fetchall()
     prev_puzzles = {row[0] for row in curs}
-    curs = conn.execute("SELECT * FROM puzzles").fetchall()
-    print(len(curs))
     curs = conn.execute("SELECT id as puzzle_id FROM puzzles WHERE creator_id IS NOT ?", (user_id,)).fetchall()
-    print(len(curs))
     new_puzzles = [row['puzzle_id'] for row in curs if row[0] not in prev_puzzles]
     try:
         pick = random.randint(0, len(new_puzzles)-1)
@@ -208,7 +221,7 @@ def get_complete_puzzles(user_id):
 
 def get_incomplete_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT puzzle_id, guess_count, guess_words, word FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=0 ORDER BY puzzle_id', (user_id,))
+    curs = conn.execute('SELECT puzzle_id, guess_count, guess_words, word FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete = 0 AND inbox = 0 ORDER BY puzzle_id', (user_id,))
     rows = curs.fetchall()
     entries = []
     if rows:    
@@ -231,9 +244,23 @@ def get_incomplete_puzzles(user_id):
         conn.close()
     return entries
 
+def get_inbox(user_id):
+    conn = get_db_connection()
+    curs = conn.execute('SELECT puzzle_id, username, nickname FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id LEFT JOIN users ON puzzles.creator_id = users.id WHERE puzzlers.user_id = ? AND inbox = 1 ORDER BY puzzle_id', (user_id,))
+    rows = curs.fetchall()
+    entries = []
+    if rows:    
+        cols = [description[0] for description in curs.description]
+        for row in rows:
+            entry = {}
+            for col, val in zip(cols, row):
+                entry[col] = val
+            entries.append(entry)
+        conn.close()
+    return entries
+
 def puzzle_instance(details):
     puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'])
-    # do i need to include complete and success?
     return puzzle
 
 def get_puzzle_db(user_id, puzzle_id):   

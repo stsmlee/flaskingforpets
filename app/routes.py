@@ -428,11 +428,13 @@ def forbidden_page(error):
 def not_found(error):
     return render_template('404.html'), 404
 
-@app.route('/squeerdle', methods=['GET', 'POST'])
-def puzzle():
+@app.route('/squeerdle/', methods=['GET', 'POST'])
+@app.route('/squeerdle/<default_tab>', methods=['GET', 'POST'])
+def puzzle(default_tab=None):
     incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
     complete = squeerdle.get_complete_puzzles(get_user_id())
     created = squeerdle.get_created_puzzles(get_user_id())
+    inbox = squeerdle.get_inbox(get_user_id())
     create_form = forms.CreatePuzzleForm()
     send_form = forms.SendPuzzleForm()
     if request.method == "POST":
@@ -444,10 +446,12 @@ def puzzle():
                 flash_puzzle_error(create_form)
         if send_form.send.data:
             if send_form.validate():
+                squeerdle.send_puzzle_to_friend()
                 flash('good job', 'puzzle base notice')
             else:
                 flash_puzzle_error(send_form)
-    return render_template('squeerdle.html', incomplete = incomplete, complete = complete, created = created, create_form=create_form, send_form = send_form)
+        return redirect(url_for('puzzle', default_tab = 'Creations'))
+    return render_template('squeerdle.html', default_tab = default_tab, inbox=inbox, incomplete = incomplete, complete = complete, created = created, create_form=create_form, send_form = send_form)
 
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
@@ -456,7 +460,8 @@ def random_puzzle():
         squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
         return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
     else:
-        return "NO MORE"
+        flash('No more puzzles for you at this moment.', 'puzzle error')
+        return redirect(url_for('puzzle'))
 
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):
