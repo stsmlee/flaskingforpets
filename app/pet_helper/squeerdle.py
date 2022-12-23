@@ -198,6 +198,12 @@ def get_created_puzzles(user_id):
         conn.close()
         return entries
 
+def list_of_created_ids(entries):
+    ids = []
+    for entry in entries:
+        ids.append(entry['puzzle_id'])
+    return ids
+
 def get_complete_puzzles(user_id):
     conn = get_db_connection()
     curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY success DESC, puzzle_id', (user_id,))

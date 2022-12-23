@@ -159,3 +159,8 @@ class SendPuzzleForm(FlaskForm):
     username = StringField('Username', validators = [InputRequired(), Length(min=3, max=20), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
     send = SubmitField('Send', render_kw= {'class': 'submit_button'})
 
+def set_send_ids(form, puzzle_ids):
+    for id in puzzle_ids:
+        puzzid = 'puzz'+str(id)
+        setattr(form, puzzid, StringField('Username', validators = [InputRequired(), Length(min=3, max=20), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"}))
+
