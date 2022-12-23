@@ -95,7 +95,7 @@ div.sticker {
     font-weight: bold;
     padding: 4px 12px;
     border-radius: 10px;
-    background: linear-gradient(124deg, #fa6c55, #fa4444, #e8b71d, #e3e81d, #1de840, #1ddde8, #6d64e3, #e566f1, #b851c2);
+    background: linear-gradient(124deg, #ff6f6f, #f79d79, #f6d260, #c6f64e, #1de840, #77f5fc, #9992ff, #c271d5, #f06df9);
     background-size: 1800% 1800%;
     -webkit-animation: rainbow 10s ease infinite;
     -z-animation: rainbow 10s ease infinite;

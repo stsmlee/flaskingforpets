@@ -86,7 +86,7 @@
         <tr><th class="smolcol">ID#</th><th>Word</th><th class="smolcol">Send to a Friend?</th><th class="smolcol">Plays</th><th class="smolcol">Wins</th></tr>
         {% for row in created %}
         <tr>
-        <form method="POST"> {{send_form.hidden_tag()}}
+        <form method="POST"> {{send_form.csrf_token()}} {{send_form.hidden_id(value=row['puzzle_id'])}} {{send_form.hidden_word(value=row['word'])}}
             <td class="smolcol">{{row['puzzle_id']}}</td><td>{{row['word']}}</td><td class="smolcol">{{send_form.username.label()}}: {{send_form.username()}} {{send_form.send()}}</td><td class="smolcol">{{row['plays']}}</td><td class="smolcol">{{row['wins']}}</td>
         </form>
         </tr>
@@ -109,6 +109,7 @@
 <div id="Inbox" class="tabcontent">
   <h3>Puzzles Created for You:</h3>
   {% if inbox %}
+    <p>Click the puzzle ID link to play and move into your incomplete puzzles.</p>
       <table class = 'puzzler_table'>
       <tr><th class="smolcol">ID#</th><th class="smolcol">Creator</th></tr>
       {% for row in inbox %}

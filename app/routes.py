@@ -437,10 +437,9 @@ def puzzle(default_tab=None):
     inbox = squeerdle.get_inbox(get_user_id())
     create_form = forms.CreatePuzzleForm()
     send_form = forms.SendPuzzleForm()
-    forms.set_send_ids(send_form, squeerdle.list_of_created_ids(created))
-    print(send_form.data)
-    print(send_form.__dict__.items())
-
+    # forms.set_send_ids(send_form, squeerdle.list_of_created_ids(created))
+    # print(send_form.data)
+    # print(send_form.__dict__.items())
     if request.method == "POST":
         if create_form.submit.data:
             print(create_form.data)
@@ -451,7 +450,9 @@ def puzzle(default_tab=None):
         if send_form.send.data:
             if send_form.validate():
                 # squeerdle.send_puzzle_to_friend()
-                flash(f'{send_form.username.data}', 'puzzle base notice')
+                flash(f'Sent to {send_form.username.data}', 'puzzle base notice')
+                print(f'hidden data: {send_form.hidden_id.data}')
+                print(f'hidden word: {send_form.hidden_word.data}')
                 flash('good job', 'puzzle base notice')
             else:
                 flash_puzzle_error(send_form)
