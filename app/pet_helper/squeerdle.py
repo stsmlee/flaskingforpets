@@ -271,8 +271,13 @@ def puzzle_instance(details):
 
 def get_puzzle_db(user_id, puzzle_id):   
     conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
+    # curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success, inbox FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
+    # row = curs.fetchone()
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success, inbox FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
     row = curs.fetchone()
+    if row['inbox'] == 1:
+        conn.execute('UPDATE puzzlers SET inbox = 0 WHERE user_id = ? AND puzzle_id =?', (user_id, puzzle_id))
+        conn.commit()
     if row:
         cols = [description[0] for description in curs.description]
         details = {}

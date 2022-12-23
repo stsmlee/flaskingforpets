@@ -28,7 +28,11 @@
 
     <button class="tablinks" onclick="openSection(event, 'Create')">Create New</button>
 
+  {% if inbox %}
+    <button class="tablinks" onclick="openSection(event, 'Inbox')">Inbox &#x1F440;</button>
+  {% else %}
     <button class="tablinks" onclick="openSection(event, 'Inbox')">Inbox</button>
+  {% endif %}
 </div>
   
 <div id="Incomplete" class="tabcontent">
@@ -109,7 +113,7 @@
 <div id="Inbox" class="tabcontent">
   <h3>Puzzles Created for You:</h3>
   {% if inbox %}
-    <p>Click the puzzle ID link to play and move into your incomplete puzzles.</p>
+    <p>Click the puzzle ID link to play and move it into your incomplete puzzles.</p>
       <table class = 'puzzler_table'>
       <tr><th class="smolcol">ID#</th><th class="smolcol">Creator</th></tr>
       {% for row in inbox %}
