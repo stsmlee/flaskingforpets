@@ -141,6 +141,15 @@ div.sticker {
     text-align: center;
 }
 
+#icon_footer {
+    font-size:.5em;
+    text-align: center;
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 nav.page {
     margin-bottom: 16px;
     display: flex;
@@ -435,8 +444,8 @@ ul.notice > li {
     display: inline-block;
     padding: 8px 16px;
     /* margin: 5px 5px; */
-    margin: 0px 5px;
-    font-size: 1.3em;
+    margin: 5px 5px 0px 5px;
+    font-size: 1em;
     color: #1e0246;
     background-color: #c8b8f4d0;
     border-radius: 30px;

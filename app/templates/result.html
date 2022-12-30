@@ -50,8 +50,10 @@
                 {% endfor %}
                 <br>
             {% endif %}
-            {{pet['Description']}}<a href="{{pet['Petfinder Profile Link']}}" title="{{pet['Name']}}'s Petfinder Profile" class="dotdotdot">...</a>
-            <br>
+            {% if pet['Description'] %}
+                {{pet['Description']}}<a href="{{pet['Petfinder Profile Link']}}" title="{{pet['Name']}}'s Petfinder Profile" class="dotdotdot">...</a>
+                <br>
+            {% endif %}
 
     {% if pet['Photos'] %}
     </p>
