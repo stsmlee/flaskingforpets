@@ -12,8 +12,11 @@ p {
 
 #container {
     position: relative;
-    padding: 8px;
-    min-height: calc(100vh - 16px);
+    /* padding: 8px; */
+    padding: 0px 8px;
+    /* min-height: calc(100vh - 16px); */
+    min-height: calc(100vh - 70px);
+
 }
 
 #popup {
@@ -23,7 +26,8 @@ p {
     max-width: 310px;
     float: right;
     padding: 2px 12px;
-    margin: 10px 25px;
+    /* margin: 10px 25px; */
+    margin:0px 25px;
     color: #1e0246;
     background-color: #c8b8f4d0;
     line-height: 0em;
@@ -90,7 +94,8 @@ div.sticker {
 
 .gimme_button {
     font-family: Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
-    font-size: 100%;
+    font-size: 75%;
+    vertical-align: top;
     color: #1e0246;
     font-weight: bold;
     padding: 4px 12px;
@@ -159,20 +164,33 @@ h1 {
     color:midnightblue
 }
 
-#header {
+/* #header {
     font-size: 1em;
     padding: .67em .67em 0px .67em;
     display: flex;
     justify-content: space-between;
     align-items: center;
+} */
+
+#header {
+    font-size: 1em;
+    padding: 16px 10px 16px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #cebff5d0;
 }
 
-#header a:link{
+/* #header a:link{
     text-decoration: underline overline dotted;
-    /* text-underline-offset: 3px; */
+    text-underline-offset: 3px;
     text-underline-position: under;
     top: 0px;
-}
+} */
+
+#header a:link{
+    text-decoration: none;
+    }
 
 #header a:hover{
     text-decoration: none;
@@ -389,7 +407,8 @@ ul.alert > li {
 ul.notice {
     float: right;
     padding: 2px 16px;
-    margin: 10px 25px;
+    /* margin: 10px 25px; */
+    margin: 0px 25px;
     color: #1e0246;
     background-color: #c8b8f4d0;
     border-radius: 10px;
@@ -415,7 +434,8 @@ ul.notice > li {
 .response_error {
     display: inline-block;
     padding: 8px 16px;
-    margin: 5px 5px;
+    /* margin: 5px 5px; */
+    margin: 0px 5px;
     font-size: 1.3em;
     color: #1e0246;
     background-color: #c8b8f4d0;
@@ -509,7 +529,8 @@ div.change_limit {
 }
 
 #squeerdle_wrapper {
-    padding:3.5em 3.75em;
+    /* padding:3.5em 3.75em; */
+    padding:0px 3.75em;
 }
 
 #abort {

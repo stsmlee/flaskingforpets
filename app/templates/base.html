@@ -8,45 +8,47 @@
     <title>{%block title%}{% endblock %}</title>
   </head>
   <body>
+
+    <div id = "header">
+      <nav id = 'home'>
+        <ul>
+          <li><a href="/">Home</a></li>
+          {% if type %}
+            {% if type == 'Small & Furry' or type == 'Barnyard' %}
+            &#x25B9; <li><a href="{{url_for('animals', type=type)}}">{{type}}</a></li>
+            {% else %}
+            &#x25B9; <li><a href="{{url_for('animals', type=type)}}">{{type}}s</a></li>
+            {% endif  %}
+          {% endif %}
+          {% if payload %}
+            {% if savename %}
+            &#x25B9; <li><a href="{{url_for('search_saved', type=type, payload=payload, page=1, savename=savename)}}">Start of Results</a></li>
+            {% else %}
+            &#x25B9; <li><a href="{{url_for('search', type=type, payload=payload, page=1)}}">Start of Results</a></li>
+            {% endif %}
+          {% endif %}
+          {% if puzzle %}
+            &#x25B9; <li><a href="{{url_for('puzzle')}}">Squeerdle Basecamp</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      <nav>
+        <ul>      
+        {%if session['user_token']%}
+        <li><a href="{{url_for('check_updates')}}" id ='news' onclick="patience()">What's News?</a></li>
+        <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
+        <li><a href="{{url_for('logout')}}">Log Out</a></li>
+        {%else%}
+        <li><a href="{{url_for('register')}}">Register</a></li>
+        {%endif%}
+        </ul>
+      </nav>
+    </div>
+
     <div id="container">
-      <div id = "header">
-        <nav id = 'home'>
-          <ul>
-            <li><a href="/">Home</a></li>
-            {% if type %}
-              {% if type == 'Small & Furry' or type == 'Barnyard' %}
-              &#x25B9; <li><a href="{{url_for('animals', type=type)}}">{{type}}</a></li>
-              {% else %}
-              &#x25B9; <li><a href="{{url_for('animals', type=type)}}">{{type}}s</a></li>
-              {% endif  %}
-            {% endif %}
-            {% if payload %}
-              {% if savename %}
-              &#x25B9; <li><a href="{{url_for('search_saved', type=type, payload=payload, page=1, savename=savename)}}">Start of Results</a></li>
-              {% else %}
-              &#x25B9; <li><a href="{{url_for('search', type=type, payload=payload, page=1)}}">Start of Results</a></li>
-              {% endif %}
-            {% endif %}
-            {% if puzzle %}
-              &#x25B9; <li><a href="{{url_for('puzzle')}}">Squeerdle Basecamp</a></li>
-            {% endif %}
-          </ul>
-        </nav>
-        <nav>
-          <ul>      
-          {%if session['user_token']%}
-          <li><a href="{{url_for('check_updates')}}" id ='news' onclick="patience()">What's News?</a></li>
-          <li><a href="{{url_for('manage_account')}}">Manage Your Account</a></li> 
-          <li><a href="{{url_for('logout')}}">Log Out</a></li>
-          {%else%}
-          <li><a href="{{url_for('register')}}">Register</a></li>
-          {%endif%}
-          </ul>
-        </nav>
-      </div>
+
 
       <div id="popup" style="display: none;">
-      <!-- <div id="popup"> -->
         <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
         <div id = "msg">Please wait while we take a look!</div>
         <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>

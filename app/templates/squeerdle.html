@@ -8,7 +8,7 @@
 <h1>Welcome to Squeerdle!</h1>
 
 <form method="GET" action="{{url_for('random_puzzle')}}"> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
-    <h2><input type="submit" value="Gimme a random puzzle!" class = 'gimme_button'></h2>
+    <h1><input type="submit" value="Gimme a random puzzle!" class = 'gimme_button'></h1>
 </form>
 
 <div class="tab">

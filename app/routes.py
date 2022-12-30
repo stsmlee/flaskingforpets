@@ -448,8 +448,6 @@ def puzzle(default_tab=None):
             if send_form.validate():
                 squeerdle.send_puzzle_to_friend(send_form.username.data, int(send_form.hidden_id.data))
                 flash(f'Sent {send_form.hidden_word.data} to {send_form.username.data}! Hope they like :)', 'puzzle base notice')
-                # print(f'hidden data: {send_form.hidden_id.data}')
-                # print(f'hidden word: {send_form.hidden_word.data}')
             else:
                 flash_puzzle_error(send_form)
         return redirect(url_for('puzzle', default_tab = 'Creations'))
