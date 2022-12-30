@@ -315,6 +315,63 @@ ul.index > li > a {
     vertical-align: middle;
 }
 
+.animal_type {
+    background-size: auto 50px;
+    background-repeat: no-repeat;
+    background-position-y: 5px;
+    background-position-x: center;
+    display: inline-block;
+    height: 100px;
+    width: 120px;
+    background-color: #cebff5d0;
+    text-align: center;
+    border-radius: 8px;
+    vertical-align: middle;
+    /*     line-height: 105px; */
+    font-size: 16px;
+    font-family: inherit;
+    padding-top: 60px;
+    box-sizing: border-box;
+    white-space:normal;
+    margin-top: 4px;
+}
+
+.animal_form {
+    display:inline;
+}
+
+.dog_icon {
+    background-image: url('dog_icon.png');
+}
+
+.cat_icon {
+    background-image: url('cat_icon.png');
+}
+
+.rabbit_icon {
+    background-image: url('rabbit_icon.png');
+}
+
+.small_furry_icon {
+    background-image: url('hamster_icon.png');
+}
+
+.unicorn_icon {
+    background-image: url('unicorn_icon.png');
+}
+
+.bird_icon {
+    background-image: url('bird_icon.png')
+}
+
+.dino_icon {
+    background-image: url('dino_icon.png');
+}
+
+.pig_icon {
+    background-image: url('pig_icon.png');
+}
+
 table.puzzler_table {
     line-height: 1.5em;
     border-collapse: collapse;

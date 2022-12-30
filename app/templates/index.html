@@ -3,7 +3,7 @@
 {%block title%}Flasking for Pets{%endblock%}
 
 {%block content%}
-<div id="padded_wrapper">
+<div id="padded_wrapper" style = "text-align: center;">
 
 {% if not session['user_token'] %}
 <h1>SUP DOG</h1>
@@ -24,16 +24,43 @@
 {% endif %}
 
 <h4>What type are you looking for?</h4>
-<ul class="index">
-    {% for type in pet_types_dict %} 
-        <li><a href = "{{url_for('animals', type=type)}}">{{type}}</a></li>
-    {% endfor %}
-</ul>
+
+<div>
+    <form method="GET" action="{{url_for('animals', type='Dog')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Dog!" class = 'dog_icon animal_type'>
+    </form>
+    <form method="GET" action="{{url_for('animals', type='Cat')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Cat!" class = 'cat_icon animal_type'>
+    </form>
+    <form method="GET" action="{{url_for('animals', type='Rabbit')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Rabbit!" class = 'rabbit_icon animal_type'>
+    </form>
+    <form method="GET" action="{{url_for('animals', type='Small & Furry')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Lil Guys!" class = 'small_furry_icon animal_type'>
+    </form>
+
+    <br>
+
+    <form method="GET" action="{{url_for('animals', type='Horse')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Horse!" class = 'unicorn_icon animal_type'>
+    </form>
+    <form method="GET" action="{{url_for('animals', type='Bird')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Bird!" class = 'bird_icon animal_type'>
+    </form>
+    <form method="GET" action="{{url_for('animals', type='Scales, Fins & Other')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Scales & Fins!" class = 'dino_icon animal_type'>
+    </form>
+    <form method="GET" action="{{url_for('animals', type='Barnyard')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
+        <input type="submit" value="Barnyard!" class = 'pig_icon animal_type'>
+    </form>
+    
+</div>
+
 
 {% if re_form %}
 <h4>You can reuse a search below!</h4>
 <form method="POST" onsubmit="wait()">
-    <div id = "form_submit" style = "height:25px;"> {{ re_form.hidden_tag() }}
+    <div id = "form_submit" style = "height:25px; justify-content: center;"> {{ re_form.hidden_tag() }}
         <div>{{ re_form.savename.label }}: {{ re_form.savename() }} {{ re_form.submit() }}</div>
         <div id="wait" style="display: none;">
             <div><img src="{{ url_for('static', filename = 'meow.gif') }}"></div>
