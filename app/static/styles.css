@@ -25,9 +25,12 @@ p {
     width: 100%;
     max-width: 310px;
     float: right;
+    /* position: absolute;
+    right: 10px;
+    top: 0px; */
     padding: 2px 12px;
-    /* margin: 10px 25px; */
-    margin:0px 25px;
+    margin: 10px 25px;
+    /* margin:0px 25px; */
     color: #1e0246;
     background-color: #c8b8f4d0;
     line-height: 0em;
@@ -472,9 +475,12 @@ ul.alert > li {
 
 ul.notice {
     float: right;
+    /* position: absolute;
+    right: 10px;
+    top: 0px; */
     padding: 2px 16px;
-    /* margin: 10px 25px; */
-    margin: 0px 25px;
+    margin: 10px 25px;
+    /* margin: 0px 25px; */
     color: #1e0246;
     background-color: #c8b8f4d0;
     border-radius: 10px;
@@ -499,9 +505,15 @@ ul.notice > li {
 
 .response_error {
     display: inline-block;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    text-align: center;
     padding: 8px 16px;
     /* margin: 5px 5px; */
-    margin: 5px 5px 0px 5px;
+    margin: 5px auto 5px auto;
     font-size: 1em;
     color: #1e0246;
     background-color: #c8b8f4d0;
@@ -510,6 +522,7 @@ ul.notice > li {
 
 .puzzle_error{
     display: inline-block;
+    margin-top: -10px;
     padding: 2px 16px;
     color: #970020;
     background-color: #ffd5de;
@@ -591,12 +604,13 @@ div.change_limit {
 }
 
 #padded_wrapper {
-    padding:0px 3.75em;
+    /* padding:0px 3.75em; */
+    padding:3.5em 3.75em;
 }
 
 #squeerdle_wrapper {
-    /* padding:3.5em 3.75em; */
-    padding:0px 3.75em;
+    padding:3.5em 3.75em;
+    /* padding:0px 3.75em; */
 }
 
 #abort {

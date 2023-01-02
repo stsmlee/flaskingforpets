@@ -3,6 +3,19 @@
 {%block title%}Flasking for Pets{%endblock%}
 
 {%block content%}
+
+<div>
+    {% with res_errors = get_flashed_messages(category_filter=['response error']) %}
+    {% if res_errors %}
+        <div class="response_error">
+        {% for message in res_errors %}
+        {{ message }}
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+</div>
+
 <div id="padded_wrapper" style = "text-align: center;">
 
 {% if not session['user_token'] %}
@@ -72,8 +85,8 @@
 {% endif %}
 
 {% if  session['user_token'] %}
-<h4>You can try the little side game of Squeerdle, it's like budget Wordle, but more rainbow, and you can create words and send to friends.</h4>
-<a href="{{url_for('puzzle')}}">Click here to play!</a>
+<h4><a href="{{url_for('puzzle')}}">Try a little side game of Squeerdle!</a></h4>
+<p>Think budget Wordle, but a little more rainbow, and you can create words and send to friends.</p>
 {% endif %}
 
 <div class = 'sticker'>

@@ -223,9 +223,9 @@ def get_token():
     pet_info.header = {"Authorization": auth}
 
 def try_token():
-    try: 
-        get_token()
-    except: 
+    # try: 
+    #     get_token()
+    # except: 
         # flash('Petfinder is currently down, please try again later.', 'response error')
         return redirect(url_for('index'))
 

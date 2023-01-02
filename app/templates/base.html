@@ -56,10 +56,10 @@
       <div>
         {% with notices = get_flashed_messages(category_filter=['notice']) %}
         {% if notices %}
-          <ul class="notice" >
+          <ul class="notice">
           {% for message in notices %}
             {% if message == "Nothing new for you, I'm afraid. Maybe try a new search!"%}
-              <li>{{ message }}</li>
+              <li class="notice">{{ message }}</li>
             {% else %}
               <li class="new">{{ message }}</li>
             {% endif %}
@@ -69,7 +69,7 @@
       {% endwith %}
       </div>
 
-      <div style="text-align: center;">
+      <!-- <div style="text-align: center;">
         {% with res_errors = get_flashed_messages(category_filter=['response error']) %}
         {% if res_errors %}
           <div class="response_error">
@@ -79,7 +79,7 @@
           </div>
         {% endif %}
         {% endwith %}
-      </div>
+      </div> -->
 
       {% block content %}
       {% endblock %}
@@ -106,6 +106,10 @@
           else {
             popup.style.display = "none";
           }
+
+          let notice = document.getElementsByClassName('notice new');
+          // notice.style.display = "none";
+          console.log('FUCK')
       }
     </script>
   </body>
