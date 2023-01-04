@@ -84,7 +84,7 @@
       {% block content %}
       {% endblock %}
 
-      <div>
+      <div style="text-align:center;">
         {% with errs = get_flashed_messages(category_filter=['error']) %}
           {% if errs %}
             <ul class="alert">

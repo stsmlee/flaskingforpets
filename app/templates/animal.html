@@ -4,7 +4,7 @@
 
 {%block content%}
 
-<div id="padded_wrapper">
+<div id="padded_wrapper" style="text-align:center">
 
 {% if type == 'Small & Furry' %}
 <h1>So you want something small and furry!</h1>
@@ -18,30 +18,33 @@
 <form method="POST" onsubmit="wait()" id = "filter_form">
     {{ form.hidden_tag() }}
     {% if type in ['Dog','Cat','Rabbit'] %}
-        <div>{{ form.breed1.label }} {{ form.breed1()}}</div>
-        <div>{{ form.breed2.label }} {{ form.breed2()}}</div>
+        <div><b>{{ form.breed1.label }}?</b> {{ form.breed1()}}</div>
+        <div><b>{{ form.breed2.label }}?</b> {{ form.breed2()}}</div>
     {% else %}
-        <div><label for="breed1">Species</label> {{ form.breed1() }}</div>
+        <div><b><label for="breed1">Species</label></b> {{ form.breed1() }}</div>
         <div style="display:none"><label for="breed2">Species #2</label> {{ form.breed2() }}</div>
     {% endif %}
-    <div>{{ form.color.label }} {{ form.color()}}</div>
-    <div>{{ form.coat.label }} {{ form.coat()}}</div>
-    <div>{{ form.gender.label }} {{ form.gender()}}</div>
-    <b>Care to filter by size?</b>
-    <div>{{ form.small() }} {{ form.small.label }} {{ form.medium() }} {{ form.medium.label }} {{ form.large() }} {{ form.large.label }} {{ form.xlarge() }} {{ form.xlarge.label }}</div>
-    <b>Care to filter by age?</b>
-    <div>{{ form.baby() }} {{form.baby.label}} {{ form.young() }} {{form.young.label}} {{ form.adult() }} {{form.adult.label}} {{ form.senior() }} {{form.senior.label}} </div>
-    <b>Care to filter by your home needs?</b>
-    <div>{{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }} 
+    <div class="break"></div>
+    <div><b>{{ form.color.label }}? </b>{{ form.color()}} </div>
+    <div><b>{{ form.coat.label }}? </b>{{ form.coat()}} </div>
+    <div><b>{{ form.gender.label }}? </b>{{ form.gender()}} </div>
+    <div class="break"></div>
+    <div><b>Size?</b> {{ form.small() }} {{ form.small.label }} {{ form.medium() }} {{ form.medium.label }} {{ form.large() }} {{ form.large.label }} {{ form.xlarge() }} {{ form.xlarge.label }}</div>
+    <div><b>Age?</b> {{ form.baby() }} {{form.baby.label}} {{ form.young() }} {{form.young.label}} {{ form.adult() }} {{form.adult.label}} {{ form.senior() }} {{form.senior.label}} </div>
+    <div class="break"></div>
+    <div><b>Home needs?</b> {{ form.children() }} {{ form.children.label }} {{ form.cats() }} {{ form.cats.label }} {{ form.dogs() }} {{ form.dogs.label }} 
         {% if type == 'Dog' %}
         {{form.housetrained()}} {{form.housetrained.label}}
         {% endif %}
     </div>
-    <b>Where are you?</b>
-    <div>{{ form.zipcode.label }} {{ form.zipcode() }} {{ form.distance.label }} {{ form.distance() }}</div>
+    <div class="break"></div>
+    <div><b>{{ form.zipcode.label }}?</b> {{ form.zipcode() }} </div>
+    <div><b>{{ form.distance.label }}?</b> {{ form.distance() }}</div>
     {% if login %}
+    <div class="break"></div>
     <div>If you want to save your search for future use, enter a name: {{ form.savename() }}</div>
     {% endif %}
+    <div class="break"></div>
     <div id = "form_submit" style = "height:40px"> 
         <div>{{ form.submit() }}</div>
         <div id="wait" style="display: none;">
