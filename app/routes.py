@@ -454,17 +454,25 @@ def puzzle(default_tab=None):
             return redirect(url_for('puzzle', default_tab = 'Creations'))
         return render_template('squeerdle.html', default_tab = default_tab, inbox=inbox, incomplete = incomplete, complete = complete, created = created, create_form=create_form, send_form = send_form)
     except:
-        flash('You need to register and/or log in to play Squeerdle.', 'error')
-        return redirect(url_for('index'))
+        if not session.get('user_token'):
+            flash('You need to register and/or log in to play Squeerdle.', 'error')
+            return redirect(url_for('index'))
+        else:
+            return render_template('squeerdle_error.html')
+
+
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
-    puzzle_id = squeerdle.get_random_puzzle_id(get_user_id())
-    if puzzle_id:
-        squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
-        return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
-    else:
-        flash('No more puzzles for you at this moment.', 'puzzle error')
-        return redirect(url_for('puzzle'))
+    try:
+        puzzle_id = squeerdle.get_random_puzzle_id(get_user_id())
+        if puzzle_id:
+            squeerdle.add_puzzle_to_puzzler(get_user_id(), puzzle_id)
+            return redirect(url_for('play_puzzle', puzzle_id=puzzle_id))
+        else:
+            flash('No more puzzles for you at this moment.', 'puzzle error')
+            return redirect(url_for('puzzle'))
+    except:
+        return render_template('squeerdle_error.html')
 
 @app.route('/squeerdle/play/<int:puzzle_id>/', methods=['GET', 'POST'])
 def play_puzzle(puzzle_id):

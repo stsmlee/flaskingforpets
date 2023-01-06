@@ -65,7 +65,6 @@
     <form method="GET" action="{{url_for('animals', type='Barnyard')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
         <input type="submit" value="Barnyard!" class = 'pig_icon animal_type'>
     </form>
-    
 </div>
 
 {% if re_form %}
