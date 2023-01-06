@@ -460,7 +460,6 @@ def puzzle(default_tab=None):
         else:
             return render_template('squeerdle_error.html')
 
-
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
     try:
