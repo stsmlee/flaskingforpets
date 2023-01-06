@@ -616,9 +616,17 @@ div.change_limit {
 }
 
 #padded_wrapper {
-    /* padding:0px 3.75em; */
-    padding:3.5em 3.75em;
+    /* padding:3.5em 3.75em; */
     padding: 56px 60px ;
+    text-align: center;
+}
+
+#register_div{
+    line-height:2.5em !important; 
+    text-align:left; 
+    width:fit-content;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 #squeerdle_wrapper {

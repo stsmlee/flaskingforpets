@@ -84,10 +84,9 @@
 </form>
 {% endif %}
 
-{% if  session['user_token'] %}
 <h4><a href="{{url_for('puzzle')}}">Try a little side game of Squeerdle!</a></h4>
 <p>Think budget Wordle, but a little more rainbow, and you can create words and send to friends.</p>
-{% endif %}
+<p>You will need to <a href="{{url_for('register')}}">register</a> an account and/or log in to play.</p>
 
 <div class = 'sticker'>
     <img src = "{{ url_for('static', filename = 'kimchibun.png') }}" alt = "the cutest pitbull ever, Kimchi Bun" style = "width:auto;height:218px;">
