@@ -459,7 +459,7 @@ input.checkbox {
     font-size:.95em;
 }
 
-ul.alert {
+ul.error {
     display: inline-block;
     padding: 2px 16px;
     margin: .67em 60px;
@@ -469,7 +469,7 @@ ul.alert {
     list-style: none;
 }
 
-ul.alert > li::before {
+ul.error > li::before {
     content: '';
     display:inline-block; height:10px; width:10px;
     background-size: contain;
@@ -481,7 +481,7 @@ ul.alert > li::before {
     vertical-align: middle;
   }
 
-ul.alert > li {
+ul.error > li {
     line-height: 1.5em;
 }
 

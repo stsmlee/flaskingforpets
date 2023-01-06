@@ -431,28 +431,31 @@ def not_found(error):
 @app.route('/squeerdle/', methods=['GET', 'POST'])
 @app.route('/squeerdle/<default_tab>', methods=['GET', 'POST'])
 def puzzle(default_tab=None):
-    incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
-    complete = squeerdle.get_complete_puzzles(get_user_id())
-    created = squeerdle.get_created_puzzles(get_user_id())
-    inbox = squeerdle.get_inbox(get_user_id())
-    create_form = forms.CreatePuzzleForm()
-    send_form = forms.SendPuzzleForm()
-    if request.method == "POST":
-        if create_form.submit.data:
-            print(create_form.data)
-            if create_form.validate():
-                squeerdle.add_puzzle_word_db(create_form.word.data, get_user_id())
-            else:
-                flash_puzzle_error(create_form)
-        if send_form.send.data:
-            if send_form.validate():
-                squeerdle.send_puzzle_to_friend(send_form.username.data, int(send_form.hidden_id.data))
-                flash(f'Sent {send_form.hidden_word.data} to {send_form.username.data}! Hope they like :)', 'puzzle base notice')
-            else:
-                flash_puzzle_error(send_form)
-        return redirect(url_for('puzzle', default_tab = 'Creations'))
-    return render_template('squeerdle.html', default_tab = default_tab, inbox=inbox, incomplete = incomplete, complete = complete, created = created, create_form=create_form, send_form = send_form)
-
+    try:
+        incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
+        complete = squeerdle.get_complete_puzzles(get_user_id())
+        created = squeerdle.get_created_puzzles(get_user_id())
+        inbox = squeerdle.get_inbox(get_user_id())
+        create_form = forms.CreatePuzzleForm()
+        send_form = forms.SendPuzzleForm()
+        if request.method == "POST":
+            if create_form.submit.data:
+                print(create_form.data)
+                if create_form.validate():
+                    squeerdle.add_puzzle_word_db(create_form.word.data, get_user_id())
+                else:
+                    flash_puzzle_error(create_form)
+            if send_form.send.data:
+                if send_form.validate():
+                    squeerdle.send_puzzle_to_friend(send_form.username.data, int(send_form.hidden_id.data))
+                    flash(f'Sent {send_form.hidden_word.data} to {send_form.username.data}! Hope they like :)', 'puzzle base notice')
+                else:
+                    flash_puzzle_error(send_form)
+            return redirect(url_for('puzzle', default_tab = 'Creations'))
+        return render_template('squeerdle.html', default_tab = default_tab, inbox=inbox, incomplete = incomplete, complete = complete, created = created, create_form=create_form, send_form = send_form)
+    except:
+        flash('You need to register and/or log in to play Squeerdle.', 'error')
+        return redirect(url_for('index'))
 @app.route('/squeerdle/random', methods=['GET', 'POST'])
 def random_puzzle():
     puzzle_id = squeerdle.get_random_puzzle_id(get_user_id())

@@ -30,14 +30,13 @@
 <h4>Do you want to log in to your session?</h4>
 <form method="POST"><div>
     {{ form.hidden_tag() }}
-    {{form.username.label}}: {{form.username()}} 
-    {{form.password.label}}: {{form.password()}}
+    {{form.username()}}  
+    {{form.password()}}
     {{form.submit()}}
 <div></form>
 {% endif %}
 
 <h4>What type are you looking for?</h4>
-
 <div>
     <form method="GET" action="{{url_for('animals', type='Dog')}}" class = 'animal_form'> <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 
         <input type="submit" value="Dog!" class = 'dog_icon animal_type'>
@@ -69,7 +68,6 @@
     
 </div>
 
-
 {% if re_form %}
 <h4>You can reuse a search below!</h4>
 <form method="POST" onsubmit="wait()">
@@ -84,10 +82,13 @@
 </form>
 {% endif %}
 
-<h4><a href="{{url_for('puzzle')}}">Try a little side game of Squeerdle!</a></h4>
-<p>Think budget Wordle, but a little more rainbow, and you can create words and send to friends.</p>
-<p>You will need to <a href="{{url_for('register')}}">register</a> an account and/or log in to play.</p>
+<br>
 
+<h4><a href="{{url_for('puzzle')}}">Try a little side game of Squeerdle!</a></h4>
+<p>Think budget Wordle, but a little more rainbow, and you can create words and send to friends.
+{% if not session['user_token'] %}
+<br>You will need to <a href="{{url_for('register')}}">register</a> an account and/or log in to play.</p>
+{% endif %}
 <div class = 'sticker'>
     <img src = "{{ url_for('static', filename = 'kimchibun.png') }}" alt = "the cutest pitbull ever, Kimchi Bun" style = "width:auto;height:218px;">
 </div>
