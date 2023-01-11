@@ -152,11 +152,11 @@ class PuzzleForm(FlaskForm):
         return True
 
 class CreatePuzzleForm(FlaskForm):
-    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), custom_az_regexp, check_valid_word, check_puzzle_exists], render_kw= {'class': 'form_font', 'autocomplete':"off"})
-    submit = SubmitField('Submit', render_kw= {'class': 'submit_button', 'placeholder': '5-7 characters'})
+    word = StringField('Your Word', validators = [InputRequired(), Length(min=5, max=7), custom_az_regexp, check_valid_word, check_puzzle_exists], render_kw= {'class': 'form_font', 'autocomplete':"off", 'placeholder': '5-7 characters'})
+    submit = SubmitField('Submit', render_kw= {'class': 'submit_button'})
 
 class SendPuzzleForm(FlaskForm):
-    username = StringField('Username', validators = [InputRequired(), Length(min=3, max=20), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off"})
+    username = StringField('Username', validators = [InputRequired(), Length(min=3, max=20), verify_friend], render_kw= {'class': 'form_font', 'autocomplete':"off", 'placeholder': 'Username'})
     hidden_id = HiddenField()
     hidden_word = HiddenField()
     send = SubmitField('Send', render_kw= {'class': 'submit_button'})

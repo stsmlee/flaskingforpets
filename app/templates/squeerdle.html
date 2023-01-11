@@ -91,7 +91,7 @@
         {% for row in created %}
         <tr>
         <form method="POST"> {{send_form.csrf_token()}} {{send_form.hidden_id(value=row['puzzle_id'])}} {{send_form.hidden_word(value=row['word'])}}
-            <td class="smolcol">{{row['puzzle_id']}}</td><td>{{row['word']}}</td><td class="smolcol">{{send_form.username.label()}}: {{send_form.username()}} {{send_form.send()}}</td><td class="smolcol">{{row['plays']}}</td><td class="smolcol">{{row['wins']}}</td>
+            <td class="smolcol">{{row['puzzle_id']}}</td><td>{{row['word']}}</td><td class="smolcol">{{send_form.username()}} {{send_form.send()}}</td><td class="smolcol">{{row['plays']}}</td><td class="smolcol">{{row['wins']}}</td>
         </form>
         </tr>
         {% endfor %}
