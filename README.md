@@ -10,4 +10,4 @@ Registered users can also play the bonus minigame of Squeerdle. It is much like 
   
   -Add new words to the database and send these words to others with known usernames.
   
-  -Keep track of their created puzzles’ play and win counts.
+  -Keep track of their created puzzles’ play and win counts. 
