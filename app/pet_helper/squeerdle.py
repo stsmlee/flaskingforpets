@@ -296,7 +296,7 @@ def get_puzzle_db(user_id, puzzle_id):
 def puzzle_loader(user_id, puzzle_id):
     puzzle_info = get_puzzle_db(user_id= user_id, puzzle_id=puzzle_id)
     if puzzle_info:
-        print('puzzle_info', puzzle_info)
+        # print('puzzle_info', puzzle_info)
         puzzle = puzzle_instance(puzzle_info)
         return(puzzle)
 
