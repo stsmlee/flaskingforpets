@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     nickname TEXT,
-    -- timezone TEXT DEFAULT 'US/Eastern',
     password TEXT NOT NULL
 );
 
@@ -27,8 +26,6 @@ CREATE TABLE IF NOT EXISTS session_table(
     user_token TEXT UNIQUE PRIMARY KEY,
     user_id INTEGER NOT NULL,
     age TIMESTAMP,
-        -- ON CONFLICT REPLACE,
-        -- if you replace it will log out their other sessions on other devices/browsers
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE

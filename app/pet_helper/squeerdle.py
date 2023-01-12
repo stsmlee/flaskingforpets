@@ -85,11 +85,6 @@ def update_puzzle_stats_db(puzzle_id, success):
     conn.commit()
     conn.close()
 
-def get_attrs(puzzle):
-    # attrs = [a for a in dir(puzzle) if not a.startswith('__')]
-    # return attrs
-    return puzzle.__dict__.items()
-
 def add_placeholders(puzzle_form):
     puzzle_form.l0.render_kw['placeholder'] = puzzle_form.l0.data
     puzzle_form.l1.render_kw['placeholder'] = puzzle_form.l1.data
@@ -271,8 +266,6 @@ def puzzle_instance(details):
 
 def get_puzzle_db(user_id, puzzle_id):   
     conn = get_db_connection()
-    # curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success, inbox FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
-    # row = curs.fetchone()
     curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, evals, complete, success, inbox FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND puzzles.id = ?', (user_id,puzzle_id))
     row = curs.fetchone()
     if row['inbox'] == 1:

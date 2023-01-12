@@ -25,15 +25,12 @@ def get_token():
         "client_id": client_id
     }
     response = requests.post(url, data=params)
-    print(response)
-    print(response.text)
+    # print(response)
+    # print(response.text)
     if response.status_code != 200:
         print('!!!something went wrong with getting a token!!!')
     return response.json()['access_token']
 
-# token = get_token()
-# auth = "Bearer " + token
-# header = {"Authorization": auth}
 header = {}
 
 def update_types():
@@ -74,8 +71,7 @@ animals_url = 'https://api.petfinder.com/v2/animals'
 
 def get_request(payload):
     res = requests.get(animals_url, headers = header, params = payload)
-    print(res)
-    # print(res.text)
+    # print(res)
     if res.status_code == 200:
         res_json = res.json()
         pagination = res_json['pagination']   
@@ -85,10 +81,6 @@ def get_request(payload):
         return res_json
     else:
         return res.status_code
-
-# null = None
-# false = False
-# true = True
 
 def parse_res_animals(res_animals):
     parsed_list = []
@@ -132,7 +124,6 @@ def parse_res_animals(res_animals):
         for attr, val in pet['attributes'].items():
             if val and attr == 'spayed_neutered':
                 current['Attributes'].append('Spayed / Neutered')
-            # elif val and attr != 'house_trained':
             elif val and attr == 'house_trained':
                 current['Attributes'].append('House Trained (What a good doggo!)')
             elif val:
@@ -141,7 +132,6 @@ def parse_res_animals(res_animals):
         for attr, val in pet['environment'].items():
             if val:
                 current['Environment'].append(attr.title())
-        # current['Tags'] = ', '.join(pet['tags'])
         if pet['description']:
             description = pet['description'].replace("&amp;", "&")
             description = html.unescape(description)

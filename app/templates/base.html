@@ -69,18 +69,6 @@
       {% endwith %}
       </div>
 
-      <!-- <div style="text-align: center;">
-        {% with res_errors = get_flashed_messages(category_filter=['response error']) %}
-        {% if res_errors %}
-          <div class="response_error">
-          {% for message in res_errors %}
-            {{ message }}
-          {% endfor %}
-          </div>
-        {% endif %}
-        {% endwith %}
-      </div> -->
-
       {% block content %}
       {% endblock %}
 
@@ -106,10 +94,6 @@
           else {
             popup.style.display = "none";
           }
-
-          let notice = document.getElementsByClassName('notice new');
-          // notice.style.display = "none";
-          console.log('FUCK')
       }
     </script>
   </body>

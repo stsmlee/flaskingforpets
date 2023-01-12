@@ -3,7 +3,7 @@
 {%block title%}Delete Account?{%endblock%}
 
 {%block content%}
-<div id="padded_wrapper" style = 'text-align: center;'>
+<div id="padded_wrapper">
 <h4>Are you sure you want to delete your account?</h4>
 <form method="GET" action="{{url_for('confirm_delete')}}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

@@ -226,7 +226,6 @@ def try_token():
     try: 
         get_token()
     except: 
-        # flash('Petfinder is currently down, please try again later.', 'response error')
         return redirect(url_for('index'))
 
 def sort_limit_options(limit):

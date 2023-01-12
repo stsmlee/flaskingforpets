@@ -12,9 +12,7 @@ p {
 
 #container {
     position: relative;
-    /* padding: 8px; */
     padding: 0px 8px;
-    /* min-height: calc(100vh - 16px); */
     min-height: calc(100vh - 50px);
 
 }
@@ -25,12 +23,8 @@ p {
     width: 100%;
     max-width: 310px;
     float: right;
-    /* position: absolute;
-    right: 10px;
-    top: 0px; */
     padding: 2px 12px;
     margin: 10px 25px;
-    /* margin:0px 25px; */
     color: #1e0246;
     background-color: #c8b8f4d0;
     line-height: 0em;
@@ -189,14 +183,6 @@ h1 {
     color:midnightblue
 }
 
-/* #header {
-    font-size: 1em;
-    padding: .67em .67em 0px .67em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-} */
-
 #header {
     font-size: 1em;
     padding: 16px 10px 16px 10px;
@@ -205,13 +191,6 @@ h1 {
     align-items: center;
     background-color: #cebff5d0;
 }
-
-/* #header a:link{
-    text-decoration: underline overline dotted;
-    text-underline-offset: 3px;
-    text-underline-position: under;
-    top: 0px;
-} */
 
 #header a:link{
     text-decoration: none;
@@ -253,10 +232,6 @@ a:link,a:visited {
 a:hover,a:visited:hover  {
     color:#a361ff 
 }
-
-/* a:focus {
-    color: yellow;
-} */
 
 a:active {
     top:1px ;
@@ -300,8 +275,6 @@ a.dotdotdot:active{
 
 ul.index {
     list-style-type: none; 
-    /* list-style: square; */
-    /* list-style-image: url('pawicon.svg'); */
     margin: 0;
     padding: 0;
     margin-block-start: 1.33em;
@@ -314,16 +287,13 @@ ul.index > li::before {
     background-size: contain;
     background-image: url('pawicon.svg');
     background-repeat: no-repeat;
-/*     padding: 1em 0px 1em .5em; */
     margin-left: 1em;
     margin-right: .6em;
-/*     background-position: 0 .4em; */
     background-position: center;
     vertical-align: middle;
   }
 
 ul.index > li {
-    /* padding: 8px 0px; */
     line-height: 2em;
 }
 
@@ -343,7 +313,6 @@ ul.index > li > a {
     text-align: center;
     border-radius: 8px;
     vertical-align: middle;
-    /*     line-height: 105px; */
     font-size: 16px;
     font-family: inherit;
     padding-top: 60px;
@@ -394,18 +363,15 @@ table.puzzler_table {
     margin-left:auto;
     margin-right:auto;
     margin-bottom: 1.5em;
-    /* border: black 1px solid; */
     width: 80%;
 }
 
 .puzzler_table td {
-    /* border: black 1px solid; */
     border: 1px solid #ccc;
     padding: 5px 10px;
 }
 
 .puzzler_table th{
-    /* border: black 1px solid; */
     border: 1px solid #ccc;
     padding: 5px 10px;
 }
@@ -436,7 +402,6 @@ td.smolcol {
 }
 
 .mgmt_table td {
-    /* border: black 1px solid; */
     vertical-align: top;
 }
 
@@ -488,12 +453,8 @@ ul.error > li {
 
 ul.notice {
     float: right;
-    /* position: absolute;
-    right: 10px;
-    top: 0px; */
     padding: 2px 16px;
     margin: 10px 25px;
-    /* margin: 0px 25px; */
     color: #1e0246;
     background-color: #c8b8f4d0;
     border-radius: 10px;
@@ -525,7 +486,6 @@ ul.notice > li {
     width: fit-content;
     text-align: center;
     padding: 8px 16px;
-    /* margin: 5px 5px; */
     margin: 5px auto 5px auto;
     font-size: 1em;
     color: #1e0246;
@@ -617,7 +577,6 @@ div.change_limit {
 }
 
 #padded_wrapper {
-    /* padding:3.5em 3.75em; */
     padding: 56px 60px ;
     text-align: center;
 }
@@ -857,7 +816,6 @@ div#winner {
 }
 
 .vert_tab {
-    /* float: left; */
     display:block;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
@@ -890,7 +848,6 @@ div#winner {
   }
 
 .vert_tabcontent {
-    /* float: left; */
     display:inline-block;
     box-sizing:border-box;
     text-align:left;
