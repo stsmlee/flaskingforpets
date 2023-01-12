@@ -8,6 +8,9 @@ Users can register and log in to save their searches, and then with one click (W
 
 Registered users can manage their account, which includes deleting saved searches, changing nickname and/or password, and deleting their account altogether.
 
+<img width="400" alt="Screenshot Manage Account Page 2023-01-12 at 3 57 54 PM" src="https://user-images.githubusercontent.com/84687089/212179988-29116c50-828e-4da0-a75f-933c7b9d1ea9.png">
+
+
 Registered users can also play the bonus minigame of Squeerdle. It is much like NYT’s Wordle, except users can:
 
   * Get a new random puzzle from the database on demand (instead of only one daily puzzle).
