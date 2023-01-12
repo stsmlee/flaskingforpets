@@ -11,7 +11,7 @@ This Flask web application uses Petfinder’s RESTful API to search for and retu
 
 Users can register and log in to save their searches, and then with one click (What’s News?), the app will check and notify the user whether or not there are new results for each saved search. 
 
-<p align = "center"><img width="330" alt="Screenshot Whats News Waiting Image" src="https://user-images.githubusercontent.com/84687089/212178536-04a1e014-a65e-42bc-9dc3-f990cf53fc87.png"> <img width="330" alt="Screenshot Whats News Results" src="https://user-images.githubusercontent.com/84687089/212178537-9c1fc5c4-b4fb-4002-8a4d-b64f93e2eac2.png"></p>
+<p align = "center"><img height="200" alt="Screenshot Whats News Waiting Image" src="https://user-images.githubusercontent.com/84687089/212178536-04a1e014-a65e-42bc-9dc3-f990cf53fc87.png"> <img height="200" alt="Screenshot Whats News Results" src="https://user-images.githubusercontent.com/84687089/212178537-9c1fc5c4-b4fb-4002-8a4d-b64f93e2eac2.png"></p>
 
 Registered users can manage their account, which includes deleting saved searches, changing nickname and/or password, and deleting their account altogether.
 
