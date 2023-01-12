@@ -2,7 +2,7 @@
 
 This Flask web application uses Petfinder’s RESTful API to search for and return results for adoptable pets, using the user’s selected filters as parameters. 
 
-<img height="350" alt="Screenshot Home Screen 2023-01-12 at 10 31 28 AM" src="https://user-images.githubusercontent.com/84687089/212180345-47c0a320-3b9c-4b18-ba1c-631a5c6fb91c.png"> <img height="350" alt="Screenshot Cat 2023-01-12 at 10 46 56 AM" src="https://user-images.githubusercontent.com/84687089/212180359-e34f93ff-c32f-487d-bcec-7ec13d417e4b.png">
+<img width="500" alt="Screenshot Home Screen 2023-01-12 at 10 31 28 AM" src="https://user-images.githubusercontent.com/84687089/212180345-47c0a320-3b9c-4b18-ba1c-631a5c6fb91c.png"> <img width="500" alt="Screenshot Cat 2023-01-12 at 10 46 56 AM" src="https://user-images.githubusercontent.com/84687089/212180359-e34f93ff-c32f-487d-bcec-7ec13d417e4b.png">
 
 Users can register and log in to save their searches, and then with one click (What’s News?), the app will check and notify the user whether or not there are new results for each saved search. 
 
