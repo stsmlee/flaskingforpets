@@ -1,6 +1,6 @@
 # Flasking for Pets + Bonus Squeerdle Game
 
-## Table of Contents:
+## Table of Contents
 * [Flasking for Pets](#flasking-for-pets)
 * [Squeerdle](#squeerdle)
 
