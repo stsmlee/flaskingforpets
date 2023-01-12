@@ -25,13 +25,13 @@ Registered users can also play the bonus minigame of Squeerdle. It is much like 
   
   * Keep track of incomplete puzzles and view completed puzzles.
 
-<img width="500" alt="Screenshot Squeerdle Incomplete" src="https://user-images.githubusercontent.com/84687089/212183825-7f72e883-9051-4d63-927e-86fbdfec86e1.png"> 
-<img width="500" alt="Screenshot Squeerdle Complete" src="https://user-images.githubusercontent.com/84687089/212183975-c934310e-31d7-46fa-8673-0081fb83fbea.png">
+   <img width="500" alt="Screenshot Squeerdle Incomplete" src="https://user-images.githubusercontent.com/84687089/212183825-7f72e883-9051-4d63-927e-86fbdfec86e1.png"> 
+   <img width="500" alt="Screenshot Squeerdle Complete" src="https://user-images.githubusercontent.com/84687089/212183975-c934310e-31d7-46fa-8673-0081fb83fbea.png">
 
   * Add new words to the database and send these words to others with known usernames.
 
-<img width="500" alt="Screenshot Squeerdle Create" src="https://user-images.githubusercontent.com/84687089/212183996-37ece2f1-695f-4a14-b39f-27fb54037de4.png">  <img width="500" alt="Screenshot Squeerdle Inbox" src="https://user-images.githubusercontent.com/84687089/212184076-03d7cbef-166a-4f2c-b4a9-15f5219e9ac0.png">
+   <img width="500" alt="Screenshot Squeerdle Create" src="https://user-images.githubusercontent.com/84687089/212183996-37ece2f1-695f-4a14-b39f-27fb54037de4.png">  <img width="500" alt="Screenshot Squeerdle Inbox" src="https://user-images.githubusercontent.com/84687089/212184076-03d7cbef-166a-4f2c-b4a9-15f5219e9ac0.png">
   
   * Keep track of their created puzzles’ play and win counts. 
 
-<img width="500" alt="Screenshot Squeerdle Creations" src="https://user-images.githubusercontent.com/84687089/212184066-c626a440-d586-4fa1-a2da-d5db5ef8ac3d.png">
+   <img width="500" alt="Screenshot Squeerdle Creations" src="https://user-images.githubusercontent.com/84687089/212184066-c626a440-d586-4fa1-a2da-d5db5ef8ac3d.png">
