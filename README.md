@@ -4,7 +4,7 @@
 * [Flasking for Pets](#flasking-for-pets)
 * [Squeerdle](#squeerdle)
 
-## Flasking for pets
+## Flasking for Pets
 This Flask web application uses Petfinder’s RESTful API to search for and return results for adoptable pets, using the user’s selected filters as parameters. 
 
 <p align = "center"><img width="500" alt="Screenshot Home Screen" src="https://user-images.githubusercontent.com/84687089/212180345-47c0a320-3b9c-4b18-ba1c-631a5c6fb91c.png"> <img width="500" alt="Screenshot Cat Search" src="https://user-images.githubusercontent.com/84687089/212180359-e34f93ff-c32f-487d-bcec-7ec13d417e4b.png"></p>
