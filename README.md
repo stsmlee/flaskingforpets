@@ -1,5 +1,9 @@
-# Flasking for Pets
+# Flasking for Pets + Bonus Squeerdle Game
+##Table of Contents:
+* [Flasking for Pets] (#flasking-for-pets)
+* [Squeerdle] (#squeerdle)
 
+## Flasking for Pets
 This Flask web application uses Petfinder’s RESTful API to search for and return results for adoptable pets, using the user’s selected filters as parameters. 
 
 <img width="500" alt="Screenshot Home Screen" src="https://user-images.githubusercontent.com/84687089/212180345-47c0a320-3b9c-4b18-ba1c-631a5c6fb91c.png"> <img width="500" alt="Screenshot Cat Search" src="https://user-images.githubusercontent.com/84687089/212180359-e34f93ff-c32f-487d-bcec-7ec13d417e4b.png">
@@ -12,10 +16,9 @@ Registered users can manage their account, which includes deleting saved searche
 
 <img width="500" alt="Screenshot Manage Account Page" src="https://user-images.githubusercontent.com/84687089/212179988-29116c50-828e-4da0-a75f-933c7b9d1ea9.png">
 
-
-Registered users can also play the bonus minigame of Squeerdle. It is much like NYT’s Wordle, except users can:
-
+## Squeerdle
 <img width="500" alt="Screenshot Squeerdle Win" src="https://user-images.githubusercontent.com/84687089/212180971-72a6aeba-e737-4ce3-8404-c6b717fb2d77.png">
+Registered users can also play the bonus minigame of Squeerdle. It is much like NYT’s Wordle, except users can:
 
   * Get a new random puzzle from the database on demand (instead of only one daily puzzle).
   
