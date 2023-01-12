@@ -15,6 +15,8 @@ Registered users can manage their account, which includes deleting saved searche
 
 Registered users can also play the bonus minigame of Squeerdle. It is much like NYT’s Wordle, except users can:
 
+<img width="500" alt="Screenshot Squeerdle Win" src="https://user-images.githubusercontent.com/84687089/212180971-72a6aeba-e737-4ce3-8404-c6b717fb2d77.png">
+
   * Get a new random puzzle from the database on demand (instead of only one daily puzzle).
   
   * Keep track of incomplete puzzles and view completed puzzles.
