@@ -25,7 +25,8 @@ Registered users can also play the bonus minigame of Squeerdle. It is much like 
   
   * Keep track of incomplete puzzles and view completed puzzles.
 
-<img width="500" alt="Screenshot Squeerdle Incomplete" src="https://user-images.githubusercontent.com/84687089/212183825-7f72e883-9051-4d63-927e-86fbdfec86e1.png">  <img width="500" alt="Screenshot Squeerdle Complete" src="https://user-images.githubusercontent.com/84687089/212183975-c934310e-31d7-46fa-8673-0081fb83fbea.png">
+<img width="500" alt="Screenshot Squeerdle Incomplete" src="https://user-images.githubusercontent.com/84687089/212183825-7f72e883-9051-4d63-927e-86fbdfec86e1.png"> 
+<img width="500" alt="Screenshot Squeerdle Complete" src="https://user-images.githubusercontent.com/84687089/212183975-c934310e-31d7-46fa-8673-0081fb83fbea.png">
 
   * Add new words to the database and send these words to others with known usernames.
 
