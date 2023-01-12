@@ -1,4 +1,4 @@
-#Flasking for Pets
+# Flasking for Pets
 
 This Flask web application uses Petfinder’s RESTful API to search for and return results for adoptable pets, using the user’s selected filters as parameters. 
 
