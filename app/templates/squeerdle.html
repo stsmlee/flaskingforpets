@@ -21,12 +21,16 @@
     <button class="tablinks" onclick="openSection(event, 'Complete')">Complete</button>
   
   {% if default_tab == 'Creations' %}
-  <button class="tablinks" onclick="openSection(event, 'Creations')" id="defaultOpen">Creations</button>
+    <button class="tablinks" onclick="openSection(event, 'Creations')" id="defaultOpen">Creations</button>
   {% else %}
     <button class="tablinks" onclick="openSection(event, 'Creations')">Creations</button>
   {% endif %}
 
+  {% if default_tab == 'Create' %}
+    <button class="tablinks" onclick="openSection(event, 'Create')" id="defaultOpen">Create New</button>
+  {% else %}
     <button class="tablinks" onclick="openSection(event, 'Create')">Create New</button>
+  {% endif %}
 
   {% if inbox %}
     <button class="tablinks" onclick="openSection(event, 'Inbox')">Inbox &#x1F440;</button>

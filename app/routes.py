@@ -439,11 +439,11 @@ def puzzle(default_tab=None):
         send_form = forms.SendPuzzleForm()
         if request.method == "POST":
             if create_form.submit.data:
-                print(create_form.data)
                 if create_form.validate():
                     squeerdle.add_puzzle_word_db(create_form.word.data, get_user_id())
                 else:
                     flash_puzzle_error(create_form)
+                    return redirect(url_for('puzzle', default_tab = 'Create'))
             if send_form.send.data:
                 if send_form.validate():
                     squeerdle.send_puzzle_to_friend(send_form.username.data, int(send_form.hidden_id.data))
