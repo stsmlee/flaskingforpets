@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS puzzlers(
     date_of_completion TIMESTAMP,
     success INTEGER NOT NULL DEFAULT 0,
     inbox INTEGER NOT NULL DEFAULT 0,
+    date_received TIMESTAMP,
     evals TEXT NOT NULL DEFAULT '[]',
     PRIMARY KEY (user_id, puzzle_id) ON CONFLICT IGNORE,
     FOREIGN KEY (user_id) REFERENCES users(id)

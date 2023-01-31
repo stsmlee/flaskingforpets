@@ -150,26 +150,14 @@ def add_puzzle_to_puzzler(user_id, puzzle_id):
 
 def send_puzzle_to_friend(username, puzzle_id):
     username = username.lower()
+    now = datetime.now()
     conn = get_db_connection()
     res = conn.execute('SELECT id as user_id, username FROM users WHERE username = ?', (username,)).fetchone()
-    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id, inbox) VALUES (?,?,?)', (res['user_id'], puzzle_id, 1))
+    conn.execute(f'INSERT INTO puzzlers (user_id, puzzle_id, inbox, date_received) VALUES (?,?,?,?)', (res['user_id'], puzzle_id, 1,now))
     conn.commit()
     conn.close()
 
-def get_inbox(user_id):
-    conn = get_db_connection()
-    curs = conn.execute('SELECT puzzle_id, username, nickname FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id LEFT JOIN users ON puzzles.creator_id = users.id WHERE inbox = 1 AND puzzlers.user_id = ? ORDER BY puzzle_id', (user_id,))
-    rows = curs.fetchall()
-    entries = []
-    if rows:    
-        cols = [description[0] for description in curs.description]
-        for row in rows:
-            entry = {}
-            for col, val in zip(cols, row):
-                entry[col] = val
-            entries.append(entry)
-    conn.close()
-    return entries
+
 
 def get_random_puzzle_id(user_id):
     conn = get_db_connection()
@@ -185,7 +173,7 @@ def get_random_puzzle_id(user_id):
 
 def get_created_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ? ORDER BY date_of_creation DESC, puzzle_id", (user_id,))
+    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ? ORDER BY date_of_creation DESC, puzzle_id DESC", (user_id,))
     rows = curs.fetchall()
     if rows:
         cols = [description[0] for description in curs.description]
@@ -206,7 +194,7 @@ def list_of_created_ids(entries):
 
 def get_complete_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY date_of_completion DESC, success DESC, puzzle_id', (user_id,))
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete = 1 ORDER BY date_of_completion DESC, success DESC, puzzle_id', (user_id,))
     rows = curs.fetchall()
     entries = []
     if rows:    
@@ -252,7 +240,7 @@ def get_incomplete_puzzles(user_id):
 
 def get_inbox(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT puzzle_id, username, nickname FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id LEFT JOIN users ON puzzles.creator_id = users.id WHERE puzzlers.user_id = ? AND inbox = 1 ORDER BY puzzle_id', (user_id,))
+    curs = conn.execute('SELECT puzzle_id, username, nickname FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id LEFT JOIN users ON puzzles.creator_id = users.id WHERE inbox = 1 AND puzzlers.user_id = ? ORDER BY date_received DESC, puzzle_id', (user_id,))
     rows = curs.fetchall()
     entries = []
     if rows:    
@@ -262,7 +250,7 @@ def get_inbox(user_id):
             for col, val in zip(cols, row):
                 entry[col] = val
             entries.append(entry)
-        conn.close()
+    conn.close()
     return entries
 
 def puzzle_instance(details):
@@ -294,7 +282,7 @@ def get_puzzle_db(user_id, puzzle_id):
 def puzzle_loader(user_id, puzzle_id):
     puzzle_info = get_puzzle_db(user_id= user_id, puzzle_id=puzzle_id)
     if puzzle_info:
-        # print('puzzle_info', puzzle_info)
+        print('puzzle_info', puzzle_info)
         puzzle = puzzle_instance(puzzle_info)
         return(puzzle)
 
