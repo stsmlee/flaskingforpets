@@ -4,6 +4,7 @@ import sqlite3
 import json
 from flask import flash
 import gc
+from datetime import datetime
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
@@ -19,7 +20,7 @@ def count_instances(class_name):
     print(counter, f"instances of {class_name} class")
 
 class Puzzle:
-    def __init__(self, word, guess_words = [], guess_count = 0, evals = [], complete=0, success=0):
+    def __init__(self, word, guess_words = [], guess_count = 0, evals = [], complete=0, success=0, date_of_completion = None):
         word = word.upper()
         self.word = word
         self.max_guesses = len(word)+1
@@ -35,6 +36,7 @@ class Puzzle:
         self.evals = evals
         self.complete = complete
         self.success = success
+        self.date_of_completion = None
 
     def reset_letter_count(self):
         self.guess_letter_count = copy.deepcopy(self.expected_letter_count)
@@ -48,6 +50,7 @@ def check_guess(guess, puzzle, user_id, puzzle_id):
         puzzle.evals.append('win')
         puzzle.complete = 1
         puzzle.success = 1
+        puzzle.date_of_completion = datetime.now()
     else:
         for i in range(len(guess)):
             if guess[i] == puzzle.word[i]:
@@ -61,6 +64,7 @@ def check_guess(guess, puzzle, user_id, puzzle_id):
         puzzle.guess_count += 1
         if puzzle.guess_count == puzzle.max_guesses:
             puzzle.complete = 1
+            puzzle.date_of_completion = datetime.now()
         puzzle.guess_words.append(guess)
         puzzle.reset_letter_count()
         puzzle.evals.append(eval)
@@ -72,7 +76,7 @@ def check_guess(guess, puzzle, user_id, puzzle_id):
 
 def update_puzzler_db(puzzle, user_id, puzzle_id):
     conn = get_db_connection()
-    conn.execute('UPDATE puzzlers SET guess_count = ?, guess_words = ?, evals = ?, complete = ?, success = ? WHERE user_id = ? AND puzzle_id = ?', (puzzle.guess_count, json.dumps(puzzle.guess_words), json.dumps(puzzle.evals), puzzle.complete, puzzle.success, user_id, puzzle_id))
+    conn.execute('UPDATE puzzlers SET guess_count = ?, guess_words = ?, evals = ?, complete = ?, success = ?, date_of_completion=? WHERE user_id = ? AND puzzle_id = ?', (puzzle.guess_count, json.dumps(puzzle.guess_words), json.dumps(puzzle.evals), puzzle.complete, puzzle.success, puzzle.date_of_completion, user_id, puzzle_id))
     conn.commit()
     conn.close()
 
@@ -201,7 +205,7 @@ def list_of_created_ids(entries):
 
 def get_complete_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY TIMESTAMP DESC, success DESC, puzzle_id', (user_id,))
+    curs = conn.execute('SELECT word, puzzle_id, guess_count, guess_words, success FROM puzzlers JOIN puzzles ON puzzlers.puzzle_id = puzzles.id WHERE puzzlers.user_id = ? AND complete=1 ORDER BY date_of_completion DESC, success DESC, puzzle_id', (user_id,))
     rows = curs.fetchall()
     entries = []
     if rows:    
