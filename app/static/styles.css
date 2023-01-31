@@ -801,6 +801,8 @@ div#winner {
     border-radius: 0px 0px 5px 5px;
     animation: fadeEffect 1s;
     min-height: 200px;
+    max-height:500px;
+    overflow-y: scroll;
 }
 
 #flex_tab_container {
