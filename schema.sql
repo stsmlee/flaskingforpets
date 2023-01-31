@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS puzzlers(
     guess_count INTEGER NOT NULL DEFAULT 0,
     guess_words TEXT NOT NULL DEFAULT '[]',
     complete INTEGER NOT NULL DEFAULT 0,
+    date_of_completion TIMESTAMP,
     success INTEGER NOT NULL DEFAULT 0,
     inbox INTEGER NOT NULL DEFAULT 0,
     evals TEXT NOT NULL DEFAULT '[]',
