@@ -428,8 +428,9 @@ def not_found(error):
     return render_template('404.html'), 404
 
 @app.route('/squeerdle/', methods=['GET', 'POST'])
-@app.route('/squeerdle/<default_tab>', methods=['GET', 'POST'])
-def puzzle(default_tab=None):
+@app.route('/squeerdle/<default_tab>/', methods=['GET', 'POST'])
+@app.route('/squeerdle/<default_tab>/<int:page>', methods=['GET', 'POST'])
+def puzzle(default_tab=None, page=1):
     try:
         incomplete = squeerdle.get_incomplete_puzzles(get_user_id())
         complete = squeerdle.get_complete_puzzles(get_user_id())

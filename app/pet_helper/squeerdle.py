@@ -128,8 +128,9 @@ def valid_word(word):
     
 def add_puzzle_word_db(word, user_id = None):
     word = word.upper()
+    now = datetime.now()
     conn = get_db_connection()
-    conn.execute('INSERT INTO puzzles (word, creator_id) VALUES (?,?)', (word, user_id))
+    conn.execute('INSERT INTO puzzles (word, creator_id, date_of_creation) VALUES (?,?,?)', (word, user_id, now))
     conn.commit()
     conn.close()
     flash(f"Successfully added {word} to our database of puzzles! Thx u!", 'puzzle base notice')
@@ -184,7 +185,7 @@ def get_random_puzzle_id(user_id):
 
 def get_created_puzzles(user_id):
     conn = get_db_connection()
-    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ? ORDER BY puzzle_id", (user_id,))
+    curs = conn.execute("SELECT id as puzzle_id,word,plays,wins FROM puzzles WHERE creator_id = ? ORDER BY date_of_creation DESC, puzzle_id", (user_id,))
     rows = curs.fetchall()
     if rows:
         cols = [description[0] for description in curs.description]
