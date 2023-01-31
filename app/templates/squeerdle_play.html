@@ -137,6 +137,11 @@
     {% else %}
         <div id="rainbow_text">YOU WIN!</div>
     {% endif %}
+
+    {% if puzzle.complete == 1 %}
+        <div><a href="{{url_for('puzzle')}}">Return to Squeerdle Home</a></div>
+    {% endif %}
+
 </div>
 </form>
 <script>

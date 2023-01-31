@@ -254,7 +254,7 @@ def get_inbox(user_id):
     return entries
 
 def puzzle_instance(details):
-    puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'])
+    puzzle = Puzzle(details['word'], guess_count=details['guess_count'], guess_words=details['guess_words'], evals=details['evals'], complete=details['complete'])
     return puzzle
 
 def get_puzzle_db(user_id, puzzle_id):   
