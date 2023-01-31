@@ -199,7 +199,7 @@ def save_results(res_json, saved_dict = {}, count=1):
             next = pag_links.get('next', False)
             if next:
                 next = next['href']
-                print(next)
+                # print(next)
                 count += 1
                 res = requests.get(base_url + next, headers = header)
                 save_results(res.json(), saved_dict=saved_dict, count=count)

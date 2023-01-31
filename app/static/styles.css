@@ -857,8 +857,10 @@ div#winner {
     border: 1px solid #ccc;
     width: 100%;
     border-left: none;
-    min-height: 500px;
-    max-height:inherit;
+    /* min-height: 500px;
+    max-height:inherit; */
+    height: 550px;
+    overflow-y: scroll;
     animation: fadeEffect 1s;
 
   }
