@@ -27,8 +27,8 @@ def get_token():
     response = requests.post(url, data=params)
     # print(response)
     # print(response.text)
-    if response.status_code != 200:
-        print('!!!something went wrong with getting a token!!!')
+    # if response.status_code != 200:
+    #     print('!!!something went wrong with getting a token!!!')
     return response.json()['access_token']
 
 header = {}
@@ -220,12 +220,12 @@ def check_for_new_results(user_id):
                 break
             new_results = save_results(new_req, saved_dict={})
             if new_results and not prev_results:
-                print('You went from zero to new results!')
+                # print('You went from zero to new results!')
                 results.append(row['savename'])
             else:
                 for id in new_results:
                     if str(id) not in prev_results:
-                        print('You have new results!')
+                        # print('You have new results!')
                         results.append(row['savename'])
                         break
     return results

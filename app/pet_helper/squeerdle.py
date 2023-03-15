@@ -12,12 +12,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def count_instances(class_name):
-    counter = 0
-    for obj in gc.get_objects():
-        if isinstance(obj, class_name):
-            counter += 1
-    print(counter, f"instances of {class_name} class")
+
 
 class Puzzle:
     def __init__(self, word, guess_words = [], guess_count = 0, evals = [], complete=0, success=0, date_of_completion = None):
@@ -71,7 +66,7 @@ def check_guess(guess, puzzle, user_id, puzzle_id):
     update_puzzler_db(puzzle, user_id, puzzle_id)
     if puzzle.complete == 1:
         update_puzzle_stats_db(puzzle_id, puzzle.success)
-    print(puzzle.__dict__.items())
+    # print(puzzle.__dict__.items())
     return eval
 
 def update_puzzler_db(puzzle, user_id, puzzle_id):
@@ -282,7 +277,7 @@ def get_puzzle_db(user_id, puzzle_id):
 def puzzle_loader(user_id, puzzle_id):
     puzzle_info = get_puzzle_db(user_id= user_id, puzzle_id=puzzle_id)
     if puzzle_info:
-        print('puzzle_info', puzzle_info)
+        # print('puzzle_info', puzzle_info)
         puzzle = puzzle_instance(puzzle_info)
         return(puzzle)
 
