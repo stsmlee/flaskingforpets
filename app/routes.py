@@ -354,12 +354,13 @@ def check_updates():
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = forms.RegisterForm()
-    if form.validate_on_submit():
-        register_user_db(form.username.data,form.password.data, form.nickname.data)
-        login_session_db(form.username.data)
-        return redirect(url_for('index'))
-    else:
-        flash_errors(form)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            register_user_db(form.username.data,form.password.data, form.nickname.data)
+            login_session_db(form.username.data)
+            return redirect(url_for('index'))
+        else:
+            flash_errors(form)
     return render_template('register.html', form = form)
 
 @app.route('/logout')

@@ -102,8 +102,19 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators= [InputRequired(), Length(min=3, max=20), custom_savename_regexp, username_check], render_kw= {'class': 'form_font'})
     password = PasswordField('Password', validators= [InputRequired(), Length(min=8, max=20)], render_kw= {'class': 'form_font'})
+    confirm_password = PasswordField('Confirm Password', validators= [InputRequired(), Length(min=8, max=20)], render_kw= {'class': 'form_font'})
     nickname = StringField('Nickname (Optional)', validators= [Length(min=3, max=20), Optional()], render_kw= {'class': 'form_font'})
     submit = SubmitField('Register', render_kw= {'class': 'submit_button'})
+    
+    def validate_on_submit(self):
+        good = FlaskForm.validate(self)
+        if not good:
+            return False
+        if self.password.data != self.confirm_password.data:
+            self.confirm_password.errors.append('Password and confirm password fields must match.')
+            return False
+        return True
+
 
 class ReuseForm(FlaskForm):
     savename = SelectField('Saved Searches', render_kw= {'class': 'form_font'})
