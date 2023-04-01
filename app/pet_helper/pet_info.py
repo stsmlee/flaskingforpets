@@ -212,11 +212,14 @@ def check_for_new_results(user_id):
     results = []
     if saved_searches:
         for row in saved_searches:
-            prev_results = json.loads(row['results'])
+            if row['results']:
+                prev_results = json.loads(row['results'])
+            else:
+                prev_results = []
             params = json.loads(row['params'])
             new_req = get_request(params)
             if isinstance(new_req, int):
-                results =  new_req
+                results = new_req
                 break
             new_results = save_results(new_req, saved_dict={})
             if new_results and not prev_results:
