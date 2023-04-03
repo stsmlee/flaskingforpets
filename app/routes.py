@@ -6,7 +6,7 @@ from flask import (Flask, flash, redirect, render_template, request, session,
 from wtforms.validators import Length, NoneOf, ValidationError, StopValidation, Optional
 from app import app, forms
 from app.pet_helper import pet_info, squeerdle
-from flask_session import Session
+# from flask_session import Session
 from app.sneaky import get_session_str
 from datetime import datetime
 
