@@ -95,7 +95,7 @@ class ResultsPerPage(FlaskForm):
     limit = SelectField('Number of Results per Page', )
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators= [InputRequired(), verify_user], render_kw= {'class': 'form_font', 'placeholder': 'Username'})
+    username = StringField('Username', validators= [InputRequired(), custom_savename_regexp,verify_user], render_kw= {'class': 'form_font', 'placeholder': 'Username'})
     password = PasswordField('Password', validators= [InputRequired(), verify_password], render_kw= {'class': 'form_font', 'placeholder': 'Password'})
     submit = SubmitField('Login',render_kw= {'class': 'submit_button'})
 
